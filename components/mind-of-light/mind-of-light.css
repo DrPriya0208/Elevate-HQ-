@@ -1,0 +1,473 @@
+/**
+ * Ported from reference/elevatehq-mind-of-light-v2-veins-7s-compact.html.
+ * Only the rules this animation needs are kept: the .logo-svg base styling, the
+ * keyframes used by the .v-w (wait/formed) state and the .v-a fallback intro, and the
+ * "compact layout matching the live site" hero chrome (.mind-hero .inner/.copy/.logo-slot,
+ * .skip). Selectors are scoped under .mind-hero so they cannot clash with the rest of the
+ * site's styles. The reference's own copy/h1/button styles and its chapter pills/Replay
+ * button are intentionally not ported: the site already styles its own headline and
+ * buttons, and the live hero shows only a Skip button (see MindOfLight.tsx).
+ */
+
+.mind-hero {
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(620px, calc(100svh - 74px), 770px);
+  color: #fff;
+  background: radial-gradient(120% 90% at 70% 40%, #13295b 0%, #0a1530 55%, #050b1c 100%);
+}
+.mind-hero canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: block;
+  pointer-events: none;
+}
+.mind-hero .copy {
+  position: relative;
+  z-index: 4;
+  animation: m-copy 1.2s ease 0.5s both;
+}
+@keyframes m-copy {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.mind-hero .logo-slot {
+  position: absolute;
+  z-index: 3;
+  /* 24px = the container's own px-6 padding, so the badge's right edge lines up
+     with the header's content edge (nav/CTA), not the container's outer edge. */
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(34vw, 510px);
+  aspect-ratio: 1 / 1;
+}
+.mind-hero .badge-btn {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: default;
+  pointer-events: auto;
+}
+.mind-hero .badge-btn.replayable {
+  cursor: pointer;
+}
+.mind-hero .badge-btn:focus-visible {
+  outline: 2px solid #f2cc73;
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+.mind-hero .replay-icon {
+  position: absolute;
+  right: 14%;
+  bottom: 14%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(10, 21, 48, 0.75);
+  color: #f2cc73;
+  font-size: 18px;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.mind-hero .badge-btn.replayable:hover .replay-icon,
+.mind-hero .badge-btn.replayable:focus-visible .replay-icon {
+  opacity: 1;
+}
+.mind-hero .skip {
+  position: absolute;
+  z-index: 6;
+  right: clamp(16px, 3vw, 40px);
+  bottom: 22px;
+  font-size: 0.88rem;
+  padding: 8px 16px;
+  background: rgba(10, 21, 48, 0.5);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  transition: opacity 0.6s ease;
+}
+.mind-hero .skip:hover {
+  border-color: #f2cc73;
+  color: #f2cc73;
+}
+.mind-hero .skip.gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .mind-hero .logo-slot {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    width: min(76%, 310px);
+    margin: 0 auto 30px;
+  }
+}
+
+/* ---------- logo animation (reference: lines 59-227 of the extracted <style>) ---------- */
+.mind-hero .logo-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.mind-hero .logo-svg * {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.mind-hero .logo-svg .gt,
+.mind-hero .logo-svg .gb,
+.mind-hero .logo-svg .ring,
+.mind-hero .logo-svg .spark {
+  transform-box: view-box;
+  transform-origin: 300px 300px;
+}
+.mind-hero .logo-svg .leaf {
+  transform-box: view-box;
+  transform-origin: 319px 345px;
+}
+.mind-hero .logo-svg .ring {
+  fill: none;
+  stroke: url(#gold);
+  stroke-width: 6.35;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.mind-hero .logo-svg .bp {
+  stroke: #f3f5f9;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  fill-rule: evenodd;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: filter 0.3s ease;
+}
+.mind-hero .logo-svg .lt,
+.mind-hero .logo-svg .sp {
+  fill: url(#gold);
+}
+.mind-hero .logo-svg .nd {
+  fill: #fff0b8;
+  opacity: 0;
+}
+.mind-hero .logo-svg .halo,
+.mind-hero .logo-svg .burst,
+.mind-hero .logo-svg .bglow,
+.mind-hero .logo-svg .spark {
+  opacity: 0;
+}
+.mind-hero .logo-svg .orbit {
+  opacity: 0.35;
+}
+.mind-hero .logo-svg .nd,
+.mind-hero .logo-svg .bglow,
+.mind-hero .logo-svg .spark,
+.mind-hero .logo-svg .arc,
+.mind-hero .logo-svg .beam,
+.mind-hero .logo-svg .rip {
+  display: none;
+}
+.mind-hero .logo-svg .beam {
+  transform-box: view-box;
+  transform-origin: 300px 300px;
+  opacity: 0;
+}
+.mind-hero .logo-svg .arc {
+  fill: none;
+  stroke: url(#gold);
+  stroke-width: 6.35;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transform-box: view-box;
+  transform-origin: 300px 300px;
+}
+.mind-hero .logo-svg .rip {
+  fill: none;
+  stroke: #f2cc73;
+  stroke-width: 3.4;
+  opacity: 0;
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fillin {
+  from {
+    fill-opacity: 0;
+  }
+  to {
+    fill-opacity: 1;
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-1.6deg);
+  }
+  50% {
+    transform: rotate(1.6deg);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.35;
+  }
+}
+@keyframes fadeall {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes bloom {
+  0% {
+    transform: scale(0) rotate(-12deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1) rotate(2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0) rotate(-90deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.25) rotate(8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate(calc(var(--dx) * 1px), calc(var(--dy) * 1px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A: Draw & Bloom - the fallback intro used when WebGL is unavailable or fails */
+.mind-hero .v-a .halo {
+  animation: a-halo 1.2s ease-out both;
+}
+@keyframes a-halo {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.55;
+  }
+}
+.mind-hero .v-a .disc {
+  animation: a-disc 0.8s var(--ease) both;
+}
+@keyframes a-disc {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.mind-hero .v-a .r1 {
+  animation: draw 1.1s var(--ease) 0.4s both;
+}
+.mind-hero .v-a .r2 {
+  animation: draw 1.1s var(--ease) 0.55s both;
+}
+.mind-hero .v-a .bp {
+  animation:
+    draw 0.9s var(--ease) calc(1s + var(--i) * 0.09s) both,
+    fillin 0.5s ease-out calc(1.65s + var(--i) * 0.09s) both;
+}
+.mind-hero .v-a .leaf {
+  animation:
+    bloom 0.95s var(--spring) 2.3s both,
+    sway 5s ease-in-out 4.4s infinite;
+}
+.mind-hero .v-a .burst {
+  animation: a-burst 1.2s ease-out 2.4s both;
+}
+@keyframes a-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  40% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+.mind-hero .v-a .lt.top {
+  animation: rise 0.6s var(--ease) calc(2.7s + var(--i) * 0.05s) both;
+}
+.mind-hero .v-a .lt.bot {
+  animation: rise 0.6s var(--ease) calc(3.1s + var(--i) * 0.022s) both;
+}
+.mind-hero .v-a .sp {
+  animation:
+    pop 0.7s var(--spring) calc(3.4s + var(--i) * 0.12s) both,
+    twinkle 3.6s ease-in-out calc(4.6s + var(--i) * 0.8s) infinite;
+}
+.mind-hero .v-a .orbit {
+  animation:
+    fadein 1s ease 3.4s both,
+    spin 60s linear 3.4s infinite;
+}
+.mind-hero .v-a .nd,
+.mind-hero .v-a .bglow {
+  display: none;
+}
+
+/* ---------- parallax layers (driven by the pointer, unused once WebGL takes over) ---------- */
+.mind-hero .px {
+  transform: translate(calc(var(--mx, 0) * var(--d) * 1px), calc(var(--my, 0) * var(--d) * 1px));
+  transition: transform 0.35s var(--ease);
+}
+
+/* hover glow on the brain (not part of the intro) */
+.mind-hero .stage:hover .bp {
+  filter: drop-shadow(0 0 5px rgba(242, 204, 115, 0.85));
+}
+
+/* crisp logo: hidden until the light has formed it */
+.mind-hero .v-w.wait .logo-svg {
+  opacity: 0;
+}
+.mind-hero .v-w.formed .logo-svg {
+  animation: fadeall 1.6s ease both;
+}
+/* warm start: the story was already seen this session, so the logo should just be there */
+.mind-hero .v-w.formed.instant .logo-svg {
+  animation: none;
+  opacity: 1;
+}
+.mind-hero .v-w.formed .sp {
+  animation: twinkle 3.6s ease-in-out calc(1.8s + var(--i) * 0.8s) infinite;
+}
+.mind-hero .v-w.formed .leaf {
+  animation: sway 5s ease-in-out 2s infinite;
+}
+.mind-hero .v-w.formed .orbit {
+  animation:
+    fadein 1.2s ease 1.2s both,
+    spin 60s linear 1.2s infinite;
+}
+.mind-hero .v-w .orbit {
+  opacity: 0;
+}
+/* ambient motion (twinkle/sway/spin) runs for a while after forming, then stops for good */
+.mind-hero .v-w.formed.settled .sp,
+.mind-hero .v-w.formed.settled .leaf,
+.mind-hero .v-w.formed.settled .orbit {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mind-hero .copy {
+    animation: none;
+  }
+  .mind-hero .skip {
+    display: none;
+  }
+  .mind-hero .badge-btn {
+    cursor: default;
+  }
+  .mind-hero .replay-icon {
+    display: none;
+  }
+  .mind-hero .logo-svg *,
+  .mind-hero .logo-svg {
+    animation: none !important;
+    transition: none !important;
+  }
+  .mind-hero .logo-svg .nd,
+  .mind-hero .logo-svg .halo {
+    opacity: 0.35;
+  }
+  .mind-hero .logo-svg .bglow,
+  .mind-hero .logo-svg .burst,
+  .mind-hero .logo-svg .spark,
+  .mind-hero .logo-svg .beam,
+  .mind-hero .logo-svg .rip {
+    display: none !important;
+  }
+  .mind-hero .px {
+    transform: none !important;
+  }
+}

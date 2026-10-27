@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  /* Lenis drives scrolling itself; let it own scroll-behavior once active. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  html.lenis.lenis-smooth {
+    scroll-behavior: auto;
+  }
+  html.lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  body {
+    @apply bg-mist font-sans text-navy antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-serif font-bold tracking-tight text-navy;
+  }
+  /* Two-tone ring stays visible on both navy and light backgrounds */
+  :focus-visible {
+    outline: 2px solid #10203f;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px #f2cc73;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+@layer utilities {
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(24px, -20px) scale(1.08);
+    }
+  }
+  .animate-drift {
+    animation: drift 16s ease-in-out infinite;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-[0.95rem] font-semibold transition-[background-color,transform] motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98];
+  }
+  .btn-gold {
+    @apply bg-gold text-ink hover:bg-white;
+  }
+  .btn-outline-light {
+    @apply border border-white/40 text-white hover:border-gold hover:text-gold;
+  }
+  .btn-navy {
+    @apply bg-navy text-white hover:bg-ink;
+  }
+  .field {
+    @apply w-full rounded-md border border-line bg-white px-3.5 py-2.5 text-base text-navy placeholder:text-slate/70;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-navy;
+  }
+
+  /* Speckled navy surface, echoing the business card texture */
+  .speckle {
+    position: relative;
+    isolation: isolate;
+  }
+  .speckle::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.5;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='7'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -12 0 0 0 5.1'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* Typography for blog posts */
+  .post-body {
+    @apply font-serif text-[1.15rem] leading-[1.8] text-navy;
+  }
+  .post-body > * + * {
+    @apply mt-5;
+  }
+  .post-body h2 {
+    @apply mt-10 text-3xl leading-tight;
+  }
+  .post-body h3 {
+    @apply mt-8 text-2xl leading-snug;
+  }
+  .post-body ul {
+    @apply list-disc pl-6;
+  }
+  .post-body ol {
+    @apply list-decimal pl-6;
+  }
+  .post-body li + li {
+    @apply mt-1.5;
+  }
+  .post-body a {
+    @apply underline decoration-brass underline-offset-4 hover:decoration-navy;
+  }
+  .post-body blockquote {
+    @apply border-l-4 border-gold pl-5 italic text-slate;
+  }
+  .post-body hr {
+    @apply my-8 border-line;
+  }
+  .post-body code {
+    @apply rounded bg-line/60 px-1.5 py-0.5 font-mono text-[0.9em];
+  }
+}

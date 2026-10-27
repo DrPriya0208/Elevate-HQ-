@@ -1,0 +1,28 @@
+import type { Config } from "tailwindcss";
+
+// Palette is taken from the ElevateHQ business card: deep navy, warm gold, white.
+const config: Config = {
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        ink: "#0A1530",
+        navy: "#10203F",
+        gold: "#F2CC73",
+        "deep-gold": "#D4A53A",
+        brass: "#B88A2B",
+        mist: "#F3F5F9",
+        slate: "#56627D",
+        line: "#D9DEE8",
+      },
+      fontFamily: {
+        serif: ["var(--font-serif)", "Georgia", "serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        playfair: ["var(--font-playfair)", "Georgia", "serif"],
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;

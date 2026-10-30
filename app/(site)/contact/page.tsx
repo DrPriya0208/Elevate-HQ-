@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import HeroGlow from "@/components/HeroGlow";
+import PageHero from "@/components/PageHero";
+import { Icon } from "@/components/icons";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { site } from "@/lib/content";
 import ContactForm from "./ContactForm";
 
@@ -8,56 +10,68 @@ export const metadata: Metadata = {
   description: "Book a session or ask a question. ElevateHQ, Sholinganallur, Chennai.",
 };
 
+const methods = [
+  { icon: "phone", label: "Call us", value: site.phone, href: site.phoneHref, external: false },
+  { icon: "message", label: "WhatsApp", value: "Message us on WhatsApp", href: site.whatsapp, external: true },
+  { icon: "mail", label: "Email", value: site.email, href: `mailto:${site.email}`, external: false },
+];
+
 export default function ContactPage() {
   return (
     <>
-      <section className="speckle relative overflow-hidden bg-navy text-white">
-        <HeroGlow />
-        <div className="relative mx-auto max-w-6xl px-6 py-16 md:py-20">
-          <h1 className="font-serif text-4xl text-white sm:text-5xl">Book a session</h1>
-          <p className="mt-4 max-w-xl text-lg text-white/80">
-            Send a message and we will reply to arrange a first conversation.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        kicker="Contact"
+        title="Book a session."
+        intro="Send a message and we will reply to arrange a first conversation."
+      />
 
-      <div className="mx-auto grid max-w-6xl gap-14 px-6 py-16 md:grid-cols-[1.2fr_0.8fr]">
-        <ContactForm />
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1.25fr_0.75fr]">
+        <FadeIn className="card p-8 md:p-10">
+          <p className="kicker text-brass">Send a message</p>
+          <h2 className="mt-3 font-serif text-2xl">Tell us a little about what you need.</h2>
+          <div className="mt-8">
+            <ContactForm />
+          </div>
+        </FadeIn>
 
-        <aside className="space-y-8">
-          <div>
-            <h2 className="font-serif text-2xl">Prefer to call or message?</h2>
-            <ul className="mt-4 space-y-3">
-              <li>
-                <a href={site.phoneHref} className="font-semibold underline decoration-brass underline-offset-4 hover:decoration-navy">
-                  {site.phone}
-                </a>
-              </li>
-              <li>
+        <aside className="space-y-4">
+          <Stagger as="ul" className="space-y-4">
+            {methods.map((m) => (
+              <StaggerItem key={m.label}>
                 <a
-                  href={site.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold underline decoration-brass underline-offset-4 hover:decoration-navy"
+                  href={m.href}
+                  {...(m.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className="card card-hover group flex items-center gap-4 p-5"
                 >
-                  Message on WhatsApp
+                  <span className="icon-badge transition-colors duration-300 group-hover:bg-gold group-hover:text-navy">
+                    <Icon name={m.icon} className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="kicker block text-slate">{m.label}</span>
+                    <span className="mt-1 block break-all font-semibold text-navy">{m.value}</span>
+                  </span>
                 </a>
-              </li>
-              <li>
-                <a href={`mailto:${site.email}`} className="break-all font-semibold underline decoration-brass underline-offset-4 hover:decoration-navy">
-                  {site.email}
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="font-serif text-2xl">Where we are</h2>
-            <p className="mt-3 text-slate">{site.location}</p>
-          </div>
-          <p className="rounded-md border border-line bg-white p-4 text-sm leading-relaxed text-slate">
-            This form is not monitored around the clock. In a crisis, call Tele-MANAS on 14416 or 1-800-891-4416, or go
-            to the nearest hospital.
-          </p>
+              </StaggerItem>
+            ))}
+            <StaggerItem>
+              <div className="card flex items-center gap-4 p-5">
+                <span className="icon-badge">
+                  <Icon name="pin" className="h-5 w-5" />
+                </span>
+                <span>
+                  <span className="kicker block text-slate">Where we are</span>
+                  <span className="mt-1 block font-semibold text-navy">{site.location}</span>
+                </span>
+              </div>
+            </StaggerItem>
+          </Stagger>
+
+          <FadeIn delay={0.2}>
+            <p className="rounded-xl border border-gold/50 bg-gold/10 p-5 text-sm leading-relaxed text-navy">
+              <span className="font-semibold">In a crisis?</span> This form is not monitored around the clock. Call
+              Tele-MANAS on 14416 or 1-800-891-4416, or go to the nearest hospital.
+            </p>
+          </FadeIn>
         </aside>
       </div>
     </>

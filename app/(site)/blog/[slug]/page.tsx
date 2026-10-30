@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CtaBand from "@/components/CtaBand";
-import { FadeIn } from "@/components/motion";
+import HeroGlow from "@/components/HeroGlow";
+import { DrawLine, FadeIn, RevealText } from "@/components/motion";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/text";
 
@@ -43,21 +44,37 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <>
-      <article className="mx-auto max-w-3xl px-6 py-14">
-        <Link href="/blog" className="text-sm font-semibold underline decoration-brass underline-offset-4 hover:decoration-navy">
-          All posts
-        </Link>
+      <header className="speckle relative overflow-hidden bg-navy text-white">
+        <HeroGlow />
+        <div className={`relative mx-auto max-w-3xl px-6 pt-16 ${post.coverImage ? "pb-36" : "pb-16"}`}>
+          <Link href="/blog" className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold hover:text-white">
+            <span aria-hidden="true">←</span> All posts
+          </Link>
+          <FadeIn>
+            <p className="kicker mt-10 text-gold">{formatDate(post.publishedAt)}</p>
+          </FadeIn>
+          <RevealText as="h1" text={post.title} className="mt-4 font-serif text-4xl leading-tight text-white sm:text-5xl" />
+          <DrawLine className="mt-6 block h-[3px] w-20 origin-left rounded-full bg-gold" />
+        </div>
+      </header>
+
+      <article className="mx-auto max-w-3xl px-6 pb-20">
+        {post.coverImage && (
+          <FadeIn className="-mt-24">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={post.coverImage}
+              alt=""
+              className="relative aspect-[16/9] w-full rounded-xl object-cover shadow-[0_20px_40px_rgba(10,21,48,0.25)]"
+            />
+          </FadeIn>
+        )}
         <FadeIn>
-          <p className="mt-8 text-sm text-slate">{formatDate(post.publishedAt)}</p>
-          <h1 className="mt-2 font-serif text-4xl leading-tight sm:text-5xl">{post.title}</h1>
-
-          {post.coverImage && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={post.coverImage} alt="" className="mt-8 w-full rounded-md object-cover" />
-          )}
-
-          <div className="post-body mt-10" dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div className="post-body mt-12" dangerouslySetInnerHTML={{ __html: post.content }} />
         </FadeIn>
+        <div className="mt-16 border-t border-line pt-8">
+          <Link href="/blog" className="btn btn-navy">← More articles</Link>
+        </div>
       </article>
       <CtaBand />
     </>

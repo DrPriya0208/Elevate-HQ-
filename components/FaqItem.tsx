@@ -17,12 +17,14 @@ export default function FaqItem({ q, a }: FaqItemProps) {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full cursor-pointer items-center justify-between gap-4 py-5 text-left font-serif text-xl font-bold"
+        className="group flex w-full cursor-pointer items-center justify-between gap-4 py-5 text-left font-serif text-lg font-bold transition-colors hover:text-brass"
       >
         {q}
         <motion.span
           aria-hidden="true"
-          className="text-2xl text-brass"
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-xl leading-none transition-colors ${
+            open ? "border-gold bg-gold text-navy" : "border-line text-brass group-hover:border-gold"
+          }`}
           animate={{ rotate: open ? 45 : 0 }}
           transition={{ duration: 0.2 }}
         >

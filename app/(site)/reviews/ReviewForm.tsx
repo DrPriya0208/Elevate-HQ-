@@ -36,7 +36,7 @@ export default function ReviewForm() {
     return (
       <motion.div
         role="status"
-        className="rounded-md border border-gold bg-white p-6"
+        className="rounded-xl border border-gold bg-white p-6 shadow-[0_1px_3px_rgba(0,55,112,0.08)]"
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}

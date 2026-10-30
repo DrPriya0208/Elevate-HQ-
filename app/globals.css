@@ -18,12 +18,13 @@
     overflow: hidden;
   }
   body {
-    @apply bg-mist font-sans text-navy antialiased;
+    @apply bg-mist font-sans font-light text-ink antialiased;
+    font-feature-settings: "ss01";
   }
   h1,
   h2,
   h3 {
-    @apply font-serif font-bold tracking-tight text-navy;
+    @apply font-serif font-bold tracking-tight text-ink;
   }
   /* Two-tone ring stays visible on both navy and light backgrounds */
   :focus-visible {
@@ -59,7 +60,7 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-[0.95rem] font-semibold transition-[background-color,transform] motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98];
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[0.95rem] font-medium transition-[background-color,transform] motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98];
   }
   .btn-gold {
     @apply bg-gold text-ink hover:bg-white;
@@ -71,10 +72,22 @@
     @apply bg-navy text-white hover:bg-ink;
   }
   .field {
-    @apply w-full rounded-md border border-line bg-white px-3.5 py-2.5 text-base text-navy placeholder:text-slate/70;
+    @apply w-full rounded-md border border-line bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-slate/70;
   }
   .label {
-    @apply mb-1.5 block text-sm font-semibold text-navy;
+    @apply mb-1.5 block text-sm font-semibold text-ink;
+  }
+  .card {
+    @apply rounded-xl border border-line bg-white shadow-[0_1px_3px_rgba(10,21,48,0.08)];
+  }
+  .card-hover {
+    @apply transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-[0_14px_32px_rgba(10,21,48,0.12)];
+  }
+  .kicker {
+    @apply text-xs font-semibold uppercase tracking-[0.22em];
+  }
+  .icon-badge {
+    @apply flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-navy text-gold;
   }
 
   /* Speckled navy surface, echoing the business card texture */
@@ -104,6 +117,9 @@
   }
   .post-body h3 {
     @apply mt-8 text-2xl leading-snug;
+  }
+  .post-body img {
+    @apply mt-8 w-full rounded-md object-cover;
   }
   .post-body ul {
     @apply list-disc pl-6;

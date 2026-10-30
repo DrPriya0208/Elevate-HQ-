@@ -23,7 +23,7 @@ export default function Header() {
     <header className="sticky top-0 z-40 bg-navy text-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
-          <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={56} height={56} className="h-14 w-14" />
+          <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={56} height={56} className="h-14 w-14" priority />
           <span className="font-serif text-2xl font-bold tracking-wide">
             ElevateH
             <span className="relative inline-block">
@@ -51,7 +51,7 @@ export default function Header() {
               key={l.href}
               href={l.href}
               aria-current={isActive(l.href) ? "page" : undefined}
-              className={`relative pb-1 font-playfair text-[1.05rem] hover:text-gold ${isActive(l.href) ? "font-semibold text-gold" : "text-white/85"}`}
+              className={`relative pb-1 font-sans text-base font-semibold hover:text-gold ${isActive(l.href) ? "text-gold" : "text-white/90"}`}
             >
               {l.label}
               {isActive(l.href) && (
@@ -100,7 +100,7 @@ export default function Header() {
                     <Link
                       href={l.href}
                       aria-current={isActive(l.href) ? "page" : undefined}
-                      className={`block py-3.5 font-playfair text-lg ${isActive(l.href) ? "font-semibold text-gold" : ""}`}
+                      className={`block py-3.5 font-sans text-lg font-semibold ${isActive(l.href) ? "text-gold" : ""}`}
                       onClick={() => setOpen(false)}
                     >
                       {l.label}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import HeroGlow from "@/components/HeroGlow";
+import PageHero from "@/components/PageHero";
+import SectionHeading from "@/components/SectionHeading";
 import Stars from "@/components/Stars";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { reviewsCopy } from "@/lib/content";
@@ -49,50 +50,51 @@ export default async function ReviewsPage({ searchParams }: Props) {
 
   return (
     <>
-      <section className="speckle relative overflow-hidden bg-navy text-white">
-        <HeroGlow />
-        <div className="relative mx-auto max-w-6xl px-6 py-16 md:py-20">
-          <FadeIn>
-            <h1 className="font-serif text-4xl text-white sm:text-5xl">Share your feedback</h1>
-            <p className="mt-4 max-w-xl text-lg text-white/80">{reviewsCopy.intro}</p>
-            {summary && (
-              <p className="mt-6 flex items-center gap-2 text-white/90">
+      <PageHero kicker="Reviews" title="Share your feedback." intro={reviewsCopy.intro}>
+        {summary && (
+          <FadeIn delay={0.25}>
+            <div className="mt-8 inline-flex items-center gap-4 rounded-full border border-white/15 bg-white/5 px-5 py-3">
+              <span className="font-serif text-3xl font-bold text-gold">{summary.average.toFixed(1)}</span>
+              <span className="flex flex-col gap-1">
                 <Stars rating={Math.round(summary.average)} />
-                <span>
-                  {summary.average.toFixed(1)} average from {summary.count} review{summary.count === 1 ? "" : "s"}
+                <span className="text-sm text-white/75">
+                  from {summary.count} review{summary.count === 1 ? "" : "s"}
                 </span>
-              </p>
-            )}
+              </span>
+            </div>
+          </FadeIn>
+        )}
+      </PageHero>
+
+      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <FadeIn className="card p-8">
+            <p className="kicker text-brass">Leave feedback</p>
+            <h2 className="mt-3 font-serif text-2xl">How was your experience?</h2>
+            <div className="mt-6">
+              <ReviewForm />
+            </div>
           </FadeIn>
         </div>
-      </section>
 
-      <div className="mx-auto max-w-3xl px-6 py-16">
-        <FadeIn>
-          <h2 className="font-serif text-2xl">Leave feedback</h2>
-          <div className="mt-6">
-            <ReviewForm />
-          </div>
-        </FadeIn>
-      </div>
-
-      <div className="bg-white">
-        <div className="mx-auto max-w-3xl px-6 py-16">
-          <FadeIn><h2 className="font-serif text-2xl">What people have said</h2></FadeIn>
+        <div>
+          <SectionHeading kicker="Testimonials" title="What people have said." />
 
           {failed ? (
-            <p className="mt-6 text-slate">Reviews could not be loaded right now. Please try again in a few minutes.</p>
+            <p className="card mt-8 p-6 text-slate">Reviews could not be loaded right now. Please try again in a few minutes.</p>
           ) : reviews.length === 0 ? (
-            <p className="mt-6 text-slate">{reviewsCopy.emptyState}</p>
+            <p className="card mt-8 p-6 text-slate">{reviewsCopy.emptyState}</p>
           ) : (
             <>
-              <Stagger as="ul" className="mt-6 space-y-10">
+              <Stagger as="ul" className="mt-10 space-y-5">
                 {reviews.map((r) => (
-                  <StaggerItem key={r.id}>
+                  <StaggerItem key={r.id} className="card relative p-7">
+                    <span aria-hidden className="absolute right-6 top-3 font-serif text-7xl leading-none text-gold/40">“</span>
                     <Stars rating={r.rating} />
-                    <p className="mt-3 whitespace-pre-line font-serif text-xl leading-relaxed">{r.message}</p>
-                    <p className="mt-3 text-sm text-slate">
-                      {r.name} · {formatMonthYear(r.approvedAt)}
+                    <p className="mt-4 whitespace-pre-line font-serif text-lg leading-relaxed">{r.message}</p>
+                    <p className="mt-5 text-sm font-semibold text-navy">
+                      {r.name}
+                      <span className="font-normal text-slate"> · {formatMonthYear(r.approvedAt)}</span>
                     </p>
                   </StaggerItem>
                 ))}
@@ -101,13 +103,13 @@ export default async function ReviewsPage({ searchParams }: Props) {
               {totalPages > 1 && (
                 <nav aria-label="Reviews pagination" className="mt-10 flex items-center justify-between">
                   {page > 1 ? (
-                    <Link href={`/reviews?page=${page - 1}`} className="font-semibold underline decoration-brass underline-offset-4 hover:decoration-navy">
+                    <Link href={`/reviews?page=${page - 1}`} className="btn btn-navy !px-5 !py-2 text-sm">
                       ← Newer
                     </Link>
                   ) : <span />}
                   <span className="text-sm text-slate">Page {page} of {totalPages}</span>
                   {page < totalPages ? (
-                    <Link href={`/reviews?page=${page + 1}`} className="font-semibold underline decoration-brass underline-offset-4 hover:decoration-navy">
+                    <Link href={`/reviews?page=${page + 1}`} className="btn btn-navy !px-5 !py-2 text-sm">
                       Older →
                     </Link>
                   ) : <span />}

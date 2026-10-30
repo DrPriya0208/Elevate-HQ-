@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import type { FormState } from "@/lib/types";
 import Editor from "./Editor";
+import { uploadImage } from "./uploadImage";
 
 type PostValues = {
   title: string;
@@ -23,6 +24,27 @@ type Props = {
 export default function PostForm({ action, post, submitLabel }: Props) {
   const [state, formAction, pending] = useActionState<FormState, FormData>(action, undefined);
   const [content, setContent] = useState(post?.content ?? "");
+  const [coverImage, setCoverImage] = useState(post?.coverImage ?? "");
+  const [coverUploading, setCoverUploading] = useState(false);
+  const [coverError, setCoverError] = useState<string | null>(null);
+  const coverFileRef = useRef<HTMLInputElement>(null);
+
+  async function handleCoverFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    setCoverError(null);
+    setCoverUploading(true);
+    try {
+      const url = await uploadImage(file);
+      setCoverImage(url);
+    } catch (err) {
+      setCoverError(err instanceof Error ? err.message : "Could not upload the image.");
+    } finally {
+      setCoverUploading(false);
+    }
+  }
 
   return (
     <form action={formAction} className="space-y-6">
@@ -62,15 +84,41 @@ export default function PostForm({ action, post, submitLabel }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="coverImage" className="label">Cover image link (optional)</label>
+          <label htmlFor="coverImage" className="label">Cover image (optional)</label>
+          <div className="flex flex-wrap items-center gap-3">
+            {coverImage && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={coverImage} alt="" className="h-16 w-24 rounded-md object-cover" />
+            )}
+            <button
+              type="button"
+              onClick={() => coverFileRef.current?.click()}
+              disabled={coverUploading}
+              className="btn btn-navy !px-4 !py-2 text-sm disabled:opacity-60"
+            >
+              {coverUploading ? "Uploading…" : coverImage ? "Replace photo" : "Upload photo"}
+            </button>
+            {coverImage && (
+              <button
+                type="button"
+                onClick={() => setCoverImage("")}
+                className="text-sm font-semibold text-slate underline underline-offset-4 hover:text-navy"
+              >
+                Remove
+              </button>
+            )}
+            <input ref={coverFileRef} type="file" accept="image/*" className="hidden" onChange={handleCoverFile} />
+          </div>
           <input
             id="coverImage"
             name="coverImage"
             type="url"
-            defaultValue={post?.coverImage}
-            className="field"
-            placeholder="https://…"
+            value={coverImage}
+            onChange={(e) => setCoverImage(e.target.value)}
+            className="field mt-2"
+            placeholder="or paste an image link (https://…)"
           />
+          {coverError && <p className="mt-1 text-sm text-red-800">{coverError}</p>}
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Open_Sans, Playfair_Display } from "next/font/google";
+import { Bricolage_Grotesque, Open_Sans, Playfair_Display, Inter } from "next/font/google";
 import { MotionConfig } from "framer-motion";
 import ScrollProgress from "@/components/ScrollProgress";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -24,6 +24,12 @@ const playfair = Playfair_Display({
   display: "swap",
   weight: ["500", "600"],
 });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+  weight: ["300", "400", "500"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -42,7 +48,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${serif.variable} ${sans.variable} ${playfair.variable} ${inter.variable}`}>
       <body>
         <ScrollProgress />
         <SmoothScroll />

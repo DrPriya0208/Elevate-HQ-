@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { del } from "@vercel/blob";
 import { AuthError } from "next-auth";
 import { z } from "zod";
 import { auth, signIn } from "@/auth";
@@ -15,6 +16,16 @@ import type { ContactState, FormState, ReviewState } from "@/lib/types";
 async function requireAdmin() {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
+}
+
+async function deleteBlobIfOwned(url?: string | null) {
+  if (!url || !process.env.BLOB_READ_WRITE_TOKEN) return;
+  if (!/\.public\.blob\.vercel-storage\.com\//.test(url)) return;
+  try {
+    await del(url);
+  } catch (err) {
+    console.error("Could not delete blob", err);
+  }
 }
 
 function revalidateBlog(slug?: string) {
@@ -117,6 +128,10 @@ export async function updatePost(id: string, _prev: FormState, formData: FormDat
   const published = formData.get("published") === "on";
   const slug = await uniqueSlug(data.slug || data.title, id);
 
+  if (existing.coverImage && existing.coverImage !== (data.coverImage || null)) {
+    await deleteBlobIfOwned(existing.coverImage);
+  }
+
   await prisma.post.update({
     where: { id },
     data: {
@@ -137,9 +152,10 @@ export async function updatePost(id: string, _prev: FormState, formData: FormDat
 
 export async function deletePost(id: string): Promise<void> {
   await requireAdmin();
-  const existing = await prisma.post.findUnique({ where: { id }, select: { slug: true } });
+  const existing = await prisma.post.findUnique({ where: { id }, select: { slug: true, coverImage: true } });
   if (!existing) return;
   await prisma.post.delete({ where: { id } });
+  await deleteBlobIfOwned(existing.coverImage);
   revalidateBlog(existing.slug);
   revalidatePath("/admin");
 }

@@ -10,7 +10,7 @@ export const site = {
   email: "Priyadarshini@elevatehq.com",
   location: "Sholinganallur, Chennai",
   linkedin: "https://www.linkedin.com/in/priyadharshini-balaji-b549031a5/",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://elevatehq.in",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://elevatehqservices.com",
 };
 
 export type Service = {

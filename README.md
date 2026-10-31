@@ -42,14 +42,14 @@ npm run dev
 ## 3. Deploy (Vercel free tier)
 
 1. Push the repo to GitHub (commit the `prisma/migrations` folder).
-2. Import it in Vercel and add every variable from `.env` (set `NEXT_PUBLIC_SITE_URL` to `https://elevatehq.in`).
+2. Import it in Vercel and add every variable from `.env` (set `NEXT_PUBLIC_SITE_URL` to `https://elevatehqservices.com`).
 3. Set the **Build Command** to `npx prisma migrate deploy && next build`.
-4. Add the domain `elevatehq.in` in Vercel and follow the DNS instructions.
+4. Add the domain `elevatehqservices.com` in Vercel, then add the DNS records Vercel shows in Cloudflare (set them to "DNS only", grey cloud).
 
 ## 4. Before launch
 
 - Replace the placeholder services, FAQ answers, and `qualifications` in `lib/content.ts`.
-- Contact email: Resend's test sender only delivers to your own Resend account email. Verify `elevatehq.in` in Resend, then set `CONTACT_FROM_EMAIL` (for example `ElevateHQ <hello@elevatehq.in>`) and `CONTACT_TO_EMAIL`.
+- Contact email: Resend's test sender only delivers to your own Resend account email. Verify `elevatehqservices.com` in Resend, then set `CONTACT_FROM_EMAIL` (for example `ElevateHQ <hello@elevatehqservices.com>`) and `CONTACT_TO_EMAIL`.
 - The business card prints `elevatehq.com`. Make sure the card, QR code, and email addresses match the domain you actually use.
 
 ## Not included yet

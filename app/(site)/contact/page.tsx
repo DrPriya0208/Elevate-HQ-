@@ -10,10 +10,23 @@ export const metadata: Metadata = {
   description: "Book a session or ask a question. ElevateHQ, Sholinganallur, Chennai.",
 };
 
+const [emailUser, emailDomain] = site.email.split("@");
+
 const methods = [
   { icon: "phone", label: "Call us", value: site.phone, href: site.phoneHref, external: false },
   { icon: "message", label: "WhatsApp", value: "Message us on WhatsApp", href: site.whatsapp, external: true },
-  { icon: "mail", label: "Email", value: site.email, href: `mailto:${site.email}`, external: false },
+  {
+    icon: "mail",
+    label: "Email",
+    value: (
+      <>
+        {emailUser}@<wbr />
+        {emailDomain}
+      </>
+    ),
+    href: `mailto:${site.email}`,
+    external: false,
+  },
 ];
 
 export default function ContactPage() {
@@ -37,7 +50,7 @@ export default function ContactPage() {
         <aside className="space-y-4">
           <Stagger as="ul" className="space-y-4">
             {methods.map((m) => (
-              <StaggerItem key={m.label}>
+              <StaggerItem key={m.href}>
                 <a
                   href={m.href}
                   {...(m.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -48,7 +61,7 @@ export default function ContactPage() {
                   </span>
                   <span className="min-w-0">
                     <span className="kicker block text-slate">{m.label}</span>
-                    <span className="mt-1 block break-all font-semibold text-navy">{m.value}</span>
+                    <span className="mt-1 block break-words font-semibold text-navy">{m.value}</span>
                   </span>
                 </a>
               </StaggerItem>

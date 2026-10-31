@@ -13,6 +13,16 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://elevatehqservices.com",
 };
 
+// Leave url empty until the profile exists; the icon shows but is not clickable.
+export const socials: { name: string; icon: string; url: string }[] = [
+  { name: "LinkedIn", icon: "linkedin", url: site.linkedin },
+  { name: "Instagram", icon: "instagram", url: "" },
+  { name: "Facebook", icon: "facebook", url: "" },
+  { name: "YouTube", icon: "youtube", url: "" },
+  { name: "X", icon: "x", url: "" },
+  { name: "WhatsApp", icon: "whatsapp", url: site.whatsapp },
+];
+
 export type Service = {
   slug: string;
   title: string;

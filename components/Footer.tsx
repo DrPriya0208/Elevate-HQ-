@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@/components/icons";
-import { site } from "@/lib/content";
+import { site, socials } from "@/lib/content";
 
 const pages = [
   { href: "/about", label: "About" },
@@ -49,27 +49,46 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href={`mailto:${site.email}`} className="flex items-center gap-3 break-all transition-colors hover:text-gold">
+              <a href={`mailto:${site.email}`} className="flex items-center gap-3 break-words transition-colors hover:text-gold">
                 <Icon name="mail" className="h-4 w-4 shrink-0 text-gold" />
-                {site.email}
+                <span className="min-w-0">
+                  {site.email.split("@")[0]}@<wbr />
+                  {site.email.split("@")[1]}
+                </span>
               </a>
             </li>
             <li className="flex items-center gap-3">
               <Icon name="pin" className="h-4 w-4 shrink-0 text-gold" />
               {site.location}
             </li>
-            <li>
-              <a
-                href={site.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn profile, opens in a new tab"
-                className="flex items-center gap-3 transition-colors hover:text-gold"
-              >
-                <Icon name="person" className="h-4 w-4 shrink-0 text-gold" />
-                LinkedIn
-              </a>
-            </li>
+          </ul>
+
+          <p className="kicker mt-8 text-gold">Follow us</p>
+          <ul className="mt-4 flex flex-wrap gap-3">
+            {socials.map((s) => (
+              <li key={s.name}>
+                {s.url ? (
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${s.name}, opens in a new tab`}
+                    title={s.name}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/80 transition-colors duration-300 hover:border-gold hover:bg-gold hover:text-navy"
+                  >
+                    <Icon name={s.icon} className="h-[18px] w-[18px]" />
+                  </a>
+                ) : (
+                  <span
+                    title={`${s.name} (coming soon)`}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/80"
+                  >
+                    <Icon name={s.icon} className="h-[18px] w-[18px]" />
+                    <span className="sr-only">{s.name} (coming soon)</span>
+                  </span>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
       </div>

@@ -65,6 +65,15 @@ const paths: Record<string, ReactNode> = {
       <path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" />
     </>
   ),
+  eye: (
+    <>
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  "eye-off": (
+    <path d="M3 3l18 18M10.6 5.1A10.4 10.4 0 0112 5c6.4 0 10 7 10 7a17.6 17.6 0 01-3.2 4.2M6.6 6.6C3.9 8.4 2 12 2 12s3.6 7 10 7a9.7 9.7 0 005.4-1.6M9.9 9.9a3 3 0 004.2 4.2" />
+  ),
 };
 
 export function Icon({ name, className = "h-6 w-6" }: { name: string; className?: string }) {

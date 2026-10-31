@@ -7,7 +7,7 @@ import Stars from "@/components/Stars";
 import { Icon } from "@/components/icons";
 import MindOfLightHero from "@/components/mind-of-light/MindOfLightHero";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
-import { clients, faqs, services, steps } from "@/lib/content";
+import { faqs, home, howWeWork, services, whoWeServe, whyChoose } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import { formatDate, formatMonthYear } from "@/lib/text";
 
@@ -40,12 +40,10 @@ async function getFeaturedReviews() {
 }
 
 const stats = [
-  { value: "14", unit: "years", label: "Combined experience in psychology, counselling and training" },
-  { value: "10+", unit: "years", label: "Specialized in workplace behavior and seafarer wellbeing" },
-  { value: "6", unit: "areas", label: "From PoSH compliance to private counselling" },
+  { value: "14", unit: "years", label: "Combined experience in psychology, counselling, assessments and training" },
+  { value: "10+", unit: "years", label: "Specialised in workplace behaviour and seafarer mental health" },
+  { value: "6", unit: "services", label: "From counselling and assessments to PoSH and maritime psychology" },
 ];
-
-const clientIcons = ["building", "ship", "school", "briefcase", "person"];
 
 export default async function HomePage() {
   const [posts, reviews] = await Promise.all([getLatestPosts(), getFeaturedReviews()]);
@@ -54,16 +52,11 @@ export default async function HomePage() {
     <>
       {/* Hero: "Mind of Light" - a WebGL badge animation (galaxy -> vein brain -> logo) */}
       <MindOfLightHero>
-        <h1 className="font-serif text-4xl leading-[1.1] text-white lg:text-[3.5rem]">
-          Psychology for people and teams.
-        </h1>
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
-          ElevateHQ offers counselling, psychometric assessment, PoSH compliance and leadership training, led by
-          an organizational and maritime psychologist with 14 years of combined experience.
-        </p>
+        <h1 className="font-serif text-4xl leading-[1.1] text-white lg:text-[3.5rem]">{home.title}</h1>
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">{home.intro}</p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/contact" className="btn btn-gold">Book a session</Link>
-          <Link href="/services" className="btn btn-outline-light">See our services</Link>
+          <Link href="/services" className="btn btn-gold">Explore our services</Link>
+          <Link href="/contact" className="btn btn-outline-light">Book a session</Link>
         </div>
       </MindOfLightHero>
 
@@ -82,85 +75,127 @@ export default async function HomePage() {
         </Stagger>
       </section>
 
-      {/* Services */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <SectionHeading
-            kicker="What we do"
-            title="Support for organizations, and for the individuals within them."
-          />
-          <FadeIn>
-            <Link href="/services" className="btn btn-navy shrink-0">View all services</Link>
+      {/* Welcome */}
+      <section className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-2 md:items-start">
+        <SectionHeading kicker="Welcome" title={home.practiceTitle} intro={home.welcome} />
+        <div>
+          <FadeIn delay={0.1} className="space-y-5 text-lg leading-relaxed text-navy/85">
+            {home.practice.map((p) => (
+              <p key={p}>{p}</p>
+            ))}
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            <figure className="card mt-8 p-7">
+              <p className="kicker text-brass">Our purpose</p>
+              <blockquote className="mt-3 font-serif text-xl font-bold leading-snug text-navy">{home.purpose}</blockquote>
+            </figure>
           </FadeIn>
         </div>
-        <Stagger as="ul" className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s) => (
-            <StaggerItem key={s.slug} className="h-full">
-              <Link href={`/services#${s.slug}`} className="card card-hover group flex h-full flex-col p-7">
-                <div className="flex items-center justify-between">
+      </section>
+
+      {/* Services at a glance */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-6 py-24">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <SectionHeading kicker="What we do" title="Our core services at a glance." />
+            <FadeIn>
+              <Link href="/services" className="btn btn-navy shrink-0">Explore our services</Link>
+            </FadeIn>
+          </div>
+          <Stagger as="ul" className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((s) => (
+              <StaggerItem key={s.slug} className="h-full">
+                <Link href={`/services#${s.slug}`} className="card card-hover group flex h-full flex-col p-7">
                   <span className="icon-badge transition-colors duration-300 group-hover:bg-gold group-hover:text-navy">
                     <Icon name={s.slug} />
                   </span>
-                  <span className="rounded-full bg-mist px-3 py-1 text-xs font-semibold text-slate">
-                    {s.audience === "organizations" ? "Organizations" : "Individuals"}
+                  <p className="kicker mt-6 text-slate">{s.audience}</p>
+                  <h3 className="mt-2 font-serif text-xl leading-snug">{s.title}</h3>
+                  <p className="mt-3 leading-relaxed text-navy/80">{s.summary}</p>
+                  <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-semibold text-brass">
+                    Learn more
+                    <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                   </span>
-                </div>
-                <h3 className="mt-6 font-serif text-xl leading-snug">{s.title}</h3>
-                <p className="mt-3 line-clamp-3 leading-relaxed text-navy/80">{s.summary}</p>
-                <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-semibold text-brass">
-                  Learn more
-                  <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </Link>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
+      {/* Who we serve */}
+      <section className="speckle relative overflow-hidden bg-navy text-white">
+        <div className="mx-auto max-w-6xl px-6 py-24">
+          <SectionHeading
+            kicker="Who we serve"
+            title="From a first-year student to a seasoned CEO."
+            intro="Whatever your age, role or industry, there is a place for you here."
+            dark
+          />
+          <Stagger as="ul" className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {whoWeServe.map((w) => (
+              <StaggerItem
+                key={w.title}
+                className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-gold/50 hover:bg-white/[0.07]"
+              >
+                <span className="text-gold">
+                  <Icon name={w.icon} className="h-7 w-7" />
                 </span>
-              </Link>
+                <span className="font-serif text-base font-bold leading-snug text-white">{w.title}</span>
+                <span className="text-sm leading-relaxed text-white/70">{w.body}</span>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
+      {/* Why choose */}
+      <section className="mx-auto max-w-6xl px-6 py-24">
+        <SectionHeading kicker="Why choose Elevate HQ" title="Experience, ethics and real-world results." />
+        <Stagger as="ul" className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {whyChoose.map((w) => (
+            <StaggerItem key={w.text} className="card flex items-start gap-4 p-6">
+              <span className="icon-badge !h-11 !w-11">
+                <Icon name={w.icon} className="h-5 w-5" />
+              </span>
+              <span className="pt-1 leading-relaxed text-navy/85">{w.text}</span>
             </StaggerItem>
           ))}
         </Stagger>
       </section>
 
-      {/* Who we work with */}
-      <section className="speckle relative overflow-hidden bg-navy text-white">
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <SectionHeading kicker="Who we work with" title="Organizations across sectors, and individuals too." dark />
-          <Stagger as="ul" className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-5">
-            {clients.map((c, i) => (
-              <StaggerItem
-                key={c}
-                className="flex flex-col items-start gap-4 rounded-xl border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-gold/50 hover:bg-white/[0.07]"
-              >
-                <span className="text-gold">
-                  <Icon name={clientIcons[i] ?? "person"} className="h-7 w-7" />
-                </span>
-                <span className="font-serif text-lg leading-snug text-white">{c}</span>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
-      </section>
-
-      {/* How it works: a real sequence, so numbered */}
+      {/* How we work: a real sequence, so numbered */}
       <section className="bg-white">
         <div className="mx-auto max-w-6xl px-6 py-24">
-          <SectionHeading kicker="How it works" title="Three simple steps to get started." center />
+          <SectionHeading kicker="How we work" title="Five steps, built around you." center />
           <div className="relative mt-16">
-          <span aria-hidden className="absolute left-[16%] right-[16%] top-8 hidden h-px bg-gradient-to-r from-gold/0 via-gold/60 to-gold/0 md:block" />
-          <Stagger as="ol" className="relative grid gap-6 md:grid-cols-3">
-            {steps.map((step, i) => (
-              <StaggerItem key={step.title} className="relative flex flex-col items-center px-4 text-center">
-                <span className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-gold bg-white font-serif text-2xl font-bold text-navy shadow-[0_0_0_8px_white]">
-                  {i + 1}
-                </span>
-                <h3 className="mt-6 font-serif text-xl">{step.title}</h3>
-                <p className="mt-3 leading-relaxed text-navy/80">{step.body}</p>
-              </StaggerItem>
-            ))}
-          </Stagger>
+            <span aria-hidden className="absolute left-[10%] right-[10%] top-8 hidden h-px bg-gradient-to-r from-gold/0 via-gold/60 to-gold/0 lg:block" />
+            <Stagger as="ol" className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+              {howWeWork.map((step, i) => (
+                <StaggerItem key={step.title} className="relative flex flex-col items-center px-2 text-center">
+                  <span className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-gold bg-white font-serif text-2xl font-bold text-navy shadow-[0_0_0_8px_white]">
+                    {i + 1}
+                  </span>
+                  <h3 className="mt-6 font-serif text-xl">{step.title}</h3>
+                  <p className="mt-2 leading-relaxed text-navy/80">{step.body}</p>
+                </StaggerItem>
+              ))}
+            </Stagger>
           </div>
         </div>
       </section>
 
+      {/* Promise */}
+      <section className="mx-auto max-w-4xl px-6 py-24 text-center">
+        <FadeIn>
+          <p className="kicker text-brass">Our promise</p>
+          <p className="mt-5 font-serif text-3xl font-bold leading-snug text-navy sm:text-4xl">“{home.promise}”</p>
+        </FadeIn>
+      </section>
+
       {/* Latest posts */}
       {posts.length > 0 && (
-        <section className="mx-auto max-w-6xl px-6 py-24">
+        <section className="mx-auto max-w-6xl px-6 pb-24">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading kicker="From the blog" title="Notes on minds, work and wellbeing." />
             <FadeIn>
@@ -203,7 +238,7 @@ export default async function HomePage() {
 
       {/* What clients say */}
       {reviews.length > 0 && (
-        <section className="bg-mist">
+        <section className="bg-white">
           <div className="mx-auto max-w-6xl px-6 py-24">
             <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
               <SectionHeading kicker="Testimonials" title="What clients say." />
@@ -234,11 +269,11 @@ export default async function HomePage() {
           <div className="md:sticky md:top-28 md:self-start">
             <SectionHeading
               kicker="FAQ"
-              title="Questions people ask first."
-              intro="Something else on your mind? Message us and we will answer it directly."
+              title="Frequently asked questions."
+              intro="Something else on your mind? Book a free introductory call and we will suggest the next step."
             />
             <FadeIn delay={0.15}>
-              <Link href="/contact" className="btn btn-gold mt-8">Ask a question</Link>
+              <Link href="/contact" className="btn btn-gold mt-8">Book a free call</Link>
             </FadeIn>
           </div>
           <FadeIn delay={0.1} className="divide-y divide-line border-y border-line">

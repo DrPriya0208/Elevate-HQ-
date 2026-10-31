@@ -4,18 +4,10 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { submitEnquiry } from "@/lib/actions";
 import { motion, tapScale } from "@/components/motion";
+import { enquiryTopics } from "@/lib/content";
 import type { ContactState } from "@/lib/types";
 
-const interests = [
-  "PoSH compliance or training",
-  "Organizational psychology or leadership training",
-  "Maritime psychology",
-  "Psychometric assessment",
-  "Counselling (private session)",
-  "Something else",
-];
-
-export default function ContactForm() {
+export default function ContactForm({ defaultTopic }: { defaultTopic?: string }) {
   const [state, action, pending] = useActionState<ContactState, FormData>(submitEnquiry, undefined);
 
   if (state?.ok) {
@@ -61,8 +53,13 @@ export default function ContactForm() {
 
       <div>
         <label htmlFor="interest" className="label">What would you like help with?</label>
-        <select id="interest" name="interest" className="field" defaultValue={interests[0]}>
-          {interests.map((i) => (
+        <select
+          id="interest"
+          name="interest"
+          className="field"
+          defaultValue={defaultTopic && enquiryTopics.includes(defaultTopic) ? defaultTopic : enquiryTopics[0]}
+        >
+          {enquiryTopics.map((i) => (
             <option key={i} value={i}>{i}</option>
           ))}
         </select>

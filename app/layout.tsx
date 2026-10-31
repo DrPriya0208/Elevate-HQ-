@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     template: `%s | ${site.name}`,
   },
   description:
-    "Counselling, psychometric assessment, PoSH compliance and leadership training for organizations and individuals, based in Sholinganallur, Chennai.",
+    "Psychology, counselling, psychometric assessments, training and PoSH compliance for people at every stage of life and work, and for organisations of every size. Based in Sholinganallur, Chennai.",
   openGraph: {
     title: `${site.name} | ${site.tagline}`,
     siteName: site.name,

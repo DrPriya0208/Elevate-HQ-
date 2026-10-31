@@ -23,186 +23,354 @@ export const socials: { name: string; icon: string; url: string }[] = [
   { name: "WhatsApp", icon: "whatsapp", url: site.whatsapp },
 ];
 
+/* ---------- Home ---------- */
+
+export const home = {
+  title: "Psychology for every stage of life and work.",
+  intro:
+    "From a first-year student to a seasoned CEO, from a homemaker to a seafarer far from shore, we offer psychology, counselling, assessments and training that help individuals thrive and organisations perform.",
+  welcome:
+    "Elevate HQ Psychology and Development Services is a purpose-led practice for people at every stage of life and work.",
+  purpose: "Healthier minds, wholesome lives and workplaces where every person feels safe, valued and inspired to excel.",
+  practiceTitle: "A practice for every person and every workplace",
+  practice: [
+    "Great lives and great workplaces are built by people who feel understood, capable and supported. Yet stress, conflict, burnout, uncertainty and unclear leadership quietly hold many people back, whatever their age, role or industry.",
+    "Elevate HQ brings together psychology, counselling, scientific assessment and practical training to address these challenges at the root, and to help you move from coping to thriving.",
+  ],
+  promise:
+    "We go beyond compliance to conscious culture-building: not tick-box sessions, but real and lasting change.",
+};
+
+export const whoWeServe: { icon: string; title: string; body: string }[] = [
+  { icon: "child", title: "Children and teenagers", body: "Age-appropriate guidance, confidence-building and life skills, in partnership with parents and schools." },
+  { icon: "school", title: "Students and young adults", body: "Counselling, career clarity, exam and campus-life support, and preparation for the world of work." },
+  { icon: "briefcase", title: "Working professionals and freshers", body: "Support for stress, career transitions, communication and workplace relationships." },
+  { icon: "home", title: "Homemakers, parents, couples and families", body: "A confidential space for family concerns, parenting, relationships and personal wellbeing." },
+  { icon: "sun", title: "Mature adults and retirees", body: "Support through life transitions, change and emotional wellbeing." },
+  { icon: "compass", title: "Leaders, entrepreneurs and business owners", body: "Leadership profiling, coaching conversations and culture-building." },
+  { icon: "building", title: "Startups, SMEs and corporates", body: "Training, assessments, PoSH compliance and wellbeing programmes for teams of every size." },
+  { icon: "ship", title: "Seafarers, shipping and maritime companies", body: "Psychological support for crew, families and shore staff." },
+  { icon: "book", title: "Schools, colleges and universities", body: "Student programmes, staff development and campus-to-corporate readiness sessions." },
+  { icon: "hands", title: "NGOs, healthcare and service-sector organisations", body: "Wellbeing, conduct and capability programmes for people-facing teams." },
+];
+
+export const whyChoose: { icon: string; text: string }[] = [
+  { icon: "award", text: "14 years of combined experience in psychology, counselling, assessments and training." },
+  { icon: "ship", text: "Specialist in workplace and maritime psychology. Few practitioners offer both." },
+  { icon: "posh", text: "Practising Presiding Officer (Chairperson) of Internal Committees under the PoSH Act." },
+  { icon: "psychometric", text: "Evidence-based and ethical. Every method is grounded in behavioural science." },
+  { icon: "lock", text: "Inclusive and confidential. Respect for every background, culture and role, and your trust is never taken lightly." },
+  { icon: "organizational", text: "Business-aligned. We connect people development to real organisational goals." },
+];
+
+export const howWeWork: { title: string; body: string }[] = [
+  { title: "Listen", body: "Understand your needs, goals and challenges." },
+  { title: "Assess", body: "Use the right tools and observations." },
+  { title: "Design", body: "Create a clear, customised plan." },
+  { title: "Deliver", body: "Counselling, training or consulting with care." },
+  { title: "Review", body: "Measure progress and keep improving." },
+];
+
+export const whoChoosesUs = [
+  "Students, parents, families and individuals of all ages",
+  "Working professionals and leaders",
+  "Corporates, startups and service companies",
+  "Shipping and maritime organisations",
+  "Schools, colleges and institutions",
+  "NGOs, healthcare and community organisations",
+];
+
+/* ---------- Services ---------- */
+
 export type Service = {
   slug: string;
   title: string;
+  /** Short line for cards and the "at a glance" list. */
   summary: string;
+  audience: string;
+  intro: string[];
+  listTitle: string;
   details: string[];
-  audience: "organizations" | "individuals";
+  steps?: { title: string; items: string[] };
+  notes?: { label: string; text: string }[];
+  cta: string;
+  /** Matches an option in enquiryTopics, so the contact form can be pre-filled. */
+  topic: string;
 };
 
 export const services: Service[] = [
   {
-    slug: "posh",
-    title: "PoSH compliance and training",
-    summary:
-      "Awareness sessions, Internal Committee training, and end-to-end compliance from committee formation to annual reporting, with trauma-informed inquiry guidance.",
-    details: [
-      "PoSH awareness and employee sensitization programs",
-      "Internal Committee training and capacity building",
-      "End-to-end compliance, from committee formation to annual reporting",
-      "Trauma-informed, unbiased inquiry guidance",
-      "Notices, circulars and IC meeting minutes",
-      "Policy drafting in collaboration with your legal advisors",
-      "Manager sensitization on responsibilities and preventive practices",
+    slug: "counselling",
+    title: "Counselling and Therapy",
+    summary: "A safe space to talk, heal and grow.",
+    audience: "For individuals and families",
+    intro: [
+      "Life and work can feel heavy at any age. Our counselling sessions offer a private, judgement-free space to understand your emotions, build healthy coping skills and move forward with clarity.",
+      "We work with children and teenagers (with parent or guardian involvement), students, adults, couples, families and senior members of the community.",
     ],
-    audience: "organizations",
-  },
-  {
-    slug: "organizational",
-    title: "Organizational psychology",
-    summary:
-      "Workplace behavior analysis, leadership competency mapping, emotional intelligence at work, and support for stress, burnout and conflict.",
+    listTitle: "We support you with",
     details: [
-      "Workplace behavior analysis and intervention",
-      "Leadership behavior and competency mapping",
-      "Emotional intelligence at work",
-      "Stress, burnout and mental health interventions",
-      "Conflict resolution and behavioral risk management",
+      "Stress, anxiety and overwhelm",
+      "Burnout and work-life balance",
+      "Anger and emotional regulation",
+      "Relationship, parenting and family concerns",
+      "Workplace conflict and career confusion",
+      "Trauma-informed emotional support",
+      "Confidence and personal growth",
+      "Student, exam and peer-related stress",
+      "Life transitions, loss and change",
     ],
-    audience: "organizations",
-  },
-  {
-    slug: "maritime",
-    title: "Maritime psychology",
-    summary: "Psychological support and training for seafarers and shipping companies, including seafarer mental health.",
-    details: [
-      "Seafarer mental health",
-      "Psychosocial support for seafarers",
-      "Training delivered by a certified maritime trainer",
-    ],
-    audience: "organizations",
+    steps: {
+      title: "How it works",
+      items: [
+        "Book a free introductory call or send an enquiry.",
+        "Meet your counsellor for a first session.",
+        "Build a simple plan together.",
+        "Grow at your own pace, online or in person.",
+      ],
+    },
+    notes: [{ label: "Your privacy matters", text: "Every session is strictly confidential." }],
+    cta: "Book a session",
+    topic: "Counselling (individuals and families)",
   },
   {
     slug: "psychometric",
-    title: "Psychometric assessment",
-    summary:
-      "Leadership, emotional intelligence and behavioral assessments, with personality and competency profiling and developmental feedback.",
-    details: [
-      "Psychometric testing and analysis across leadership, EQ and behavioral tools",
-      "Personality and competency assessments",
-      "Interpretation and developmental feedback",
-      "Behavioral profiling for leadership and managerial roles",
-      "Data-informed decisions for HR and leadership development",
+    title: "Psychometric Assessments",
+    summary: "Understand personality, leadership style and strengths with data, not guesswork.",
+    audience: "For individuals and organisations",
+    intro: [
+      "Important decisions about careers and teams deserve more than instinct. Our scientifically designed assessments offer clear, reliable insight into personality, emotional intelligence, leadership potential and behavioural competencies, for school students, graduates, professionals and senior leaders alike.",
     ],
-    audience: "organizations",
+    listTitle: "What we offer",
+    details: [
+      "Personality and competency assessments",
+      "Leadership and emotional intelligence profiling",
+      "Behavioural profiling for managerial roles",
+      "Career guidance for students and professionals",
+      "Detailed interpretation reports",
+      "One-to-one developmental feedback sessions",
+    ],
+    notes: [
+      { label: "Benefits for organisations", text: "Better hiring, smarter promotions, stronger succession planning and targeted training." },
+      { label: "Benefits for individuals", text: "Self-awareness, career clarity and a roadmap for growth." },
+    ],
+    cta: "Request an assessment",
+    topic: "Psychometric assessment",
   },
   {
     slug: "training",
-    title: "Leadership, behavioral and soft skills training",
-    summary:
-      "Leadership development, communication, team building, decision-making and life skills, taught through case-based and scenario-driven learning.",
-    details: [
-      "Leadership development programs",
-      "Soft skills and life skills training",
-      "Team building and communication skills",
-      "Behavioral interviewing skills",
-      "Decision-making and problem-solving",
-      "Experiential, case-based and scenario-driven learning",
+    title: "Leadership, Behavioural and Soft Skills Training",
+    summary: "Practical programmes people actually enjoy and use.",
+    audience: "For students, teams and leaders",
+    intro: [
+      "Our sessions are interactive, story-driven and rooted in real situations. They are designed to suit every audience, from school and college students to frontline teams, managers and the boardroom, with no jargon and no dull slides.",
     ],
-    audience: "organizations",
+    listTitle: "Popular programmes",
+    details: [
+      "Leadership Development Programme",
+      "Emotional Intelligence at Work",
+      "Communication and Team Building",
+      "Decision-Making and Problem-Solving",
+      "Conflict Management",
+      "Stress and Burnout Management",
+      "Behavioural Interviewing Skills (for hiring managers)",
+      "Life Skills and Soft Skills for students and freshers",
+      "Campus-to-corporate readiness sessions",
+      "Talks and workshops for schools, colleges and institutions",
+    ],
+    notes: [
+      { label: "Formats", text: "Workshops, talks, half-day or full-day programmes, multi-session series, online or on-site." },
+    ],
+    cta: "Plan a training programme",
+    topic: "Leadership, behavioural or soft skills training",
   },
   {
-    slug: "counselling",
-    title: "Counselling",
-    summary:
-      "Individual and workplace counselling for stress, conflict, work-life balance, anger, trauma and emotional wellbeing, using CBT and trauma-informed support. Private sessions are available.",
-    details: [
-      "Individual and workplace counselling",
-      "Cognitive behavioral therapy (CBT)",
-      "Trauma-informed support",
-      "Anger, stress and emotional regulation",
-      "Psychosocial support for employees, seafarers and private clients",
+    slug: "posh",
+    title: "PoSH Compliance and Training",
+    summary: "Complete support from Internal Committee setup to annual reporting.",
+    audience: "For organisations",
+    intro: [
+      "The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013 requires every eligible organisation to have a properly formed Internal Committee and to follow clear procedures. Non-compliance can lead to penalties and, more importantly, an unsafe culture.",
+      "Elevate HQ offers end-to-end PoSH support, from formation to annual reporting, for corporates, startups, shipping companies, educational institutions and service-sector organisations.",
     ],
-    audience: "individuals",
+    listTitle: "Our PoSH services",
+    details: [
+      "Internal Committee (IC) formation guidance",
+      "External Member / Presiding Officer support for the IC",
+      "Employee awareness and sensitisation programmes",
+      "IC member training and capacity building",
+      "Manager sensitisation on roles and responsibilities",
+      "Trauma-informed, unbiased inquiry guidance",
+      "Notices, circulars, documentation and IC meeting minutes",
+      "PoSH policy drafting (in collaboration with your legal advisors)",
+      "Annual report preparation",
+    ],
+    notes: [
+      {
+        label: "What makes us different",
+        text: "We do not just train on the law. As a practising Presiding Officer of Internal Committees, we bring real inquiry experience and a trauma-informed approach, protecting both the complainant and the process.",
+      },
+    ],
+    cta: "Get PoSH support",
+    topic: "PoSH compliance or training",
+  },
+  {
+    slug: "organizational",
+    title: "Organisational Psychology Consulting",
+    summary: "Culture, conflict, wellbeing and behaviour solutions.",
+    audience: "For organisations",
+    intro: [
+      "Strategy succeeds only when culture, communication and wellbeing are strong. We examine what is truly happening within your organisation, whether a start-up, an established corporate, an institution or a service team, and design practical, measurable solutions.",
+    ],
+    listTitle: "We help with",
+    details: [
+      "Workplace behaviour analysis and intervention",
+      "Leadership behaviour and competency mapping",
+      "Team conflict and group dynamics",
+      "Employee wellbeing and mental health programmes",
+      "Behavioural risk management",
+      "Building psychologically safe and inclusive workplaces",
+    ],
+    cta: "Talk to our consultant",
+    topic: "Organisational psychology consulting",
+  },
+  {
+    slug: "maritime",
+    title: "Maritime Psychology",
+    summary: "Mental health and behavioural support for seafarers and shipping companies.",
+    audience: "For seafarers and shipping companies",
+    intro: [
+      "Life at sea involves long separations, isolation, fatigue, pressure and high-risk work. Seafarers, their families and shipping companies need psychological support that genuinely understands this world.",
+    ],
+    listTitle: "Our maritime services",
+    details: [
+      "Counselling and psychosocial support for seafarers and families",
+      "Mental health awareness for crew and shore staff",
+      "Stress, fatigue and emotional regulation training",
+      "Behavioural assessments for maritime roles",
+      "Leadership and team-building for ship and shore teams",
+      "PoSH and workplace conduct training for shipping companies",
+    ],
+    cta: "Enquire about maritime services",
+    topic: "Maritime psychology",
   },
 ];
 
-export const clients = [
-  "Corporates",
-  "Shipping companies",
-  "Educational institutions",
-  "Service sectors",
-  "Individuals (private sessions)",
+export const enquiryTopics = [
+  ...services.map((s) => s.topic),
+  "Student, school or institution programme",
+  "Something else",
 ];
 
-export const founderProfile = {
-  headline: "Organizational & Maritime Psychologist · Psychometric Analyst · Counsellor",
-  experience:
-    "14 years of combined experience in psychology, counselling, psychometric assessment, training and behavioral sciences, including more than 10 years of specialized work in workplace behavior, leadership assessment, seafarer mental health and employee wellbeing.",
-  doctorate: "Final year of a doctorate in psychology (management and organizational behavior).",
+/* ---------- About ---------- */
+
+export const about = {
+  title: "Where compassion meets science.",
+  storyBelief:
+    "Elevate HQ was founded on one belief: every person deserves to feel mentally strong, and every workplace deserves to be safe, respectful and productive.",
+  story: [
+    "Our founder, Priyadharshini, is an Organisational and Maritime Psychologist, Psychometric Analyst, Counsellor and certified PoSH Trainer. With 14 years of combined experience and over a decade of specialised work in workplace behaviour, leadership assessment, seafarer mental health and employee wellbeing, she has supported people across corporates, shipping companies, educational institutions and service sectors.",
+    "She is also a Presiding Officer (Chairperson) of Internal Committees under PoSH, and is currently in the final year of her doctoral research in Psychology (Management and Organisational Behaviour). This blend of hands-on practice and academic depth shapes everything we do.",
+  ],
+  mission: "To make psychological wellbeing, healthy and safe workplaces accessible to every individual and organisation.",
+  vision:
+    "To be a trusted name in psychology and people development, where compassion meets science and every step creates measurable change.",
 };
 
-export const qualifications: string[] = [
-  "Master's degree in Psychology (specialization: Organizational Behaviour)",
-  "Doctorate in Psychology (PhD), management and organizational behavior: currently pursuing, final year",
+export const values: { letter: string; title: string; body: string }[] = [
+  { letter: "E", title: "Empathy", body: "We listen first, then guide." },
+  { letter: "L", title: "Learning and Growth", body: "Everyone can grow, at any age and any stage." },
+  { letter: "E", title: "Ethics and Confidentiality", body: "Integrity and privacy, always." },
+  { letter: "V", title: "Valuing Diversity", body: "Every voice, culture and sector, respected." },
+  { letter: "A", title: "Authenticity", body: "Honest conversations, without judgement." },
+  { letter: "T", title: "Trust", body: "Dependable, transparent, consistent." },
+  { letter: "E", title: "Excellence", body: "Practical delivery that creates real results." },
+  { letter: "H", title: "Humanity", body: "People come before processes." },
+  { letter: "Q", title: "Quotient", body: "Elevating the Human Quotient wherever people live, learn and work." },
 ];
 
-export const certifications: string[] = [
-  "Certified PoSH Trainer",
-  "Certified Maritime Trainer",
-  "Psychometric Testing and Analysis (multiple tools)",
-  "Life Skills and Soft Skills Trainer",
-  "Cognitive Behavioral Therapy (CBT)",
-  "Trauma-Informed Inquiry and Behavioral Interviewing",
-];
+export const founder = {
+  name: "Priyadharshini",
+  role: "Founder",
+  titles: [
+    "Organisational and Maritime Psychologist",
+    "Psychometric Analyst",
+    "Counsellor",
+    "Presiding Officer, IC-PoSH",
+    "Certified PoSH Trainer",
+    "Leadership and Soft Skills Trainer",
+    "Corporate Trainer",
+    "Speaker in schools and institutions",
+  ],
+  qualifications: [
+    "Master's in Psychology (Organisational Behaviour)",
+    "Doctorate in Psychology, Management and Organisational Behaviour (final year)",
+    "Certified PoSH Trainer",
+    "Certified Maritime Trainer",
+    "Psychometric Testing and Analysis (multiple tools)",
+    "Life Skills and Soft Skills Trainer",
+    "Cognitive Behavioural Therapy (CBT)",
+    "Trauma-Informed Inquiry and Behavioural Interviewing",
+  ],
+  alsoOffered:
+    "Individual and family counselling; training sessions and talks for schools and institutions; campus-to-corporate sessions and other tailored needs.",
+};
 
-// CONFIRM WITH CLIENT before enabling
-export const showPoshRole = false;
-export const poshRole = "Presiding Officer (Chairperson), Internal Committee (IC-PoSH)";
+export const coFounder = {
+  name: "Balaji",
+  role: "Co-Founder",
+  headline: "HR and Marketing Professional · 18 years of experience",
+  bio: [
+    "Balaji brings 18 years of experience in Human Resources and Marketing, with a deep understanding of how people, culture and communication drive an organisation's success.",
+    "As Co-Founder, he shapes the business side of Elevate HQ, building corporate partnerships and strengthening our brand so that every programme stays practical and relevant to real workplace needs.",
+    "Together with Priyadharshini, he brings balance: science and compassion on one side, strategy and reach on the other.",
+  ],
+  strengths: [
+    "HR and people management",
+    "Business development, marketing and brand building",
+    "Corporate partnerships",
+    "Employee engagement",
+  ],
+};
 
-export const steps = [
-  {
-    title: "Get in touch",
-    body: "Send a message, call, or use WhatsApp. Tell us briefly whether you are enquiring as an organization or an individual, and what you would like support with.",
-  },
-  {
-    title: "Have a first conversation",
-    body: "We talk through what is going on, what you want to achieve, and whether we are the right fit.",
-  },
-  {
-    title: "Begin the work",
-    body: "Together we agree the format, whether sessions, a training program, an assessment or a compliance program, and review progress as it continues.",
-  },
-];
+/* ---------- FAQ ---------- */
 
 export const faqs = [
   {
-    q: "Do you work with organizations as well as individuals?",
-    a: "Yes. We work with corporates, shipping companies, educational institutions and service-sector organizations, as well as offering private counselling sessions for individuals.",
+    q: "Who can approach Elevate HQ?",
+    a: "Anyone. We work with children and teenagers (with guardian involvement), students, adults, families, senior citizens, professionals, leaders, seafarers and organisations of every size and sector.",
   },
   {
-    q: "Do I need a diagnosis, or to be in crisis, to book?",
-    a: "No. Many people and organizations come because they feel stuck, want to prevent a problem, or simply want to understand themselves or their teams better.",
+    q: "Is counselling confidential?",
+    a: "Yes. Your sessions are private. Exceptions apply only where the law requires disclosure or where there is serious risk to life.",
   },
   {
-    q: "What happens in the first session?",
-    a: "We get to know each other. You share as much as you are comfortable with, we talk about your goals, and you can ask anything about how the work will proceed.",
+    q: "Do you offer online sessions?",
+    a: "Yes. Counselling and training are available online and in person.",
   },
   {
-    q: "Is what I share confidential?",
-    a: "Yes. What you share stays confidential, apart from the exceptions the law requires, such as a serious risk to someone's safety.",
+    q: "Who needs PoSH compliance?",
+    a: "Organisations with ten or more employees must have an Internal Committee under the PoSH Act. Smaller workplaces fall under the Local Committee system. We can guide you on what applies to you.",
   },
   {
-    q: "How do I enquire or book?",
-    a: "Use the contact page, call, or message on WhatsApp. We will reply to confirm the next step.",
+    q: "Can you customise training for our company or institution?",
+    a: "Absolutely. Every programme is tailored to your industry, audience level and goals.",
+  },
+  {
+    q: "How do I know which assessment is right for me or my team?",
+    a: "Tell us your purpose, such as hiring, promotion, career choice or development, and we will recommend the right tools.",
+  },
+  {
+    q: "Do you work with students and schools?",
+    a: "Yes. We offer counselling, career guidance, life skills programmes and talks for students, parents and institutions.",
+  },
+  {
+    q: "How do I begin?",
+    a: "Book a free introductory call. We will understand your needs and suggest the next step.",
   },
 ];
 
-export const principles = [
-  {
-    title: "Listening comes first",
-    body: "Before any technique or tool, we make sure we understand your situation, or your organization's situation, as you see it.",
-  },
-  {
-    title: "Practical, not abstract",
-    body: "Sessions, assessments and training end with something you can use, so progress shows up in ordinary days and real workplaces.",
-  },
-  {
-    title: "Confidentiality is protected",
-    body: "What you share is kept confidential within the limits the law sets.",
-  },
-];
+/* ---------- Reviews ---------- */
 
 export const reviewsCopy = {
   intro: "If ElevateHQ has been useful to you, we would be glad to hear about it.",

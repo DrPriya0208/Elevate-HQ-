@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import CtaBand from "@/components/CtaBand";
 import PageHero from "@/components/PageHero";
+import SectionHeading from "@/components/SectionHeading";
 import { Icon } from "@/components/icons";
 import { DrawLine, FadeIn, RevealText, ScaleIn, Stagger, StaggerItem } from "@/components/motion";
-import { services } from "@/lib/content";
+import { services, whoChoosesUs } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Services",
-  description: "PoSH, psychometric assessment, counselling and training for organizations and individuals.",
+  description:
+    "Counselling, psychometric assessments, leadership and soft skills training, PoSH compliance, organisational and maritime psychology.",
 };
 
 export default function ServicesPage() {
@@ -16,8 +18,8 @@ export default function ServicesPage() {
     <>
       <PageHero
         kicker="Our services"
-        title="PoSH, psychometric assessment, counselling and training."
-        intro="Not sure which fits? Tell us what is going on and we will suggest a starting point."
+        title="Psychology, counselling, assessments and training."
+        intro="Not sure which fits? Book a free introductory call and we will suggest a starting point."
       />
 
       <div className="mx-auto max-w-6xl px-6 py-20">
@@ -32,6 +34,7 @@ export default function ServicesPage() {
                   <span className="font-serif text-sm text-slate">{String(i + 1).padStart(2, "0")}</span>
                 </div>
                 <span className="mt-2 font-serif text-lg font-bold leading-snug text-navy">{s.title}</span>
+                <span className="text-sm leading-relaxed text-navy/75">{s.summary}</span>
                 <span className="mt-auto inline-flex items-center gap-1 pt-2 text-sm font-semibold text-brass">
                   Learn more
                   <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover:translate-x-1">
@@ -56,23 +59,19 @@ export default function ServicesPage() {
                       </ScaleIn>
                       <span className="font-serif text-4xl font-bold text-white/15">{String(i + 1).padStart(2, "0")}</span>
                     </div>
-                    <p className="kicker mt-8 text-gold">
-                      {s.audience === "organizations" ? "For organizations" : "For individuals"}
-                    </p>
-                    <RevealText
-                      as="h2"
-                      text={s.title}
-                      className="mt-3 font-serif text-3xl leading-tight text-white"
-                    />
+                    <p className="kicker mt-8 text-gold">{s.audience}</p>
+                    <RevealText as="h2" text={s.title} className="mt-3 font-serif text-3xl leading-tight text-white" />
                     <DrawLine className="mt-5 block h-[3px] w-16 origin-left rounded-full bg-gold" />
-                    <FadeIn delay={0.1}>
-                      <p className="mt-6 leading-relaxed text-white/80">{s.summary}</p>
+                    <FadeIn delay={0.1} className="mt-6 space-y-4 leading-relaxed text-white/80">
+                      {s.intro.map((p) => (
+                        <p key={p}>{p}</p>
+                      ))}
                     </FadeIn>
                   </div>
                 </div>
 
                 <div className="flex flex-col p-8 md:p-10">
-                  <p className="kicker text-brass">What&apos;s included</p>
+                  <p className="kicker text-brass">{s.listTitle}</p>
                   <Stagger as="ul" className="mt-5 space-y-3">
                     {s.details.map((d) => (
                       <StaggerItem key={d} className="flex gap-3 leading-relaxed text-navy/90">
@@ -83,9 +82,37 @@ export default function ServicesPage() {
                       </StaggerItem>
                     ))}
                   </Stagger>
+
+                  {s.steps && (
+                    <FadeIn className="mt-8">
+                      <p className="kicker text-brass">{s.steps.title}</p>
+                      <ol className="mt-4 space-y-3">
+                        {s.steps.items.map((step, n) => (
+                          <li key={step} className="flex gap-3 leading-relaxed text-navy/90">
+                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy text-xs font-bold text-gold">
+                              {n + 1}
+                            </span>
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                    </FadeIn>
+                  )}
+
+                  {s.notes && (
+                    <FadeIn className="mt-8 space-y-3">
+                      {s.notes.map((note) => (
+                        <p key={note.label} className="rounded-xl bg-mist p-4 text-[0.95rem] leading-relaxed text-navy/85">
+                          <span className="font-semibold text-navy">{note.label}: </span>
+                          {note.text}
+                        </p>
+                      ))}
+                    </FadeIn>
+                  )}
+
                   <div className="mt-auto pt-8">
-                    <Link href="/contact" className="btn btn-navy">
-                      Enquire about this
+                    <Link href={`/contact?topic=${encodeURIComponent(s.topic)}`} className="btn btn-navy">
+                      {s.cta}
                     </Link>
                   </div>
                 </div>
@@ -93,6 +120,17 @@ export default function ServicesPage() {
             </section>
           ))}
         </div>
+
+        <section className="mt-24">
+          <SectionHeading kicker="Who chooses us" title="Trusted by people and organisations of every kind." center />
+          <Stagger as="ul" className="mx-auto mt-10 flex max-w-4xl flex-wrap justify-center gap-3">
+            {whoChoosesUs.map((w) => (
+              <StaggerItem key={w} className="rounded-full border border-line bg-white px-5 py-2.5 text-[0.95rem] font-medium text-navy">
+                {w}
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </section>
       </div>
 
       <CtaBand />

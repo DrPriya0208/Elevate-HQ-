@@ -29,13 +29,17 @@ const methods = [
   },
 ];
 
-export default function ContactPage() {
+type Props = { searchParams: Promise<{ topic?: string }> };
+
+export default async function ContactPage({ searchParams }: Props) {
+  const { topic } = await searchParams;
+
   return (
     <>
       <PageHero
         kicker="Contact"
         title="Book a session."
-        intro="Send a message and we will reply to arrange a first conversation."
+        intro="Book a free introductory call or send an enquiry. We will understand your needs and suggest the next step."
       />
 
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1.25fr_0.75fr]">
@@ -43,7 +47,7 @@ export default function ContactPage() {
           <p className="kicker text-brass">Send a message</p>
           <h2 className="mt-3 font-serif text-2xl">Tell us a little about what you need.</h2>
           <div className="mt-8">
-            <ContactForm />
+            <ContactForm defaultTopic={topic} />
           </div>
         </FadeIn>
 

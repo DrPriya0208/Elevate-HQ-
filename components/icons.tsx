@@ -65,6 +65,20 @@ const paths: Record<string, ReactNode> = {
       <path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" />
     </>
   ),
+  child: (
+    <>
+      <circle cx="12" cy="6" r="2.5" />
+      <path d="M8 21v-5l-2-3 3-3.5h6L18 13l-2 3v5M12 13v8" />
+    </>
+  ),
+  home: <path d="M3.5 11L12 4l8.5 7M6 9.5V20h12V9.5M10 20v-5.5h4V20" />,
+  sun: (
+    <>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" />
+    </>
+  ),
+  hands: <path d="M12 20s-7-4.2-7-9.2A4 4 0 0112 8.5a4 4 0 017 2.3c0 5-7 9.2-7 9.2zM12 8.5V5M9.5 3.5l2.5 1.5 2.5-1.5" />,
   linkedin: (
     <>
       <rect x="3" y="3" width="18" height="18" rx="3" />

@@ -54,6 +54,5 @@ npm run dev
 
 ## Not included yet
 
-- Image uploads in blog posts (cover images use a link for now; Vercel Blob or Cloudinary is the next step)
 - Login attempt rate limiting
 - Online appointment booking

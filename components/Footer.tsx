@@ -99,7 +99,13 @@ export default function Footer() {
             If you or someone you know is in crisis or at risk of harm, do not wait for an appointment. Call the Tele-MANAS
             helpline on 14416 or 1-800-891-4416, or go to the nearest hospital.
           </p>
-          <p className="shrink-0">© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
+          <div className="flex shrink-0 flex-col gap-2 md:items-end">
+            <p>© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
+            <p className="flex gap-4">
+              <Link href="/privacy" className="transition-colors hover:text-gold">Privacy Policy</Link>
+              <Link href="/terms" className="transition-colors hover:text-gold">Terms &amp; Conditions</Link>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

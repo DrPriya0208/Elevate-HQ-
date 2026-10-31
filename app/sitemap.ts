@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const pages = ["", "/about", "/services", "/blog", "/reviews", "/contact"].map((path) => ({
+  const pages = ["", "/about", "/services", "/blog", "/reviews", "/contact", "/privacy", "/terms"].map((path) => ({
     url: `${site.url}${path}`,
     lastModified: new Date(),
   }));

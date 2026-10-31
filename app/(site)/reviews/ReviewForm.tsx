@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useState } from "react";
 import { submitReview } from "@/lib/actions";
 import { motion, tapScale } from "@/components/motion";
@@ -73,7 +74,13 @@ export default function ReviewForm() {
 
       <label className="flex items-start gap-3">
         <input type="checkbox" name="consent" required className="mt-1 h-5 w-5 accent-navy" />
-        <span>{reviewsCopy.consent}</span>
+        <span>
+          {reviewsCopy.consent} See our{" "}
+          <Link href="/privacy" className="font-semibold underline decoration-brass underline-offset-4 hover:text-navy">
+            Privacy Policy
+          </Link>
+          .
+        </span>
       </label>
 
       {state?.error && (

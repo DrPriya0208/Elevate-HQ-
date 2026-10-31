@@ -83,6 +83,31 @@
   .card-hover {
     @apply transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-[0_14px_32px_rgba(10,21,48,0.12)];
   }
+  .legal {
+    @apply text-[1.02rem] leading-relaxed text-navy/85;
+  }
+  .legal h2 {
+    @apply mt-12 scroll-mt-28 font-serif text-2xl text-navy;
+  }
+  .legal h2:first-child {
+    @apply mt-0;
+  }
+  .legal p,
+  .legal ul {
+    @apply mt-4;
+  }
+  .legal ul {
+    @apply list-disc space-y-2 pl-6 marker:text-brass;
+  }
+  .legal a {
+    @apply font-semibold text-navy underline decoration-brass underline-offset-4 hover:decoration-navy;
+  }
+  .legal a[href^="tel:"] {
+    @apply whitespace-nowrap;
+  }
+  .legal strong {
+    @apply font-semibold text-navy;
+  }
   .kicker {
     @apply text-xs font-semibold uppercase tracking-[0.22em];
   }

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { submitEnquiry } from "@/lib/actions";
 import { motion, tapScale } from "@/components/motion";
@@ -91,6 +92,14 @@ export default function ContactForm() {
       >
         {pending ? "Sending…" : "Send message"}
       </motion.button>
+
+      <p className="text-sm text-slate">
+        By sending this form you agree to our{" "}
+        <Link href="/privacy" className="font-semibold underline decoration-brass underline-offset-4 hover:text-navy">
+          Privacy Policy
+        </Link>
+        . Please don&apos;t include clinical details here; we&apos;ll discuss them privately.
+      </p>
     </form>
   );
 }

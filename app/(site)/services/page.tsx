@@ -20,11 +20,6 @@ export default function ServicesPage() {
         kicker="Our services"
         title="Psychology, counselling, assessments and training."
         intro="Not sure which fits? Book a free introductory call and we will suggest a starting point."
-        chips={[
-          { label: "Counselling", icon: "counselling" },
-          { label: "Assessments", icon: "psychometric" },
-          { label: "Training", icon: "training" },
-        ]}
       />
 
       <div className="mx-auto max-w-6xl px-6 py-20">

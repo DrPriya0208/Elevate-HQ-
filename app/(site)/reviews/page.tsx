@@ -50,16 +50,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageHero
-        kicker="Reviews"
-        title="Share your feedback."
-        intro={reviewsCopy.intro}
-        chips={[
-          { label: "Your experience", icon: "message" },
-          { label: "Your words", icon: "pencil" },
-          { label: "Our growth", icon: "sun" },
-        ]}
-      >
+      <PageHero kicker="Reviews" title="Share your feedback." intro={reviewsCopy.intro}>
         {summary && (
           <FadeIn delay={0.25}>
             <div className="mt-8 inline-flex items-center gap-4 rounded-full border border-white/15 bg-white/5 px-5 py-3">

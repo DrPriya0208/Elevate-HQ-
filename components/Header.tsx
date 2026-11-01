@@ -24,7 +24,7 @@ export default function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={56} height={56} className="h-14 w-14" priority />
-          <span className="font-serif text-2xl font-bold tracking-wide">
+          <span className="whitespace-nowrap font-serif text-2xl font-bold tracking-wide">
             ElevateH
             <span className="relative inline-block">
               <span className="inline-block [clip-path:polygon(0_0,100%_0,100%_68%,68%_100%,0_100%)]">Q</span>
@@ -45,7 +45,7 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-8 md:flex">
+        <nav aria-label="Main" className="hidden items-center gap-8 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -63,14 +63,14 @@ export default function Header() {
               )}
             </Link>
           ))}
-          <Link href="/contact" className="btn btn-gold !px-5 !py-2">
+          <Link href="/contact" className="btn btn-gold whitespace-nowrap !px-5 !py-2">
             Book a session
           </Link>
         </nav>
 
         <button
           type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-md md:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-md lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -87,7 +87,7 @@ export default function Header() {
           <motion.nav
             id="mobile-nav"
             aria-label="Mobile"
-            className="overflow-hidden border-t border-white/10 px-6 md:hidden"
+            className="overflow-hidden border-t border-white/10 px-6 lg:hidden"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}

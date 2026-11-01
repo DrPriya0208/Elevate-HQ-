@@ -123,13 +123,14 @@
   pointer-events: none;
 }
 
-@media (max-width: 760px) {
+/* Phones and portrait tablets: badge stacks above the copy instead of overlapping it. */
+@media (max-width: 1023px) {
   .mind-hero .logo-slot {
     position: relative;
     right: auto;
     top: auto;
     transform: none;
-    width: min(76%, 310px);
+    width: min(76%, 340px);
     margin: 0 auto 30px;
   }
 }

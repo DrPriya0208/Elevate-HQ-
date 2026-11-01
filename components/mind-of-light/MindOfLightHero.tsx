@@ -30,7 +30,7 @@ export default function MindOfLightHero({ children }: MindOfLightHeroProps) {
       <canvas ref={canvasRef} aria-hidden="true" />
       {/* Same container as the header (mx-auto max-w-6xl px-6), so the headline lines up with the logo.
           The badge is positioned independently (absolute) so it never narrows the text column. */}
-      <div className="relative mx-auto flex min-h-[inherit] max-w-6xl flex-col items-stretch gap-12 px-6 py-16 md:flex-row md:items-center md:py-24">
+      <div className="relative mx-auto flex min-h-[inherit] max-w-6xl flex-col items-stretch gap-12 px-6 py-16 lg:flex-row lg:items-center lg:py-24">
         <div className="logo-slot" ref={slotRef}>
           <button type="button" className="badge-btn" aria-label="Replay logo animation" ref={badgeBtnRef}>
             <div className="stage v-w wait" ref={stageRef}>

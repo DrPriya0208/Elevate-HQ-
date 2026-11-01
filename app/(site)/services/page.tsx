@@ -49,7 +49,7 @@ export default function ServicesPage() {
         <div className="mt-24 space-y-8">
           {services.map((s, i) => (
             <section key={s.slug} id={s.slug} className="card scroll-mt-28 overflow-hidden">
-              <div className="grid md:grid-cols-[0.9fr_1.1fr]">
+              <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
                 <div className="speckle relative overflow-hidden bg-navy p-8 text-white md:p-10">
                   <div aria-hidden className="absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-gold/15 blur-3xl" />
                   <div className="relative">

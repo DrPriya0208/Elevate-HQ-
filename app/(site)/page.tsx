@@ -62,9 +62,9 @@ export default async function HomePage() {
 
       {/* Credentials strip */}
       <section className="border-b border-line bg-white">
-        <Stagger as="ul" className="mx-auto grid max-w-6xl divide-y divide-line px-6 md:grid-cols-3 md:divide-x md:divide-y-0">
+        <Stagger as="ul" className="mx-auto grid max-w-6xl divide-y divide-line px-6 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
           {stats.map((s) => (
-            <StaggerItem key={s.label} className="flex items-center gap-4 py-8 md:px-8 md:first:pl-0 md:last:pr-0">
+            <StaggerItem key={s.label} className="flex items-center gap-4 py-8 lg:px-8 lg:first:pl-0 lg:last:pr-0">
               <p className="font-serif text-5xl font-bold leading-none text-navy">
                 {s.value}
                 <span className="ml-1 text-base font-semibold text-brass">{s.unit}</span>
@@ -136,13 +136,15 @@ export default async function HomePage() {
             {whoWeServe.map((w) => (
               <StaggerItem
                 key={w.title}
-                className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-gold/50 hover:bg-white/[0.07]"
+                className="flex gap-4 rounded-xl border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-gold/50 hover:bg-white/[0.07] sm:flex-col sm:gap-3"
               >
-                <span className="text-gold">
+                <span className="shrink-0 text-gold">
                   <Icon name={w.icon} className="h-7 w-7" />
                 </span>
-                <span className="font-serif text-base font-bold leading-snug text-white">{w.title}</span>
-                <span className="text-sm leading-relaxed text-white/70">{w.body}</span>
+                <span className="flex flex-col gap-1.5 sm:gap-3">
+                  <span className="font-serif text-base font-bold leading-snug text-white">{w.title}</span>
+                  <span className="text-sm leading-relaxed text-white/70">{w.body}</span>
+                </span>
               </StaggerItem>
             ))}
           </Stagger>

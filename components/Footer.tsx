@@ -22,15 +22,18 @@ export default function Footer() {
             <p className="font-serif text-2xl font-bold text-white">{site.name}</p>
           </div>
           <p className="mt-4 max-w-xs text-sm leading-relaxed">{site.tagline}</p>
-          <Link href="/contact" className="btn btn-gold mt-6 !px-5 !py-2 text-sm">Book a session</Link>
+          <Link href="/contact" className="btn btn-gold mt-6 !px-5 !py-2.5 text-sm">Book a session</Link>
         </div>
 
         <div>
           <p className="kicker text-gold">Pages</p>
-          <ul className="mt-5 space-y-3 text-sm">
+          <ul className="mt-3 text-sm md:mt-5 md:space-y-3">
             {pages.map((p) => (
               <li key={p.href}>
-                <Link href={p.href} className="group inline-flex items-center gap-2 transition-colors hover:text-gold">
+                <Link
+                  href={p.href}
+                  className="group inline-flex min-h-10 items-center gap-2 transition-colors hover:text-gold md:min-h-0"
+                >
                   <span aria-hidden className="h-px w-3 bg-white/30 transition-all duration-300 group-hover:w-5 group-hover:bg-gold" />
                   {p.label}
                 </Link>
@@ -41,15 +44,18 @@ export default function Footer() {
 
         <div>
           <p className="kicker text-gold">Contact</p>
-          <ul className="mt-5 space-y-4 text-sm">
+          <ul className="mt-3 space-y-1 text-sm md:mt-5 md:space-y-4">
             <li>
-              <a href={site.phoneHref} className="flex items-center gap-3 transition-colors hover:text-gold">
+              <a href={site.phoneHref} className="flex min-h-10 items-center gap-3 transition-colors hover:text-gold md:min-h-0">
                 <Icon name="phone" className="h-4 w-4 shrink-0 text-gold" />
                 {site.phone}
               </a>
             </li>
             <li>
-              <a href={`mailto:${site.email}`} className="flex items-center gap-3 break-words transition-colors hover:text-gold">
+              <a
+                href={`mailto:${site.email}`}
+                className="flex min-h-10 items-center gap-3 break-words transition-colors hover:text-gold md:min-h-0"
+              >
                 <Icon name="mail" className="h-4 w-4 shrink-0 text-gold" />
                 <span className="min-w-0">
                   {site.email.split("@")[0]}@<wbr />
@@ -57,7 +63,7 @@ export default function Footer() {
                 </span>
               </a>
             </li>
-            <li className="flex items-center gap-3">
+            <li className="flex min-h-10 items-center gap-3 md:min-h-0">
               <Icon name="pin" className="h-4 w-4 shrink-0 text-gold" />
               {site.location}
             </li>
@@ -101,9 +107,13 @@ export default function Footer() {
           </p>
           <div className="flex shrink-0 flex-col gap-2 md:items-end">
             <p>© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
-            <p className="flex gap-4">
-              <Link href="/privacy" className="transition-colors hover:text-gold">Privacy Policy</Link>
-              <Link href="/terms" className="transition-colors hover:text-gold">Terms &amp; Conditions</Link>
+            <p className="flex gap-6">
+              <Link href="/privacy" className="inline-flex min-h-10 items-center transition-colors hover:text-gold md:min-h-0">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="inline-flex min-h-10 items-center transition-colors hover:text-gold md:min-h-0">
+                Terms &amp; Conditions
+              </Link>
             </p>
           </div>
         </div>

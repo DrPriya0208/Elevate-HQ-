@@ -42,7 +42,7 @@ export default function AboutPage() {
         </FadeIn>
 
         <div>
-          <SectionHeading kicker="Our story" title="Every person deserves to feel mentally strong." />
+          <SectionHeading kicker="Our story" title="Every person deserves to feel mentally strong." glow />
           <FadeIn delay={0.1} className="mt-8 space-y-5">
             {about.story.map((p) => (
               <p key={p} className="font-serif text-[1.15rem] leading-[1.8]">
@@ -82,6 +82,7 @@ export default function AboutPage() {
             title="E-L-E-V-A-T-E H-Q"
             intro="The values behind our name, and behind every session, assessment and programme."
             center
+            glow
           />
           <Stagger as="ul" className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {values.map((v, i) => (

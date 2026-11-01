@@ -78,7 +78,7 @@ export default async function HomePage() {
 
       {/* Welcome */}
       <section className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-2 md:items-start">
-        <SectionHeading kicker="Welcome" title={home.practiceTitle} intro={home.welcome} />
+        <SectionHeading kicker="Welcome" title={home.practiceTitle} intro={home.welcome} glow />
         <div>
           <FadeIn delay={0.1} className="space-y-5 text-lg leading-relaxed text-navy/85">
             {home.practice.map((p) => (
@@ -154,7 +154,7 @@ export default async function HomePage() {
 
       {/* Why choose */}
       <section className="mx-auto max-w-6xl px-6 py-24">
-        <SectionHeading kicker="Why choose Elevate HQ" title="Experience, ethics and real-world results." />
+        <SectionHeading kicker="Why choose Elevate HQ" title="Experience, ethics and real-world results." glow />
         <Stagger as="ul" className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {whyChoose.map((w) => (
             <StaggerItem key={w.text} className="card flex items-start gap-4 p-6">
@@ -260,6 +260,7 @@ export default async function HomePage() {
             <SectionHeading
               kicker="FAQ"
               title="Frequently asked questions."
+              glow
               intro="Something else on your mind? Book a free introductory call and we will suggest the next step."
             />
             <FadeIn delay={0.15}>

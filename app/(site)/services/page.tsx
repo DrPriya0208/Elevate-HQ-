@@ -122,7 +122,7 @@ export default function ServicesPage() {
         </div>
 
         <section className="mt-24">
-          <SectionHeading kicker="Who chooses us" title="Trusted by people and organisations of every kind." center />
+          <SectionHeading kicker="Who chooses us" title="Trusted by people and organisations of every kind." center glow />
           <Stagger as="ul" className="mx-auto mt-10 flex max-w-4xl flex-wrap justify-center gap-3">
             {whoChoosesUs.map((w) => (
               <StaggerItem key={w} className="rounded-full border border-line bg-white px-5 py-2.5 text-[0.95rem] font-medium text-navy">

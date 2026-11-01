@@ -6,30 +6,42 @@ type Props = {
   intro?: string;
   center?: boolean;
   dark?: boolean;
+  /** Soft gold light behind the heading, for a few key sections on light backgrounds. */
+  glow?: boolean;
   className?: string;
 };
 
-export default function SectionHeading({ kicker, title, intro, center = false, dark = false, className = "" }: Props) {
+export default function SectionHeading({ kicker, title, intro, center = false, dark = false, glow = false, className = "" }: Props) {
   return (
-    <div className={`${center ? "mx-auto text-center" : ""} ${className}`}>
-      {kicker && (
-        <FadeIn>
-          <p className={`kicker ${dark ? "text-gold" : "text-brass"}`}>{kicker}</p>
-        </FadeIn>
+    <div className={`relative ${center ? "mx-auto text-center" : ""} ${className}`}>
+      {glow && (
+        <div
+          aria-hidden
+          className={`pointer-events-none absolute -top-24 -z-0 h-72 w-72 rounded-full bg-gold/25 blur-3xl ${
+            center ? "left-1/2 -translate-x-1/2" : "-left-24"
+          }`}
+        />
       )}
-      <RevealText
-        as="h2"
-        text={title}
-        className={`mt-3 max-w-3xl font-serif text-3xl leading-tight sm:text-4xl ${dark ? "text-white" : ""} ${center ? "mx-auto" : ""}`}
-      />
-      <DrawLine className={`mt-5 block h-[3px] w-16 rounded-full bg-gold ${center ? "mx-auto origin-center" : "origin-left"}`} />
-      {intro && (
-        <FadeIn delay={0.1}>
-          <p className={`mt-5 max-w-2xl text-lg leading-relaxed ${dark ? "text-white/80" : "text-navy/80"} ${center ? "mx-auto" : ""}`}>
-            {intro}
-          </p>
-        </FadeIn>
-      )}
+      <div className="relative">
+        {kicker && (
+          <FadeIn>
+            <p className={`kicker ${dark ? "text-gold" : "text-brass"}`}>{kicker}</p>
+          </FadeIn>
+        )}
+        <RevealText
+          as="h2"
+          text={title}
+          className={`mt-3 max-w-3xl font-serif text-3xl leading-tight sm:text-4xl ${dark ? "text-white" : ""} ${center ? "mx-auto" : ""}`}
+        />
+        <DrawLine className={`mt-5 block h-[3px] w-16 rounded-full bg-gold ${center ? "mx-auto origin-center" : "origin-left"}`} />
+        {intro && (
+          <FadeIn delay={0.1}>
+            <p className={`mt-5 max-w-2xl text-lg leading-relaxed ${dark ? "text-white/80" : "text-navy/80"} ${center ? "mx-auto" : ""}`}>
+              {intro}
+            </p>
+          </FadeIn>
+        )}
+      </div>
     </div>
   );
 }

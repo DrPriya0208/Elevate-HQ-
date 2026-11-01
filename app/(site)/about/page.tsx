@@ -139,7 +139,7 @@ export default function AboutPage() {
                 href={site.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="LinkedIn profile, opens in a new tab"
+                aria-label={`${founder.name}'s LinkedIn profile, opens in a new tab`}
                 className="btn btn-navy"
               >
                 LinkedIn profile
@@ -169,6 +169,17 @@ export default function AboutPage() {
                 </li>
               ))}
             </ul>
+            <div className="mt-auto pt-8">
+              <a
+                href={coFounder.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${coFounder.name}'s LinkedIn profile, opens in a new tab`}
+                className="btn btn-navy"
+              >
+                LinkedIn profile
+              </a>
+            </div>
           </FadeIn>
         </div>
       </section>

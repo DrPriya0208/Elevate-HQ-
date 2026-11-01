@@ -15,11 +15,13 @@ export default function SectionHeading({ kicker, title, intro, center = false, d
   return (
     <div className={`relative ${center ? "mx-auto text-center" : ""} ${className}`}>
       {glow && (
+        // A radial gradient fades to nothing on its own; a blurred box gets visibly clipped at its edges.
         <div
           aria-hidden
-          className={`pointer-events-none absolute -top-24 -z-0 h-72 w-72 rounded-full bg-gold/25 blur-3xl ${
-            center ? "left-1/2 -translate-x-1/2" : "-left-24"
+          className={`pointer-events-none absolute -top-40 h-[34rem] w-[34rem] rounded-full ${
+            center ? "left-1/2 -ml-[17rem]" : "-left-52"
           }`}
+          style={{ background: "radial-gradient(circle, rgba(242,204,115,0.26) 0%, rgba(242,204,115,0.1) 38%, rgba(242,204,115,0) 68%)" }}
         />
       )}
       <div className="relative">

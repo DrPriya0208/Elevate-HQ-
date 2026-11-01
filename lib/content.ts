@@ -342,6 +342,7 @@ export const founder = {
 export const coFounder = {
   name: "Balaji",
   role: "Co-Founder",
+  linkedin: "https://www.linkedin.com/in/balaji-s-67879413/",
   headline: "HR and Marketing Professional · 18 years of experience",
   bio: [
     "Balaji brings 18 years of experience in Human Resources and Marketing, with a deep understanding of how people, culture and communication drive an organisation's success.",

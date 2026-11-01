@@ -40,6 +40,11 @@ export default async function ContactPage({ searchParams }: Props) {
         kicker="Contact"
         title="Book a session."
         intro="Book a free introductory call or send an enquiry. We will understand your needs and suggest the next step."
+        chips={[
+          { label: "Free intro call", icon: "phone" },
+          { label: "Email", icon: "mail" },
+          { label: "WhatsApp", icon: "whatsapp" },
+        ]}
       />
 
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1.25fr_0.75fr]">

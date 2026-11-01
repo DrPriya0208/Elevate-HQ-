@@ -23,7 +23,16 @@ function Monogram({ name }: { name: string }) {
 export default function AboutPage() {
   return (
     <>
-      <PageHero kicker="About Elevate HQ" title={about.title} intro={about.storyBelief} />
+      <PageHero
+        kicker="About Elevate HQ"
+        title={about.title}
+        intro={about.storyBelief}
+        chips={[
+          { label: "Compassion", icon: "hands" },
+          { label: "Science", icon: "book" },
+          { label: "Confidential", icon: "lock" },
+        ]}
+      />
 
       {/* Story */}
       <section className="mx-auto grid max-w-6xl gap-14 px-6 py-24 md:grid-cols-[0.85fr_1.15fr]">

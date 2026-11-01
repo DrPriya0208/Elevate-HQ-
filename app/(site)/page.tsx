@@ -42,7 +42,7 @@ async function getFeaturedReviews() {
 const stats = [
   { value: "14", unit: "years", label: "Combined experience in psychology, counselling, assessments and training" },
   { value: "10+", unit: "years", label: "Specialised in workplace behaviour and seafarer mental health" },
-  { value: "6", unit: "services", label: "From counselling and assessments to PoSH and maritime psychology" },
+  { value: "7", unit: "services", label: "From counselling and student programmes to PoSH and maritime psychology" },
 ];
 
 export default async function HomePage() {

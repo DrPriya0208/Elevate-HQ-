@@ -10,7 +10,7 @@ import { services, whoChoosesUs } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Counselling, psychometric assessments, leadership and soft skills training, PoSH compliance, organisational and maritime psychology.",
+    "Counselling, psychometric assessments, leadership and soft skills training, PoSH compliance, organisational and maritime psychology, and student programmes.",
 };
 
 export default function ServicesPage() {

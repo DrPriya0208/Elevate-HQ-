@@ -65,6 +65,13 @@ const paths: Record<string, ReactNode> = {
       <path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" />
     </>
   ),
+  students: (
+    <>
+      <path d="M8 7V5.5A2.5 2.5 0 0110.5 3h3A2.5 2.5 0 0116 5.5V7" />
+      <path d="M5 10a3 3 0 013-3h8a3 3 0 013 3v9a2 2 0 01-2 2H7a2 2 0 01-2-2v-9z" />
+      <path d="M9 21v-4h6v4M9 12h6" />
+    </>
+  ),
   child: (
     <>
       <circle cx="12" cy="6" r="2.5" />

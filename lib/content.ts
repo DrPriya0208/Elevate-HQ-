@@ -254,13 +254,31 @@ export const services: Service[] = [
     cta: "Enquire about maritime services",
     topic: "Maritime psychology",
   },
+  {
+    slug: "students",
+    title: "Student Programmes",
+    summary: "End-to-end support for students, parents, teachers and institutions.",
+    audience: "For students, parents and institutions",
+    // Draft intro written from the programme list; confirm wording with Priyadharshini.
+    intro: [
+      "From exam pressure to career choices, students face challenges that affect both learning and wellbeing.",
+      "We offer end-to-end support for students, parents, teachers and institutions, from one-to-one counselling to school and college-wide programmes.",
+    ],
+    listTitle: "What we offer",
+    details: [
+      "Psychological counselling: individual, family, child, adolescent and student counselling",
+      "Career guidance and career counselling",
+      "Student wellbeing: examination stress, academic challenges, anxiety and emotional management",
+      "Bullying, harassment, peer pressure and behavioural support",
+      "School, college and institutional psychology services",
+      "Parent counselling, parenting support and teacher sensitisation",
+    ],
+    cta: "Plan a student programme",
+    topic: "Student, school or institution programme",
+  },
 ];
 
-export const enquiryTopics = [
-  ...services.map((s) => s.topic),
-  "Student, school or institution programme",
-  "Something else",
-];
+export const enquiryTopics = [...services.map((s) => s.topic), "Something else"];
 
 /* ---------- About ---------- */
 

@@ -63,12 +63,12 @@ export const whyChoose: { icon: string; text: string }[] = [
   { icon: "organizational", text: "Business-aligned. We connect people development to real organisational goals." },
 ];
 
-export const howWeWork: { title: string; body: string }[] = [
-  { title: "Listen", body: "Understand your needs, goals and challenges." },
-  { title: "Assess", body: "Use the right tools and observations." },
-  { title: "Design", body: "Create a clear, customised plan." },
-  { title: "Deliver", body: "Counselling, training or consulting with care." },
-  { title: "Review", body: "Measure progress and keep improving." },
+export const howWeWork: { title: string; body: string; icon: string }[] = [
+  { title: "Listen", body: "Understand your needs, goals and challenges.", icon: "ear" },
+  { title: "Assess", body: "Use the right tools and observations.", icon: "psychometric" },
+  { title: "Design", body: "Create a clear, customised plan.", icon: "pencil" },
+  { title: "Deliver", body: "Counselling, training or consulting with care.", icon: "handshake" },
+  { title: "Review", body: "Measure progress and keep improving.", icon: "refresh" },
 ];
 
 export const whoChoosesUs = [

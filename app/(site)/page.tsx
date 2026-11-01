@@ -2,12 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import CtaBand from "@/components/CtaBand";
 import FaqItem from "@/components/FaqItem";
+import HowWeWorkSteps from "@/components/HowWeWorkSteps";
 import SectionHeading from "@/components/SectionHeading";
 import Stars from "@/components/Stars";
 import { Icon } from "@/components/icons";
 import MindOfLightHero from "@/components/mind-of-light/MindOfLightHero";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
-import { faqs, home, howWeWork, services, whoWeServe, whyChoose } from "@/lib/content";
+import { faqs, home, services, whoWeServe, whyChoose } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import { formatDate, formatMonthYear } from "@/lib/text";
 
@@ -170,20 +171,7 @@ export default async function HomePage() {
       <section className="bg-white">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <SectionHeading kicker="How we work" title="Five steps, built around you." center />
-          <div className="relative mt-16">
-            <span aria-hidden className="absolute left-[10%] right-[10%] top-8 hidden h-px bg-gradient-to-r from-gold/0 via-gold/60 to-gold/0 lg:block" />
-            <Stagger as="ol" className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
-              {howWeWork.map((step, i) => (
-                <StaggerItem key={step.title} className="relative flex flex-col items-center px-2 text-center">
-                  <span className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-gold bg-white font-serif text-2xl font-bold text-navy shadow-[0_0_0_8px_white]">
-                    {i + 1}
-                  </span>
-                  <h3 className="mt-6 font-serif text-xl">{step.title}</h3>
-                  <p className="mt-2 leading-relaxed text-navy/80">{step.body}</p>
-                </StaggerItem>
-              ))}
-            </Stagger>
-          </div>
+          <HowWeWorkSteps />
         </div>
       </section>
 

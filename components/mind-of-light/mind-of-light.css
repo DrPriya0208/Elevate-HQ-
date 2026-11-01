@@ -135,6 +135,24 @@
   }
 }
 
+/* Phones held sideways: too short to stack, so the badge goes beside the copy as on desktop. */
+@media (max-width: 1023px) and (orientation: landscape) and (max-height: 540px) {
+  .mind-hero {
+    min-height: auto;
+  }
+  .mind-hero .logo-slot {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(34vw, 280px);
+    margin: 0;
+  }
+  .mind-hero .copy {
+    max-width: calc(100% - min(34vw, 280px) - 32px);
+  }
+}
+
 /* ---------- logo animation (reference: lines 59-227 of the extracted <style>) ---------- */
 .mind-hero .logo-svg {
   width: 100%;

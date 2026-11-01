@@ -18,7 +18,7 @@ const contours = peaks.flatMap((p) =>
       const y = p.cy + Math.sin(t) * r * wob;
       d += `${s ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`;
     }
-    return { d: d + "Z", opacity: 0.09 + i * 0.008 };
+    return { d: d + "Z", opacity: 0.16 + i * 0.012 };
   }),
 );
 
@@ -31,7 +31,7 @@ export default function TopoLines() {
       className="animate-breathe pointer-events-none absolute inset-0 h-full w-full"
     >
       {contours.map((c, i) => (
-        <path key={i} d={c.d} fill="none" stroke="#F2CC73" strokeOpacity={c.opacity} strokeWidth="1" />
+        <path key={i} d={c.d} fill="none" stroke="#F2CC73" strokeOpacity={c.opacity} strokeWidth="1.2" />
       ))}
     </svg>
   );

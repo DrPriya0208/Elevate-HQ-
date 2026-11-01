@@ -27,8 +27,9 @@ export default function TopoLines() {
     <svg
       aria-hidden
       viewBox="0 0 1440 600"
-      preserveAspectRatio="xMidYMid slice"
-      className="animate-breathe pointer-events-none absolute inset-0 h-full w-full"
+      // Anchor right so narrow screens show the ring centre, not the stretched middle of the pattern
+      preserveAspectRatio="xMaxYMid slice"
+      className="animate-breathe pointer-events-none absolute inset-0 h-full w-full opacity-70 md:opacity-100"
     >
       {contours.map((c, i) => (
         <path key={i} d={c.d} fill="none" stroke="#F2CC73" strokeOpacity={c.opacity} strokeWidth="1.2" />

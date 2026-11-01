@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import HeroGlow from "@/components/HeroGlow";
+import TopoLines from "@/components/TopoLines";
 import { DrawLine, FadeIn, RevealText } from "@/components/motion";
 
 type Props = {
@@ -11,8 +12,9 @@ type Props = {
 
 export default function PageHero({ kicker, title, intro, children }: Props) {
   return (
-    <section className="speckle relative overflow-hidden bg-navy text-white">
+    <section className="relative overflow-hidden bg-navy text-white">
       <HeroGlow />
+      <TopoLines />
       <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24">
         <FadeIn>
           <p className="kicker text-gold">{kicker}</p>

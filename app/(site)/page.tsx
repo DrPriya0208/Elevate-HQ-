@@ -4,6 +4,7 @@ import CtaBand from "@/components/CtaBand";
 import FaqItem from "@/components/FaqItem";
 import HowWeWorkSteps from "@/components/HowWeWorkSteps";
 import SectionHeading from "@/components/SectionHeading";
+import StarField from "@/components/StarField";
 import Stars from "@/components/Stars";
 import { Icon } from "@/components/icons";
 import MindOfLightHero from "@/components/mind-of-light/MindOfLightHero";
@@ -126,7 +127,8 @@ export default async function HomePage() {
 
       {/* Who we serve */}
       <section className="speckle relative overflow-hidden bg-navy text-white">
-        <div className="mx-auto max-w-6xl px-6 py-24">
+        <StarField />
+        <div className="relative mx-auto max-w-6xl px-6 py-24">
           <SectionHeading
             kicker="Who we serve"
             title="From a first-year student to a seasoned CEO."

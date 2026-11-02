@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import StarField from "@/components/StarField";
 import { Icon } from "@/components/icons";
 import { site, socials } from "@/lib/content";
 
@@ -13,9 +14,10 @@ const pages = [
 
 export default function Footer() {
   return (
-    <footer className="speckle relative bg-ink text-white/80">
+    <footer className="speckle relative overflow-hidden bg-ink text-white/80">
+      <StarField count={90} />
       <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
-      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-[1.5fr_1fr_1.2fr]">
+      <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-[1.5fr_1fr_1.2fr]">
         <div>
           <div className="flex items-center gap-3">
             <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={52} height={52} priority />
@@ -99,7 +101,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10">
+      <div className="relative border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-sm leading-relaxed text-white/60 md:flex-row md:items-start md:justify-between md:gap-10">
           <p className="max-w-2xl">
             If you or someone you know is in crisis or at risk of harm, do not wait for an appointment. Call the Tele-MANAS

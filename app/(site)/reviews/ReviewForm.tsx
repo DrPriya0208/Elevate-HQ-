@@ -10,17 +10,33 @@ import type { ReviewState } from "@/lib/types";
 const ratingLabels = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
 
 function RatingInput() {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  // Fill every star up to the chosen one (or the one under the pointer, as a preview)
+  const shown = hover || rating;
+
   return (
     <fieldset>
       <legend className="label">Your rating</legend>
-      <div className="flex gap-1">
+      <div className="flex gap-1" onMouseLeave={() => setHover(0)}>
         {[1, 2, 3, 4, 5].map((n) => (
           <label
             key={n}
-            className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-md text-3xl leading-none text-line has-[:checked]:text-deep-gold has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-navy"
+            onMouseEnter={() => setHover(n)}
+            className={`relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-md text-3xl leading-none transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-navy ${
+              n <= shown ? "text-deep-gold" : "text-line"
+            }`}
           >
-            <input type="radio" name="rating" value={n} required className="peer sr-only" />
-            <span aria-hidden="true" className="peer-checked:text-deep-gold">★</span>
+            <input
+              type="radio"
+              name="rating"
+              value={n}
+              required
+              checked={rating === n}
+              onChange={() => setRating(n)}
+              className="sr-only"
+            />
+            <span aria-hidden="true">★</span>
             <span className="sr-only">{ratingLabels[n - 1]}</span>
           </label>
         ))}

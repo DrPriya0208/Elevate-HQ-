@@ -153,50 +153,6 @@
   }
 }
 
-/* ---------- background: star field (HeroBackdrop.tsx), below the WebGL canvas ---------- */
-.mind-hero .hero-backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-.mind-hero .star {
-  position: absolute;
-  border-radius: 50%;
-  animation: hb-twinkle 4s ease-in-out infinite;
-}
-.mind-hero .shooting-star {
-  position: absolute;
-  width: 10rem;
-  height: 1px;
-  background: linear-gradient(to left, transparent, #f2cc73, #fff);
-  opacity: 0;
-  animation: hb-shoot 9s ease-in infinite;
-}
-@keyframes hb-twinkle {
-  0%,
-  100% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-@keyframes hb-shoot {
-  0% {
-    transform: translate(0, 0) rotate(-28deg);
-    opacity: 0;
-  }
-  4% {
-    opacity: 1;
-  }
-  12%,
-  100% {
-    transform: translate(-60vw, 32vw) rotate(-28deg);
-    opacity: 0;
-  }
-}
-
 /* ---------- logo animation (reference: lines 59-227 of the extracted <style>) ---------- */
 .mind-hero .logo-svg {
   width: 100%;

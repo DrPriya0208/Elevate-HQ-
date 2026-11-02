@@ -153,6 +153,105 @@
   }
 }
 
+/* ---------- background: stars and light rays (HeroBackdrop.tsx), below the WebGL canvas ---------- */
+.mind-hero .hero-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.mind-hero .star {
+  position: absolute;
+  border-radius: 50%;
+  animation: hb-twinkle 4s ease-in-out infinite;
+}
+.mind-hero .shooting-star {
+  position: absolute;
+  width: 10rem;
+  height: 1px;
+  background: linear-gradient(to left, transparent, #f2cc73, #fff);
+  opacity: 0;
+  animation: hb-shoot 9s ease-in infinite;
+}
+.mind-hero .rays-frame {
+  position: relative;
+  max-width: 72rem; /* max-w-6xl, same as the hero content */
+  height: 100%;
+  margin: 0 auto;
+}
+/* Centre of the logo badge: .logo-slot is right: 24px, width min(34vw, 510px), vertically centred */
+.mind-hero .rays-anchor {
+  position: absolute;
+  top: 50%;
+  right: calc(24px + min(34vw, 510px) / 2);
+}
+.mind-hero .rays,
+.mind-hero .rays-glow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+}
+.mind-hero .rays {
+  width: 2200px;
+  height: 2200px;
+  background: repeating-conic-gradient(from 0deg, rgba(242, 204, 115, 0.16) 0deg 2deg, rgba(242, 204, 115, 0) 4deg 10deg);
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 18%, rgba(0, 0, 0, 0.4) 30%, transparent 46%);
+  mask-image: radial-gradient(circle closest-side, #000 18%, rgba(0, 0, 0, 0.4) 30%, transparent 46%);
+  animation: hb-rays 120s linear infinite;
+}
+.mind-hero .rays-glow {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(242, 204, 115, 0.25), transparent 65%);
+}
+@keyframes hb-twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes hb-shoot {
+  0% {
+    transform: translate(0, 0) rotate(-28deg);
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  12%,
+  100% {
+    transform: translate(-60vw, 32vw) rotate(-28deg);
+    opacity: 0;
+  }
+}
+/* Both ends set, so only the rotation animates and the rays stay centred */
+@keyframes hb-rays {
+  from {
+    transform: translate(50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(50%, -50%) rotate(360deg);
+  }
+}
+/* Stacked badge: py-16 top padding + half of min(76% of the content width, 340px) */
+@media (max-width: 1023px) {
+  .mind-hero .rays-anchor {
+    top: calc(4rem + min((100vw - 48px) * 0.38, 170px));
+    right: 50%;
+  }
+}
+@media (max-width: 1023px) and (orientation: landscape) and (max-height: 540px) {
+  .mind-hero .rays-anchor {
+    top: 50%;
+    right: calc(24px + min(34vw, 280px) / 2);
+  }
+}
+
 /* ---------- logo animation (reference: lines 59-227 of the extracted <style>) ---------- */
 .mind-hero .logo-svg {
   width: 100%;

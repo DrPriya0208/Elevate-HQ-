@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useRef, type ReactNode } from "react";
+import HeroBackdrop from "./HeroBackdrop";
 import LogoBadge from "./LogoBadge";
 import "./mind-of-light.css";
 
@@ -27,6 +28,7 @@ export default function MindOfLightHero({ children }: MindOfLightHeroProps) {
 
   return (
     <section className="mind-hero" ref={heroRef} aria-label="ElevateHQ hero">
+      <HeroBackdrop />
       <canvas ref={canvasRef} aria-hidden="true" />
       {/* Same container as the header (mx-auto max-w-6xl px-6), so the headline lines up with the logo.
           The badge is positioned independently (absolute) so it never narrows the text column. */}

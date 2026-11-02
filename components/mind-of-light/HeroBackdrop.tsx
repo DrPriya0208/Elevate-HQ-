@@ -1,4 +1,4 @@
-/** Home hero background: twinkling gold stars across the navy, and slow light rays radiating from behind the logo. */
+/** Home hero background: twinkling gold and white stars across the navy, with an occasional shooting star. */
 
 // Deterministic star field so server and client render the same positions.
 function rng(seed: number) {
@@ -39,13 +39,6 @@ export default function HeroBackdrop() {
       {[0, 1].map((i) => (
         <span key={i} className="shooting-star" style={{ right: `${8 + i * 22}%`, top: `${6 + i * 10}%`, animationDelay: `${i * 4.5}s` }} />
       ))}
-      {/* Same container as the hero content, so the rays centre on the logo badge */}
-      <div className="rays-frame">
-        <div className="rays-anchor">
-          <div className="rays" />
-          <div className="rays-glow" />
-        </div>
-      </div>
     </div>
   );
 }

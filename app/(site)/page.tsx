@@ -3,9 +3,9 @@ import Link from "next/link";
 import CtaBand from "@/components/CtaBand";
 import FaqItem from "@/components/FaqItem";
 import HowWeWorkSteps from "@/components/HowWeWorkSteps";
+import ReviewCarousel from "@/components/ReviewCarousel";
 import SectionHeading from "@/components/SectionHeading";
 import StarField from "@/components/StarField";
-import Stars from "@/components/Stars";
 import { Icon } from "@/components/icons";
 import MindOfLightHero from "@/components/mind-of-light/MindOfLightHero";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
@@ -33,7 +33,7 @@ async function getFeaturedReviews() {
     return await prisma.review.findMany({
       where: { status: "APPROVED" },
       orderBy: [{ featured: "desc" }, { approvedAt: "desc" }],
-      take: 3,
+      take: 12,
       select: { id: true, name: true, rating: true, message: true, approvedAt: true },
     });
   } catch {
@@ -238,19 +238,17 @@ export default async function HomePage() {
                 <Link href="/reviews" className="btn btn-navy shrink-0">All reviews</Link>
               </FadeIn>
             </div>
-            <Stagger as="ul" className="mt-14 grid gap-6 md:grid-cols-3">
-              {reviews.map((r) => (
-                <StaggerItem key={r.id} className="card relative flex flex-col p-7">
-                  <span aria-hidden className="absolute right-6 top-3 font-serif text-7xl leading-none text-gold/40">“</span>
-                  <Stars rating={r.rating} />
-                  <p className="mt-4 whitespace-pre-line font-serif text-lg leading-relaxed">{r.message}</p>
-                  <p className="mt-auto pt-5 text-sm font-semibold text-navy">
-                    {r.name}
-                    <span className="font-normal text-slate"> · {formatMonthYear(r.approvedAt)}</span>
-                  </p>
-                </StaggerItem>
-              ))}
-            </Stagger>
+            <FadeIn>
+              <ReviewCarousel
+                reviews={reviews.map((r) => ({
+                  id: r.id,
+                  name: r.name,
+                  rating: r.rating,
+                  message: r.message,
+                  date: formatMonthYear(r.approvedAt),
+                }))}
+              />
+            </FadeIn>
           </div>
         </section>
       )}

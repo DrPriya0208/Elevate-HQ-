@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import HeroGlow from "@/components/HeroGlow";
-import StarField from "@/components/StarField";
 import TopoLines from "@/components/TopoLines";
 import { DrawLine, FadeIn, RevealText } from "@/components/motion";
 
@@ -15,7 +14,6 @@ export default function PageHero({ kicker, title, intro, children }: Props) {
   return (
     <section className="relative overflow-hidden bg-navy text-white">
       <HeroGlow />
-      <StarField count={75} />
       <TopoLines />
       <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24">
         <FadeIn>

@@ -1,5 +1,4 @@
-/** Twinkling gold and white stars with an occasional shooting star, for navy hero backgrounds.
- * Place inside a `relative overflow-hidden` parent. */
+/** Home hero background: twinkling gold and white stars across the navy, with an occasional shooting star. */
 
 // Deterministic star field so server and client render the same positions.
 function rng(seed: number) {
@@ -18,11 +17,10 @@ const stars = (() => {
   }));
 })();
 
-/** `count` lets shorter banners use fewer stars so the density matches the home hero. */
-export default function StarField({ count = stars.length }: { count?: number }) {
+export default function HeroBackdrop() {
   return (
-    <div aria-hidden className="star-field">
-      {stars.slice(0, count).map((s, i) => (
+    <div aria-hidden className="hero-backdrop">
+      {stars.map((s, i) => (
         <span
           key={i}
           className="star"

@@ -71,49 +71,6 @@
   .animate-drift {
     animation: drift 16s ease-in-out infinite;
   }
-  /* Star field (components/StarField.tsx) behind the navy heroes */
-  .star-field {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .star-field .star {
-    position: absolute;
-    border-radius: 50%;
-    animation: twinkle 4s ease-in-out infinite;
-  }
-  .star-field .shooting-star {
-    position: absolute;
-    width: 10rem;
-    height: 1px;
-    background: linear-gradient(to left, transparent, #f2cc73, #fff);
-    opacity: 0;
-    animation: shoot 9s ease-in infinite;
-  }
-  @keyframes twinkle {
-    0%,
-    100% {
-      opacity: 0.2;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-  @keyframes shoot {
-    0% {
-      transform: translate(0, 0) rotate(-28deg);
-      opacity: 0;
-    }
-    4% {
-      opacity: 1;
-    }
-    12%,
-    100% {
-      transform: translate(-60vw, 32vw) rotate(-28deg);
-      opacity: 0;
-    }
-  }
   @keyframes breathe {
     0%,
     100% {

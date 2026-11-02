@@ -11,7 +11,7 @@ const stars = (() => {
   return Array.from({ length: 140 }, () => ({
     x: r() * 100,
     y: r() * 100,
-    size: r() < 0.1 ? 2.4 : r() * 1.4 + 0.6,
+    size: r() < 0.12 ? 3 : r() * 1.6 + 1,
     delay: r() * 5,
     gold: r() > 0.45,
   }));
@@ -30,7 +30,7 @@ export default function HeroBackdrop() {
             width: s.size,
             height: s.size,
             background: s.gold ? "#F2CC73" : "#ffffff",
-            boxShadow: s.size > 2 ? "0 0 8px 2px rgba(242,204,115,.7)" : undefined,
+            boxShadow: s.size > 2 ? "0 0 10px 3px rgba(242,204,115,.75)" : "0 0 4px rgba(242,204,115,.5)",
             animationDuration: `${3 + (i % 4)}s`,
             animationDelay: `${-s.delay}s`,
           }}

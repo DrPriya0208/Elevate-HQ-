@@ -185,11 +185,14 @@ export default async function HomePage() {
         <SectionHeading kicker="Why choose Elevate HQ" title="Experience, ethics and real-world results" />
         <Stagger as="ul" className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {whyChoose.map((w) => (
-            <StaggerItem key={w.text} className="card flex items-start gap-4 p-6">
-              <span className="icon-badge !h-11 !w-11">
-                <Icon name={w.icon} className="h-5 w-5" />
-              </span>
-              <span className="pt-1 leading-relaxed text-navy/85">{w.text}</span>
+            <StaggerItem key={w.text} className="h-full">
+              {/* Same hover as the service cards; on an inner element so it doesn't fight the entrance animation */}
+              <div className="card card-hover group flex h-full items-start gap-4 p-6">
+                <span className="icon-badge !h-11 !w-11 transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
+                  <Icon name={w.icon} className="h-5 w-5" />
+                </span>
+                <span className="pt-1 leading-relaxed text-navy/85">{w.text}</span>
+              </div>
             </StaggerItem>
           ))}
         </Stagger>

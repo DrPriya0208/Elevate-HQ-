@@ -49,7 +49,10 @@ export default async function AdminDashboard() {
                   <Link href={`/admin/posts/${p.id}/edit`} className="text-sm font-semibold underline underline-offset-4">
                     Edit
                   </Link>
-                  <DeleteButton action={deletePost.bind(null, p.id)} />
+                  <DeleteButton
+                    action={deletePost.bind(null, p.id)}
+                    confirmText={`“${p.title}” will be permanently deleted${p.published ? " and removed from the website" : ""}. This cannot be undone.`}
+                  />
                 </div>
               </li>
             ))}

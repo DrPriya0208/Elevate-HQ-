@@ -90,7 +90,8 @@ export default async function AdminReviewsPage({ searchParams }: Props) {
                   </Link>
                   <DeleteButton
                     action={deleteReview.bind(null, r.id)}
-                    confirmText="Delete this review? This cannot be undone."
+                    title="Delete review?"
+                    confirmText={`The review from ${r.name} will be removed from the website. This cannot be undone.`}
                   />
                 </div>
               </div>

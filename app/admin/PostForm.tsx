@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState, useRef, useState } from "react";
 import type { FormState } from "@/lib/types";
+import ConfirmDialog from "./ConfirmDialog";
 import Editor from "./Editor";
 import { uploadImage } from "./uploadImage";
 
@@ -28,6 +29,35 @@ export default function PostForm({ action, post, submitLabel }: Props) {
   const [coverUploading, setCoverUploading] = useState(false);
   const [coverError, setCoverError] = useState<string | null>(null);
   const coverFileRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const confirmed = useRef(false);
+  const [asking, setAsking] = useState<null | { published: boolean }>(null);
+
+  // Ask before saving; the confirm button re-submits the form with `confirmed` set
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if (confirmed.current) {
+      confirmed.current = false;
+      return;
+    }
+    e.preventDefault();
+    const published = (e.currentTarget.elements.namedItem("published") as HTMLInputElement).checked;
+    setAsking({ published });
+  }
+
+  const editing = Boolean(post);
+  const dialog = asking && {
+    title: editing ? "Save changes?" : asking.published ? "Publish this post?" : "Save as draft?",
+    message: asking.published
+      ? editing
+        ? post?.published
+          ? "Your changes will go live on the website straight away."
+          : "This post will be published and visible on the website straight away."
+        : "It will be visible on the website straight away."
+      : editing && post?.published
+        ? "This post will be unpublished and hidden from the website until you publish it again."
+        : "It will be saved but not shown on the website until you publish it.",
+    confirmLabel: editing ? "Save changes" : asking.published ? "Publish" : "Save draft",
+  };
 
   async function handleCoverFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -47,7 +77,7 @@ export default function PostForm({ action, post, submitLabel }: Props) {
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form ref={formRef} action={formAction} onSubmit={handleSubmit} className="space-y-6">
       <div>
         <label htmlFor="title" className="label">Title</label>
         <input id="title" name="title" type="text" required defaultValue={post?.title} className="field" />
@@ -139,6 +169,19 @@ export default function PostForm({ action, post, submitLabel }: Props) {
         </button>
         <Link href="/admin" className="font-semibold underline underline-offset-4">Cancel</Link>
       </div>
+
+      <ConfirmDialog
+        open={Boolean(dialog)}
+        title={dialog ? dialog.title : ""}
+        message={dialog ? dialog.message : ""}
+        confirmLabel={dialog ? dialog.confirmLabel : ""}
+        onCancel={() => setAsking(null)}
+        onConfirm={() => {
+          setAsking(null);
+          confirmed.current = true;
+          formRef.current?.requestSubmit();
+        }}
+      />
     </form>
   );
 }

@@ -70,7 +70,7 @@ export default async function BlogPage() {
 
   return (
     <>
-      <PageHero kicker="Blog" title="Notes on minds, work and wellbeing." intro="Articles on mental health, relationships, workplaces and personal growth." />
+      <PageHero kicker="Blog" title="Notes on minds, work and wellbeing" intro="Articles on mental health, relationships, workplaces and personal growth." />
 
       <div className="mx-auto max-w-6xl px-6 py-20">
         {failed ? (

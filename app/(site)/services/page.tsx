@@ -4,7 +4,7 @@ import CtaBand from "@/components/CtaBand";
 import PageHero from "@/components/PageHero";
 import SectionHeading from "@/components/SectionHeading";
 import { Icon } from "@/components/icons";
-import { DrawLine, FadeIn, RevealText, ScaleIn, Stagger, StaggerItem } from "@/components/motion";
+import { FadeIn, RevealText, ScaleIn, Stagger, StaggerItem } from "@/components/motion";
 import { services, whoChoosesUs } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -18,14 +18,15 @@ export default function ServicesPage() {
     <>
       <PageHero
         kicker="Our services"
-        title="Psychology, counselling, assessments and training."
+        title="Psychology, counselling, assessments and training"
         intro="Not sure which fits? Book a free introductory call and we will suggest a starting point."
       />
 
-      <div className="mx-auto max-w-6xl px-6 py-20">
-        <Stagger as="ul" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
+        {/* Four per row on desktop (4 + 3), two on tablets; a short last row is centred instead of leaving gaps */}
+        <Stagger as="ul" className="flex flex-wrap justify-center gap-4">
           {services.map((s, i) => (
-            <StaggerItem key={s.slug} className="h-full">
+            <StaggerItem key={s.slug} className="w-full sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-3rem)/4)]">
               <a href={`#${s.slug}`} className="card card-hover group flex h-full flex-col gap-3 p-6">
                 <div className="flex items-center justify-between">
                   <span className="icon-badge transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
@@ -33,7 +34,7 @@ export default function ServicesPage() {
                   </span>
                   <span className="font-serif text-sm text-slate">{String(i + 1).padStart(2, "0")}</span>
                 </div>
-                <span className="mt-2 font-serif text-lg font-bold leading-snug text-navy">{s.title}</span>
+                <span className="mt-2 font-serif text-lg font-semibold leading-snug text-navy">{s.title}</span>
                 <span className="text-sm leading-relaxed text-navy/75">{s.summary}</span>
                 <span className="mt-auto inline-flex items-center gap-1 pt-2 text-sm font-semibold text-brass">
                   Learn more
@@ -46,23 +47,22 @@ export default function ServicesPage() {
           ))}
         </Stagger>
 
-        <div className="mt-24 space-y-8">
+        <div className="mt-16 space-y-8 lg:mt-20">
           {services.map((s, i) => (
-            <section key={s.slug} id={s.slug} className="card scroll-mt-28 overflow-hidden">
+            <section key={s.slug} id={s.slug} className="card scroll-mt-28 overflow-clip">
               <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
-                <div className="speckle relative overflow-hidden bg-navy p-8 text-white md:p-10">
-                  <div aria-hidden className="absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-gold/15 blur-3xl" />
-                  <div className="relative">
+                <div className="speckle relative bg-navy p-8 text-white md:p-10">
+                  {/* Sticky on desktop, so the intro stays beside a long list instead of leaving an empty navy column */}
+                  <div className="relative lg:sticky lg:top-28">
                     <div className="flex items-center gap-4">
-                      <ScaleIn className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gold text-navy">
+                      <ScaleIn className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gold/50 text-gold">
                         <Icon name={s.slug} />
                       </ScaleIn>
-                      <span className="font-serif text-4xl font-bold text-white/15">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="font-serif text-4xl font-semibold text-white/15">{String(i + 1).padStart(2, "0")}</span>
                     </div>
                     <p className="kicker mt-8 text-gold">{s.audience}</p>
-                    <RevealText as="h2" text={s.title} className="mt-3 font-serif text-3xl leading-tight text-white" />
-                    <DrawLine className="mt-5 block h-[3px] w-16 origin-left rounded-full bg-gold" />
-                    <FadeIn delay={0.1} className="mt-6 space-y-4 leading-relaxed text-white/80">
+                    <RevealText as="h2" text={s.title} className="mt-2 font-serif text-3xl leading-tight text-white" />
+                    <FadeIn delay={0.1} className="mt-5 space-y-4 leading-relaxed text-white/80">
                       {s.intro.map((p) => (
                         <p key={p}>{p}</p>
                       ))}
@@ -89,7 +89,7 @@ export default function ServicesPage() {
                       <ol className="mt-4 space-y-3">
                         {s.steps.items.map((step, n) => (
                           <li key={step} className="flex gap-3 leading-relaxed text-navy/90">
-                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy text-xs font-bold text-gold">
+                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-brass/50 text-xs font-semibold text-brass">
                               {n + 1}
                             </span>
                             {step}
@@ -121,8 +121,8 @@ export default function ServicesPage() {
           ))}
         </div>
 
-        <section className="mt-24">
-          <SectionHeading kicker="Who chooses us" title="Trusted by people and organisations of every kind." center />
+        <section className="mt-16 lg:mt-20">
+          <SectionHeading kicker="Who chooses us" title="Trusted by people and organisations of every kind" center />
           <Stagger as="ul" className="mx-auto mt-10 flex max-w-4xl flex-wrap justify-center gap-3">
             {whoChoosesUs.map((w) => (
               <StaggerItem key={w} className="rounded-full border border-line bg-white px-5 py-2.5 text-[0.95rem] font-medium text-navy">

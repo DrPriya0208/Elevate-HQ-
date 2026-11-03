@@ -21,7 +21,7 @@ export default function Footer() {
         <div>
           <div className="flex items-center gap-3">
             <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={52} height={52} priority />
-            <p className="font-serif text-2xl font-bold text-white">{site.name}</p>
+            <p className="font-serif text-2xl font-semibold text-white">{site.name}</p>
           </div>
           <p className="mt-4 max-w-xs text-sm leading-relaxed">{site.tagline}</p>
           <Link href="/contact" className="btn btn-gold mt-6 !px-5 !py-2.5 text-sm">Book a session</Link>

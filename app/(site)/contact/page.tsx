@@ -38,14 +38,14 @@ export default async function ContactPage({ searchParams }: Props) {
     <>
       <PageHero
         kicker="Contact"
-        title="Book a session."
+        title="Book a session"
         intro="Book a free introductory call or send an enquiry. We will understand your needs and suggest the next step."
       />
 
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1.25fr_0.75fr]">
         <FadeIn className="card p-8 md:p-10">
           <p className="kicker text-brass">Send a message</p>
-          <h2 className="mt-3 font-serif text-2xl">Tell us a little about what you need.</h2>
+          <h2 className="mt-3 font-serif text-2xl">Tell us a little about what you need</h2>
           <div className="mt-8">
             <ContactForm defaultTopic={topic} />
           </div>

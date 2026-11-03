@@ -50,7 +50,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageHero kicker="Reviews" title="Share your feedback." intro={reviewsCopy.intro}>
+      <PageHero kicker="Reviews" title="Share your feedback" intro={reviewsCopy.intro}>
         {summary && (
           <FadeIn delay={0.25}>
             <div className="mt-8 inline-flex items-center gap-4 rounded-full border border-white/15 bg-white/5 px-5 py-3">
@@ -78,7 +78,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
         </div>
 
         <div>
-          <SectionHeading kicker="Testimonials" title="What people have said." />
+          <SectionHeading kicker="Testimonials" title="What people have said" />
 
           {failed ? (
             <p className="card mt-8 p-6 text-slate">Reviews could not be loaded right now. Please try again in a few minutes.</p>

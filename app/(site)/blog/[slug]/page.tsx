@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CtaBand from "@/components/CtaBand";
-import HeroGlow from "@/components/HeroGlow";
 import ShareButtons from "@/components/ShareButtons";
 import StarField from "@/components/StarField";
 import { site } from "@/lib/content";
-import { DrawLine, FadeIn, RevealText } from "@/components/motion";
+import { FadeIn, RevealText } from "@/components/motion";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/text";
 
@@ -51,7 +50,6 @@ export default async function PostPage({ params }: Props) {
   return (
     <>
       <header className="speckle relative overflow-hidden bg-navy text-white">
-        <HeroGlow />
         <StarField />
         <div className={`relative mx-auto max-w-3xl px-6 pt-16 ${post.coverImage ? "pb-36" : "pb-16"}`}>
           <Link href="/blog" className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold hover:text-white">
@@ -60,8 +58,7 @@ export default async function PostPage({ params }: Props) {
           <FadeIn>
             <p className="kicker mt-10 text-gold">{formatDate(post.publishedAt)}</p>
           </FadeIn>
-          <RevealText as="h1" text={post.title} className="mt-4 font-serif text-4xl leading-tight text-white sm:text-5xl" />
-          <DrawLine className="mt-6 block h-[3px] w-20 origin-left rounded-full bg-gold" />
+          <RevealText as="h1" text={post.title} className="mt-3 font-serif text-4xl leading-tight text-white sm:text-5xl" />
         </div>
       </header>
 

@@ -288,7 +288,7 @@ export const enquiryTopics = [...services.map((s) => s.topic), "Something else"]
 /* ---------- About ---------- */
 
 export const about = {
-  title: "Where compassion meets science.",
+  title: "Where compassion meets science",
   storyBelief:
     "Elevate HQ was founded on one belief: every person deserves to feel mentally strong, and every workplace deserves to be safe, respectful and productive.",
   story: [

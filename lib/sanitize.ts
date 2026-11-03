@@ -1,10 +1,13 @@
 import sanitizeHtml from "sanitize-html";
+import { postFontPattern } from "@/lib/postFonts";
 
 // Blog HTML comes from the admin editor, but it is cleaned on save anyway.
 export function cleanHtml(html: string): string {
   return sanitizeHtml(html, {
-    allowedTags: ["h2", "h3", "p", "br", "strong", "em", "u", "s", "a", "ul", "ol", "li", "blockquote", "hr", "code", "pre", "img"],
-    allowedAttributes: { a: ["href", "target", "rel"], img: ["src", "alt"] },
+    allowedTags: ["h2", "h3", "p", "br", "strong", "em", "u", "s", "a", "ul", "ol", "li", "blockquote", "hr", "code", "pre", "img", "span"],
+    allowedAttributes: { a: ["href", "target", "rel"], img: ["src", "alt"], span: ["style"] },
+    // Only the editor's font choices are kept; any other inline style is dropped
+    allowedStyles: { span: { "font-family": [postFontPattern] } },
     allowedSchemes: ["http", "https", "mailto", "tel"],
     allowedSchemesByTag: { img: ["http", "https"] },
     transformTags: {

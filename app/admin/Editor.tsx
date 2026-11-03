@@ -1,11 +1,17 @@
 "use client";
 
+import FontFamily from "@tiptap/extension-font-family";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
+import TextStyle from "@tiptap/extension-text-style";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useCallback, useRef, useState } from "react";
+import { postFonts } from "@/lib/postFonts";
 import { uploadImage } from "./uploadImage";
+
+// "Lora, Georgia, serif" or "'Playfair Display', …" -> "Lora" / "Playfair Display"
+const firstFont = (css?: string) => css?.split(",")[0].trim().replace(/^['"]|['"]$/g, "").toLowerCase() ?? "";
 
 type Props = { value: string; onChange: (html: string) => void };
 
@@ -45,6 +51,8 @@ export default function Editor({ value, onChange }: Props) {
       StarterKit.configure({ heading: { levels: [2, 3] } }),
       Link.configure({ openOnClick: false, autolink: true }),
       Image.configure({ HTMLAttributes: { class: "rounded-md" } }),
+      TextStyle,
+      FontFamily,
     ],
     content: value,
     immediatelyRender: false,
@@ -90,9 +98,31 @@ export default function Editor({ value, onChange }: Props) {
 
   if (!editor) return <div className="min-h-[400px] rounded-md border border-line bg-white" />;
 
+  const currentFont = firstFont(editor.getAttributes("textStyle").fontFamily as string | undefined);
+  const selectedFont = postFonts.find((f) => f.label.toLowerCase() === currentFont)?.label ?? "";
+
   return (
     <div className="rounded-md border border-line bg-white">
       <div className="flex flex-wrap items-center gap-1 border-b border-line p-2">
+        <label className="sr-only" htmlFor="editor-font">Font</label>
+        <select
+          id="editor-font"
+          value={selectedFont}
+          onChange={(e) => {
+            const font = postFonts.find((f) => f.label === e.target.value);
+            const chain = editor.chain().focus();
+            (font ? chain.setFontFamily(font.css) : chain.unsetFontFamily()).run();
+          }}
+          title="Font for the selected text"
+          className="mr-1 rounded border border-line bg-white px-2 py-1.5 text-sm font-semibold text-navy"
+        >
+          <option value="">Default font</option>
+          {postFonts.map((f) => (
+            <option key={f.label} value={f.label} style={{ fontFamily: f.css }}>
+              {f.label}
+            </option>
+          ))}
+        </select>
         <ToolButton label="Bold" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()} />
         <ToolButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()} />
         <ToolButton label="Heading" active={editor.isActive("heading", { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} />

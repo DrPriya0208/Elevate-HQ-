@@ -171,7 +171,7 @@ async function sendEnquiryEmail(e: z.infer<typeof enquirySchema>) {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: process.env.CONTACT_FROM_EMAIL || "ElevateHQ <onboarding@resend.dev>",
+        from: process.env.CONTACT_FROM_EMAIL || "Elevate HQ <onboarding@resend.dev>",
         to: [to],
         reply_to: e.email,
         subject: `New enquiry from ${e.name}`,
@@ -254,7 +254,7 @@ async function sendReviewEmail(name: string, rating: number, message: string) {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: process.env.CONTACT_FROM_EMAIL || "ElevateHQ <onboarding@resend.dev>",
+        from: process.env.CONTACT_FROM_EMAIL || "Elevate HQ <onboarding@resend.dev>",
         to: [to],
         subject: "New review awaiting approval",
         text: `${name} left a ${rating}-star review:\n\n${message}`,

@@ -5,7 +5,7 @@ import { site } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "How ElevateHQ collects, uses and protects your personal information.",
+  description: "How Elevate HQ collects, uses and protects your personal information.",
 };
 
 const sections = [

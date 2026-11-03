@@ -27,7 +27,7 @@ export default function MindOfLightHero({ children }: MindOfLightHeroProps) {
   const badgeBtnRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <section className="mind-hero" ref={heroRef} aria-label="ElevateHQ hero">
+    <section className="mind-hero" ref={heroRef} aria-label="Elevate HQ hero">
       <StarField />
       <canvas ref={canvasRef} aria-hidden="true" />
       {/* Same container as the header (mx-auto max-w-6xl px-6), so the headline lines up with the logo.

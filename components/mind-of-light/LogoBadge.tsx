@@ -2,13 +2,13 @@ import type { CSSProperties } from "react";
 
 /**
  * Ported from reference/elevatehq-mind-of-light-v1-dots.html (<template id="logo-tpl">).
- * This is the crisp, final-state ElevateHQ logo: a brain with a gold leaf inside a navy
+ * This is the crisp, final-state Elevate HQ logo: a brain with a gold leaf inside a navy
  * badge. Classes and the gold-sheen <animateTransform> are kept verbatim so mind-of-light.css
  * (ported from the same reference) continues to drive every animation stage (.v-w, .v-a, ...).
  */
 export default function LogoBadge() {
   return (
-    <svg className="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="-40 -40 680 680" role="img" aria-label="ElevateHQ logo: a brain with a gold leaf inside a navy badge">
+    <svg className="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="-40 -40 680 680" role="img" aria-label="Elevate HQ logo: a brain with a gold leaf inside a navy badge">
   <defs>
     <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="0">
       <stop offset="0" stopColor="#F2CC73"/><stop offset="0.43" stopColor="#F2CC73"/>

@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-// Palette is taken from the ElevateHQ business card: deep navy, warm gold, white.
+// Palette is taken from the Elevate HQ business card: deep navy, warm gold, white.
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {

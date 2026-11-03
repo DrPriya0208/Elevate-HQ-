@@ -25,7 +25,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={56} height={56} className="h-14 w-14" priority />
           <span className="whitespace-nowrap font-serif text-2xl font-bold tracking-wide">
-            ElevateH
+            Elevate H
             <span className="relative inline-block">
               <span className="inline-block [clip-path:polygon(0_0,100%_0,100%_68%,68%_100%,0_100%)]">Q</span>
               <svg

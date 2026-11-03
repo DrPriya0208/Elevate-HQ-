@@ -39,7 +39,12 @@
   h1,
   h2,
   h3 {
-    @apply font-serif font-bold tracking-tight text-ink;
+    @apply font-serif font-semibold text-ink;
+  }
+  /* Tight tracking only for large display text; card titles keep normal spacing */
+  h1,
+  h2 {
+    @apply tracking-tight;
   }
   /* Two-tone ring stays visible on both navy and light backgrounds */
   :focus-visible {
@@ -133,10 +138,11 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[0.95rem] font-medium transition-[background-color,transform] motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98];
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[0.95rem] font-medium transition-[background-color,border-color,color,transform] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:active:scale-[0.98];
   }
   .btn-gold {
-    @apply bg-gold text-ink hover:bg-white;
+    /* Deeper gold on hover stays visible on both the navy and the ivory sections */
+    @apply bg-gold text-ink hover:bg-deep-gold;
   }
   .btn-outline-light {
     @apply border border-white/40 text-white hover:border-gold hover:text-gold;
@@ -154,7 +160,7 @@
     @apply rounded-xl border border-line bg-white shadow-[0_1px_3px_rgba(10,21,48,0.08)];
   }
   .card-hover {
-    @apply transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-[0_14px_32px_rgba(10,21,48,0.12)];
+    @apply transition-[transform,box-shadow,border-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-brass/50 hover:shadow-[0_8px_24px_rgba(10,21,48,0.08)];
   }
   .legal {
     @apply text-[1.02rem] leading-relaxed text-navy/85;
@@ -181,11 +187,13 @@
   .legal strong {
     @apply font-semibold text-navy;
   }
+  /* Section label: sentence case, set by colour and weight rather than capitals */
   .kicker {
-    @apply text-xs font-semibold uppercase tracking-[0.22em];
+    @apply text-sm font-semibold;
   }
+  /* Brass-ringed marker, the same ring as the numbered steps in "How we work" */
   .icon-badge {
-    @apply flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-navy text-gold;
+    @apply flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-brass/40 text-brass;
   }
 
   /* Speckled navy surface, echoing the business card texture */

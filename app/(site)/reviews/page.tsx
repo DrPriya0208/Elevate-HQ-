@@ -11,7 +11,7 @@ import ReviewForm from "./ReviewForm";
 
 export const metadata: Metadata = {
   title: "Reviews",
-  description: "Feedback from people who have worked with ElevateHQ.",
+  description: "Feedback from people who have worked with Elevate HQ.",
 };
 
 const PAGE_SIZE = 10;

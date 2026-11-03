@@ -7,7 +7,7 @@ import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Book a session or ask a question. ElevateHQ, Sholinganallur, Chennai.",
+  description: "Book a session or ask a question. Elevate HQ, Sholinganallur, Chennai.",
 };
 
 const [emailUser, emailDomain] = site.email.split("@");
@@ -60,7 +60,7 @@ export default async function ContactPage({ searchParams }: Props) {
                   {...(m.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className="card card-hover group flex items-center gap-4 p-5"
                 >
-                  <span className="icon-badge transition-colors duration-300 group-hover:bg-gold group-hover:text-navy">
+                  <span className="icon-badge transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
                     <Icon name={m.icon} className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
@@ -78,7 +78,7 @@ export default async function ContactPage({ searchParams }: Props) {
                 aria-label={`${site.location}, open in Google Maps (new tab)`}
                 className="card card-hover group flex items-center gap-4 p-5"
               >
-                <span className="icon-badge transition-colors duration-300 group-hover:bg-gold group-hover:text-navy">
+                <span className="icon-badge transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
                   <Icon name="pin" className="h-5 w-5" />
                 </span>
                 <span className="min-w-0">

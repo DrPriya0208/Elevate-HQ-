@@ -28,7 +28,7 @@ export default function ServicesPage() {
             <StaggerItem key={s.slug} className="h-full">
               <a href={`#${s.slug}`} className="card card-hover group flex h-full flex-col gap-3 p-6">
                 <div className="flex items-center justify-between">
-                  <span className="icon-badge transition-colors duration-300 group-hover:bg-gold group-hover:text-navy">
+                  <span className="icon-badge transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
                     <Icon name={s.slug} />
                   </span>
                   <span className="font-serif text-sm text-slate">{String(i + 1).padStart(2, "0")}</span>
@@ -122,7 +122,7 @@ export default function ServicesPage() {
         </div>
 
         <section className="mt-24">
-          <SectionHeading kicker="Who chooses us" title="Trusted by people and organisations of every kind." center glow />
+          <SectionHeading kicker="Who chooses us" title="Trusted by people and organisations of every kind." center />
           <Stagger as="ul" className="mx-auto mt-10 flex max-w-4xl flex-wrap justify-center gap-3">
             {whoChoosesUs.map((w) => (
               <StaggerItem key={w} className="rounded-full border border-line bg-white px-5 py-2.5 text-[0.95rem] font-medium text-navy">

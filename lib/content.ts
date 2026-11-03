@@ -1,7 +1,7 @@
 // All editable site copy lives here.
 
 export const site = {
-  name: "ElevateHQ",
+  name: "Elevate HQ",
   tagline: "Psychology & Human Development Services",
   founder: "Priyadharshini",
   phone: "+91 98407 38955",
@@ -26,7 +26,7 @@ export const socials: { name: string; icon: string; url: string }[] = [
 /* ---------- Home ---------- */
 
 export const home = {
-  title: "Psychology for every stage of life and work.",
+  title: "Psychology for every stage of life and work",
   intro:
     "From a first-year student to a seasoned CEO, from a homemaker to a seafarer far from shore, we offer psychology, counselling, assessments and training that help individuals thrive and organisations perform.",
   welcome:
@@ -397,7 +397,7 @@ export const faqs = [
 /* ---------- Reviews ---------- */
 
 export const reviewsCopy = {
-  intro: "If ElevateHQ has been useful to you, we would be glad to hear about it.",
+  intro: "If Elevate HQ has been useful to you, we would be glad to hear about it.",
   helper:
     "Use your first name or initials, or leave it blank to stay anonymous. Please don't include details about your sessions or about other people.",
   consent: "I agree to my feedback being shown on this website after it has been reviewed.",

@@ -10,7 +10,7 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Articles on mental health, relationships, and personal growth from ElevateHQ.",
+  description: "Articles on mental health, relationships, and personal growth from Elevate HQ.",
 };
 
 type PostCard = {

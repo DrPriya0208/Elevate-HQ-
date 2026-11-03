@@ -5,7 +5,7 @@ import { site } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
-  description: "The terms that apply when you use the ElevateHQ website.",
+  description: "The terms that apply when you use the Elevate HQ website.",
 };
 
 const sections = [

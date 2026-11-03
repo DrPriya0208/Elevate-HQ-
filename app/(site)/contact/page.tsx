@@ -71,15 +71,21 @@ export default async function ContactPage({ searchParams }: Props) {
               </StaggerItem>
             ))}
             <StaggerItem>
-              <div className="card flex items-center gap-4 p-5">
-                <span className="icon-badge">
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.location)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${site.location}, open in Google Maps (new tab)`}
+                className="card card-hover group flex items-center gap-4 p-5"
+              >
+                <span className="icon-badge transition-colors duration-300 group-hover:bg-gold group-hover:text-navy">
                   <Icon name="pin" className="h-5 w-5" />
                 </span>
-                <span>
+                <span className="min-w-0">
                   <span className="kicker block text-slate">Where we are</span>
                   <span className="mt-1 block font-semibold text-navy">{site.location}</span>
                 </span>
-              </div>
+              </a>
             </StaggerItem>
           </Stagger>
 

@@ -25,10 +25,19 @@ export function formatDate(date: Date | null | undefined): string {
     day: "numeric",
     month: "long",
     year: "numeric",
+    timeZone: "Asia/Kolkata", // the server runs in UTC; show the date as it was in India
   });
+}
+
+/** Date for a post card: the last-updated date when the post was edited on a later day, otherwise the publish date. */
+export function postCardDate(publishedAt: Date | null | undefined, updatedAt: Date): string {
+  const published = formatDate(publishedAt);
+  const updated = formatDate(updatedAt);
+  if (!published) return updated;
+  return publishedAt && updatedAt > publishedAt && updated !== published ? `Updated ${updated}` : published;
 }
 
 export function formatMonthYear(date: Date | null | undefined): string {
   if (!date) return "";
-  return new Date(date).toLocaleDateString("en-IN", { month: "long", year: "numeric" });
+  return new Date(date).toLocaleDateString("en-IN", { month: "long", year: "numeric", timeZone: "Asia/Kolkata" });
 }

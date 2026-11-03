@@ -1,6 +1,6 @@
 import Link from "next/link";
 import DeleteButton from "@/app/admin/DeleteButton";
-import { deletePost } from "@/lib/actions";
+import { deleteEnquiry, deletePost } from "@/lib/actions";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/text";
 
@@ -72,9 +72,16 @@ export default async function AdminDashboard() {
               <li key={e.id} className="px-5 py-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <p className="font-semibold">{e.name}</p>
-                  <p className="text-sm text-slate">
-                    {new Date(e.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
-                  </p>
+                  <div className="flex items-baseline gap-5">
+                    <p className="text-sm text-slate">
+                      {new Date(e.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
+                    </p>
+                    <DeleteButton
+                      action={deleteEnquiry.bind(null, e.id)}
+                      title="Delete enquiry?"
+                      confirmText={`The enquiry from ${e.name} will be permanently deleted. This cannot be undone.`}
+                    />
+                  </div>
                 </div>
                 <p className="mt-0.5 text-sm text-slate">
                   <a href={`mailto:${e.email}`} className="underline underline-offset-4">{e.email}</a>

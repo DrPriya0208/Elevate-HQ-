@@ -4,7 +4,7 @@ import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { prisma } from "@/lib/prisma";
-import { formatDate } from "@/lib/text";
+import { postCardDate } from "@/lib/text";
 
 export const revalidate = 60;
 
@@ -20,6 +20,7 @@ type PostCard = {
   excerpt: string;
   coverImage: string | null;
   publishedAt: Date | null;
+  updatedAt: Date;
 };
 
 function Cover({ src, large = false }: { src: string | null; large?: boolean }) {
@@ -51,7 +52,7 @@ export default async function BlogPage() {
     posts = await prisma.post.findMany({
       where: { published: true },
       orderBy: { publishedAt: "desc" },
-      select: { id: true, slug: true, title: true, excerpt: true, coverImage: true, publishedAt: true },
+      select: { id: true, slug: true, title: true, excerpt: true, coverImage: true, publishedAt: true, updatedAt: true },
     });
   } catch {
     failed = true;
@@ -85,7 +86,7 @@ export default async function BlogPage() {
                     <Cover src={featured.coverImage} large />
                   </div>
                   <div className="flex flex-col justify-center p-8 md:p-12">
-                    <p className="kicker text-brass">Latest · {formatDate(featured.publishedAt)}</p>
+                    <p className="kicker text-brass">Latest · {postCardDate(featured.publishedAt, featured.updatedAt)}</p>
                     <h2 className="mt-4 font-serif text-3xl leading-tight sm:text-4xl">{featured.title}</h2>
                     <p className="mt-4 line-clamp-4 text-lg leading-relaxed text-navy/80">{featured.excerpt}</p>
                     <span className="mt-8 inline-flex items-center gap-1.5 font-semibold text-brass">
@@ -109,7 +110,7 @@ export default async function BlogPage() {
                         <Cover src={p.coverImage} />
                       </div>
                       <div className={`flex flex-1 flex-col p-6 ${single ? "md:justify-center md:p-10" : ""}`}>
-                        <p className="text-sm text-slate">{formatDate(p.publishedAt)}</p>
+                        <p className="text-sm text-slate">{postCardDate(p.publishedAt, p.updatedAt)}</p>
                         <h2 className="mt-2 font-serif text-xl leading-snug">{p.title}</h2>
                         <p className="mt-3 line-clamp-3 leading-relaxed text-navy/80">{p.excerpt}</p>
                         <span className={`mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-brass ${single ? "md:mt-0" : ""}`}>

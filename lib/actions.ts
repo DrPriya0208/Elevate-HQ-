@@ -220,6 +220,12 @@ export async function submitEnquiry(_prev: ContactState, formData: FormData): Pr
   return { ok: true };
 }
 
+export async function deleteEnquiry(id: string): Promise<void> {
+  await requireAdmin();
+  await prisma.enquiry.deleteMany({ where: { id } }); // deleteMany: no error if it was already removed
+  revalidatePath("/admin");
+}
+
 /* ---------- reviews ---------- */
 
 function revalidateReviews() {

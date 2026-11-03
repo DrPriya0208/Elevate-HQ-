@@ -11,7 +11,7 @@ import MindOfLightHero from "@/components/mind-of-light/MindOfLightHero";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { faqs, home, services, whoWeServe, whyChoose } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
-import { formatDate, formatMonthYear } from "@/lib/text";
+import { formatMonthYear, postCardDate } from "@/lib/text";
 
 export const revalidate = 60;
 
@@ -21,7 +21,7 @@ async function getLatestPosts() {
       where: { published: true },
       orderBy: { publishedAt: "desc" },
       take: 3,
-      select: { id: true, slug: true, title: true, excerpt: true, coverImage: true, publishedAt: true },
+      select: { id: true, slug: true, title: true, excerpt: true, coverImage: true, publishedAt: true, updatedAt: true },
     });
   } catch {
     return []; // the home page should still render if the database is unreachable
@@ -213,7 +213,7 @@ export default async function HomePage() {
                     )}
                   </div>
                   <div className="flex flex-1 flex-col p-6">
-                    <p className="text-sm text-slate">{formatDate(p.publishedAt)}</p>
+                    <p className="text-sm text-slate">{postCardDate(p.publishedAt, p.updatedAt)}</p>
                     <h3 className="mt-2 font-serif text-xl leading-snug">{p.title}</h3>
                     <p className="mt-3 line-clamp-3 leading-relaxed text-navy/80">{p.excerpt}</p>
                     <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-brass">

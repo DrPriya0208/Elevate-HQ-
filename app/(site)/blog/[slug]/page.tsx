@@ -79,7 +79,10 @@ export default async function PostPage({ params }: Props) {
         <FadeIn>
           <div className="post-body mt-12" dangerouslySetInnerHTML={{ __html: post.content }} />
         </FadeIn>
-        <div className="mt-16 flex flex-col gap-6 border-t border-line pt-8 sm:flex-row sm:items-start sm:justify-between">
+        <p className="mt-16 border-t border-line pt-8 text-sm text-slate">
+          Last updated: <time dateTime={post.updatedAt.toISOString()}>{formatDate(post.updatedAt)}</time>
+        </p>
+        <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <ShareButtons url={`${site.url}/blog/${post.slug}`} title={post.title} />
           <Link href="/blog" className="btn btn-navy shrink-0 self-start">← More articles</Link>
         </div>

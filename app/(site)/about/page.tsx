@@ -105,7 +105,7 @@ export default function AboutPage() {
             <div className="flex items-center gap-5">
               <Monogram name={founder.name} />
               <div>
-                <p className="kicker text-brass">{founder.role}</p>
+                <p className="text-sm font-semibold text-brass">{founder.role}</p>
                 <h3 className="mt-1 font-serif text-2xl">{founder.name}</h3>
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function AboutPage() {
             <div className="flex items-center gap-5">
               <Monogram name={coFounder.name} />
               <div>
-                <p className="kicker text-brass">{coFounder.role}</p>
+                <p className="text-sm font-semibold text-brass">{coFounder.role}</p>
                 <h3 className="mt-1 font-serif text-2xl">{coFounder.name}</h3>
               </div>
             </div>

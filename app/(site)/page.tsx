@@ -123,7 +123,7 @@ export default async function HomePage() {
                       <span className="icon-badge transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
                         <Icon name={s.slug} />
                       </span>
-                      <p className="kicker mt-6 text-slate">{s.audience}</p>
+                      <p className="text-sm font-semibold mt-6 text-slate">{s.audience}</p>
                       <h3 className="mt-2 font-serif text-xl leading-snug">{s.title}</h3>
                     </div>
                     <div

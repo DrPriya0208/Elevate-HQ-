@@ -189,9 +189,8 @@
   }
   /* Section label: sentence case, set by colour and weight rather than capitals */
   .kicker {
-    @apply text-sm font-semibold;
-  }
-  /* Brass-ringed marker, the same ring as the numbered steps in "How we work" */
+    @apply text-lg font-semibold;
+  }  /* Brass-ringed marker, the same ring as the numbered steps in "How we work" */
   .icon-badge {
     @apply flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-brass/40 text-brass;
   }

@@ -64,7 +64,7 @@ export default async function ContactPage({ searchParams }: Props) {
                     <Icon name={m.icon} className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
-                    <span className="kicker block text-slate">{m.label}</span>
+                    <span className="text-sm font-semibold block text-slate">{m.label}</span>
                     <span className="mt-1 block break-words font-semibold text-navy">{m.value}</span>
                   </span>
                 </a>
@@ -82,7 +82,7 @@ export default async function ContactPage({ searchParams }: Props) {
                   <Icon name="pin" className="h-5 w-5" />
                 </span>
                 <span className="min-w-0">
-                  <span className="kicker block text-slate">Where we are</span>
+                  <span className="text-sm font-semibold block text-slate">Where we are</span>
                   <span className="mt-1 block font-semibold text-navy">{site.location}</span>
                 </span>
               </a>

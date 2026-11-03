@@ -7,3 +7,7 @@ next-env.d.ts
 __pycache__/
 *.pyc
 *.log
+
+# Local design tooling and reference material, not part of the site
+.impeccable/
+reference/awesome-design-md/

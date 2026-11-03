@@ -3,6 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CtaBand from "@/components/CtaBand";
 import HeroGlow from "@/components/HeroGlow";
+import ShareButtons from "@/components/ShareButtons";
+import StarField from "@/components/StarField";
+import { site } from "@/lib/content";
 import { DrawLine, FadeIn, RevealText } from "@/components/motion";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/text";
@@ -27,7 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
+      url: `/blog/${post.slug}`,
+      siteName: site.name,
       title: post.title,
       description: post.excerpt,
       type: "article",
@@ -46,6 +52,7 @@ export default async function PostPage({ params }: Props) {
     <>
       <header className="speckle relative overflow-hidden bg-navy text-white">
         <HeroGlow />
+        <StarField />
         <div className={`relative mx-auto max-w-3xl px-6 pt-16 ${post.coverImage ? "pb-36" : "pb-16"}`}>
           <Link href="/blog" className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold hover:text-white">
             <span aria-hidden="true">←</span> All posts
@@ -72,8 +79,9 @@ export default async function PostPage({ params }: Props) {
         <FadeIn>
           <div className="post-body mt-12" dangerouslySetInnerHTML={{ __html: post.content }} />
         </FadeIn>
-        <div className="mt-16 border-t border-line pt-8">
-          <Link href="/blog" className="btn btn-navy">← More articles</Link>
+        <div className="mt-16 flex flex-col gap-6 border-t border-line pt-8 sm:flex-row sm:items-start sm:justify-between">
+          <ShareButtons url={`${site.url}/blog/${post.slug}`} title={post.title} />
+          <Link href="/blog" className="btn btn-navy shrink-0 self-start">← More articles</Link>
         </div>
       </article>
       <CtaBand />

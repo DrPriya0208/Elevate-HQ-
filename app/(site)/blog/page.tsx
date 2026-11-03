@@ -59,6 +59,14 @@ export default async function BlogPage() {
 
   const [featured, ...rest] = posts;
 
+  // Pick a column count that fills each row; when no count fits evenly, the last row is centred instead of leaving a gap
+  const single = rest.length === 1;
+  const cardWidth = single
+    ? "w-full"
+    : rest.length % 3 !== 0 && rest.length % 2 === 0
+      ? "w-full sm:w-[calc((100%-1.5rem)/2)]"
+      : "w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]";
+
   return (
     <>
       <PageHero kicker="Blog" title="Notes on minds, work and wellbeing." intro="Articles on mental health, relationships, workplaces and personal growth." />
@@ -90,18 +98,21 @@ export default async function BlogPage() {
             </Stagger>
 
             {rest.length > 0 && (
-              <Stagger as="ul" className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <Stagger as="ul" className="mt-8 flex flex-wrap justify-center gap-6">
                 {rest.map((p) => (
-                  <StaggerItem key={p.id} className="h-full">
-                    <Link href={`/blog/${p.slug}`} className="card card-hover group flex h-full flex-col overflow-hidden">
-                      <div className="relative aspect-[16/10] overflow-hidden">
+                  <StaggerItem key={p.id} className={cardWidth}>
+                    <Link
+                      href={`/blog/${p.slug}`}
+                      className={`card card-hover group flex h-full flex-col overflow-hidden ${single ? "md:grid md:grid-cols-2" : ""}`}
+                    >
+                      <div className={`relative aspect-[16/10] overflow-hidden ${single ? "md:aspect-auto md:min-h-[16rem]" : ""}`}>
                         <Cover src={p.coverImage} />
                       </div>
-                      <div className="flex flex-1 flex-col p-6">
+                      <div className={`flex flex-1 flex-col p-6 ${single ? "md:justify-center md:p-10" : ""}`}>
                         <p className="text-sm text-slate">{formatDate(p.publishedAt)}</p>
                         <h2 className="mt-2 font-serif text-xl leading-snug">{p.title}</h2>
                         <p className="mt-3 line-clamp-3 leading-relaxed text-navy/80">{p.excerpt}</p>
-                        <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-brass">
+                        <span className={`mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-brass ${single ? "md:mt-0" : ""}`}>
                           Read article
                           <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                         </span>

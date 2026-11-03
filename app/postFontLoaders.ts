@@ -1,0 +1,74 @@
+import {
+  Caveat,
+  Cormorant_Garamond,
+  Dancing_Script,
+  DM_Sans,
+  EB_Garamond,
+  Libre_Baskerville,
+  Lora,
+  Merriweather,
+  Montserrat,
+  Nunito,
+  Poppins,
+  Raleway,
+} from "next/font/google";
+
+// Extra fonts for the blog editor's font menu (lib/postFonts.ts). Inter, Open Sans and Playfair Display
+// are already loaded by the site layout. Not preloaded: a page only downloads a font its text uses.
+const lora = Lora({ subsets: ["latin"], variable: "--font-lora", display: "swap", preload: false, style: ["normal", "italic"] });
+const merriweather = Merriweather({
+  subsets: ["latin"],
+  variable: "--font-merriweather",
+  display: "swap",
+  preload: false,
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+});
+const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito", display: "swap", preload: false, style: ["normal", "italic"] });
+const poppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  display: "swap",
+  preload: false,
+  weight: ["400", "600", "700"],
+  style: ["normal", "italic"],
+});
+const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat", display: "swap", preload: false, style: ["normal", "italic"] });
+const raleway = Raleway({ subsets: ["latin"], variable: "--font-raleway", display: "swap", preload: false, style: ["normal", "italic"] });
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", display: "swap", preload: false, style: ["normal", "italic"] });
+const ebGaramond = EB_Garamond({ subsets: ["latin"], variable: "--font-eb-garamond", display: "swap", preload: false, style: ["normal", "italic"] });
+const libreBaskerville = Libre_Baskerville({
+  subsets: ["latin"],
+  variable: "--font-libre-baskerville",
+  display: "swap",
+  preload: false,
+  weight: ["400", "700"],
+});
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  display: "swap",
+  preload: false,
+  weight: ["400", "600", "700"],
+  style: ["normal", "italic"],
+});
+const dancingScript = Dancing_Script({ subsets: ["latin"], variable: "--font-dancing-script", display: "swap", preload: false });
+const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat", display: "swap", preload: false });
+
+/** Class names to put on <html> so every editor font's @font-face rules are available. */
+export const postFontVariables = [
+  lora,
+  merriweather,
+  nunito,
+  poppins,
+  montserrat,
+  raleway,
+  dmSans,
+  ebGaramond,
+  libreBaskerville,
+  cormorant,
+  dancingScript,
+  caveat,
+]
+  .map((f) => f.variable)
+  .join(" ");

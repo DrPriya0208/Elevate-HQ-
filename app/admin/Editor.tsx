@@ -7,7 +7,8 @@ import TextStyle from "@tiptap/extension-text-style";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useCallback, useRef, useState } from "react";
-import { postFonts } from "@/lib/postFonts";
+import { postFontGroups, postFonts, postSizes } from "@/lib/postFonts";
+import { FontSize } from "./fontSize";
 import { uploadImage } from "./uploadImage";
 
 // "Lora, Georgia, serif" or "'Playfair Display', …" -> "Lora" / "Playfair Display"
@@ -53,6 +54,7 @@ export default function Editor({ value, onChange }: Props) {
       Image.configure({ HTMLAttributes: { class: "rounded-md" } }),
       TextStyle,
       FontFamily,
+      FontSize,
     ],
     content: value,
     immediatelyRender: false,
@@ -98,8 +100,11 @@ export default function Editor({ value, onChange }: Props) {
 
   if (!editor) return <div className="min-h-[400px] rounded-md border border-line bg-white" />;
 
-  const currentFont = firstFont(editor.getAttributes("textStyle").fontFamily as string | undefined);
+  const textStyle = editor.getAttributes("textStyle");
+  const currentFont = firstFont(textStyle.fontFamily as string | undefined);
   const selectedFont = postFonts.find((f) => f.label.toLowerCase() === currentFont)?.label ?? "";
+  const selectedSize = postSizes.find((s) => s.css === textStyle.fontSize)?.css ?? "";
+  const selectClass = "rounded border border-line bg-white px-2 py-1.5 text-sm font-semibold text-navy";
 
   return (
     <div className="rounded-md border border-line bg-white">
@@ -114,12 +119,34 @@ export default function Editor({ value, onChange }: Props) {
             (font ? chain.setFontFamily(font.css) : chain.unsetFontFamily()).run();
           }}
           title="Font for the selected text"
-          className="mr-1 rounded border border-line bg-white px-2 py-1.5 text-sm font-semibold text-navy"
+          className={selectClass}
         >
           <option value="">Default font</option>
-          {postFonts.map((f) => (
-            <option key={f.label} value={f.label} style={{ fontFamily: f.css }}>
-              {f.label}
+          {postFontGroups.map((g) => (
+            <optgroup key={g.group} label={g.group}>
+              {g.fonts.map((f) => (
+                <option key={f.label} value={f.label} style={{ fontFamily: f.css }}>
+                  {f.label}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+        <label className="sr-only" htmlFor="editor-size">Text size</label>
+        <select
+          id="editor-size"
+          value={selectedSize}
+          onChange={(e) => {
+            const chain = editor.chain().focus();
+            (e.target.value ? chain.setFontSize(e.target.value) : chain.unsetFontSize()).run();
+          }}
+          title="Size of the selected text"
+          className={`${selectClass} mr-1`}
+        >
+          <option value="">Normal size</option>
+          {postSizes.map((s) => (
+            <option key={s.css} value={s.css}>
+              {s.label}
             </option>
           ))}
         </select>

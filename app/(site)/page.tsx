@@ -128,6 +128,10 @@ export default async function HomePage() {
       {/* Who we serve */}
       <section className="speckle relative overflow-hidden bg-navy text-white">
         <StarField />
+        {/* Soft colour behind the cards so the frosted glass has something to blur */}
+        <div aria-hidden className="pointer-events-none absolute left-[8%] top-[45%] h-80 w-80 rounded-full bg-gold/25 blur-[90px]" />
+        <div aria-hidden className="pointer-events-none absolute right-[6%] top-[60%] h-96 w-96 rounded-full bg-[#3b5998]/40 blur-[100px]" />
+        <div aria-hidden className="pointer-events-none absolute left-[45%] top-[30%] h-64 w-64 rounded-full bg-deep-gold/15 blur-[90px]" />
         <div className="relative mx-auto max-w-6xl px-6 py-24">
           <SectionHeading
             kicker="Who we serve"
@@ -139,7 +143,7 @@ export default async function HomePage() {
             {whoWeServe.map((w) => (
               <StaggerItem
                 key={w.title}
-                className="flex gap-4 rounded-xl border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-gold/50 hover:bg-white/[0.07] sm:flex-col sm:gap-3"
+                className="flex gap-4 rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.12] to-white/[0.03] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl transition-colors duration-300 hover:border-gold/60 hover:from-white/[0.18] hover:to-white/[0.06] sm:flex-col sm:gap-3"
               >
                 <span className="shrink-0 text-gold">
                   <Icon name={w.icon} className="h-7 w-7" />

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useRef, useState } from "react";
+import { submitWithoutReset } from "@/lib/submitWithoutReset";
 import type { FormState } from "@/lib/types";
 import ConfirmDialog from "./ConfirmDialog";
 import Editor from "./Editor";
@@ -37,6 +38,8 @@ export default function PostForm({ action, post, submitLabel }: Props) {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     if (confirmed.current) {
       confirmed.current = false;
+      // Send it without React's automatic reset, so a validation error keeps the edits
+      submitWithoutReset(e, formAction);
       return;
     }
     e.preventDefault();

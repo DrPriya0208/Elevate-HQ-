@@ -5,6 +5,7 @@ import { useActionState, useState } from "react";
 import { submitReview } from "@/lib/actions";
 import { motion, tapScale } from "@/components/motion";
 import { reviewsCopy } from "@/lib/content";
+import { submitWithoutReset } from "@/lib/submitWithoutReset";
 import type { ReviewState } from "@/lib/types";
 
 const ratingLabels = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
@@ -65,7 +66,7 @@ export default function ReviewForm() {
   }
 
   return (
-    <form action={action} className="space-y-5" noValidate>
+    <form action={action} onSubmit={(e) => submitWithoutReset(e, action)} className="space-y-5">
       {/* Honeypot: hidden from people, filled by bots */}
       <div className="hidden" aria-hidden="true">
         <label>

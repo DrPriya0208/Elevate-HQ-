@@ -248,3 +248,58 @@
     @apply rounded bg-line/60 px-1.5 py-0.5 font-mono text-[0.9em];
   }
 }
+
+/*
+ * Scroll reveals (components/motion.tsx). Content is visible by default; only `reveal-pending`,
+ * added by script to elements still below the viewport, hides it until `reveal-in` arrives.
+ * Kept outside @layer so the classes added at runtime are never purged.
+ */
+.reveal-pending.reveal-fade,
+.reveal-pending.reveal-stagger > .reveal-item {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.reveal-pending.reveal-scale {
+  display: inline-block;
+  opacity: 0;
+  transform: scale(0.7);
+}
+.reveal-pending.reveal-line {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.reveal-pending.reveal-words .reveal-word {
+  transform: translateY(110%);
+}
+.reveal-in.reveal-fade,
+.reveal-in.reveal-stagger > .reveal-item,
+.reveal-in.reveal-scale,
+.reveal-in.reveal-line,
+.reveal-in.reveal-words .reveal-word {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.reveal-in.reveal-words .reveal-word {
+  transition-duration: 0.65s;
+  transition-delay: calc(var(--reveal-delay, 0s) + var(--i, 0) * 60ms);
+}
+.reveal-in.reveal-stagger > .reveal-item:nth-child(2) { transition-delay: 80ms; }
+.reveal-in.reveal-stagger > .reveal-item:nth-child(3) { transition-delay: 160ms; }
+.reveal-in.reveal-stagger > .reveal-item:nth-child(4) { transition-delay: 240ms; }
+.reveal-in.reveal-stagger > .reveal-item:nth-child(5) { transition-delay: 320ms; }
+.reveal-in.reveal-stagger > .reveal-item:nth-child(6) { transition-delay: 400ms; }
+.reveal-in.reveal-stagger > .reveal-item:nth-child(n + 7) { transition-delay: 480ms; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal-pending.reveal-fade,
+  .reveal-pending.reveal-stagger > .reveal-item,
+  .reveal-pending.reveal-scale,
+  .reveal-pending.reveal-line,
+  .reveal-pending.reveal-words .reveal-word {
+    opacity: 1;
+    transform: none;
+  }
+}

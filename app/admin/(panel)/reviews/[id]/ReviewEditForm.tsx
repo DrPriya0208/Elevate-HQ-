@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { submitWithoutReset } from "@/lib/submitWithoutReset";
 import type { FormState } from "@/lib/types";
 
 type Props = {
@@ -14,7 +15,7 @@ export default function ReviewEditForm({ action, name, message }: Props) {
   const [state, formAction, pending] = useActionState<FormState, FormData>(action, undefined);
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} onSubmit={(e) => submitWithoutReset(e, formAction)} className="space-y-6">
       <div>
         <label htmlFor="name" className="label">Display name</label>
         <input id="name" name="name" type="text" maxLength={60} defaultValue={name} className="field" />

@@ -3,13 +3,14 @@
 import { useActionState, useState } from "react";
 import { Icon } from "@/components/icons";
 import { loginAction } from "@/lib/actions";
+import { submitWithoutReset } from "@/lib/submitWithoutReset";
 
 export default function LoginForm() {
   const [error, action, pending] = useActionState(loginAction, undefined);
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <form action={action} className="space-y-5">
+    <form action={action} onSubmit={(e) => submitWithoutReset(e, action)} className="space-y-5">
       <div>
         <label htmlFor="email" className="label">Email</label>
         <input id="email" name="email" type="email" required autoComplete="username" className="field" />

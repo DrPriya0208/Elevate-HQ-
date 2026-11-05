@@ -1,18 +1,55 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
-import type { ReactNode } from "react";
+import { motion } from "framer-motion";
+import { useLayoutEffect, useRef, type CSSProperties, type ReactNode, type RefObject } from "react";
 
-// Shared easing/durations keep every animated section feeling like one system.
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-};
+/*
+ * Scroll reveals that never hide content in the server HTML.
+ *
+ * Every element renders fully visible, so the page paints at once (good LCP) and still shows if a
+ * script fails. After hydration, an element that is still below the viewport gets `reveal-pending`
+ * (hidden, see globals.css) and, when it scrolls into view, `reveal-in` to animate in. Elements already
+ * on screen at hydration are never hidden. Under prefers-reduced-motion nothing is hidden at all.
+ */
 
-const staggerContainer: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-};
+const REVEAL_MARGIN = 80; // px: start the reveal a little before the element reaches the viewport
+const REVEAL_CLEANUP_MS = 2000; // longest entrance: 480ms stagger delay + 650ms word slide, plus any FadeIn delay
+
+function useReveal(ref: RefObject<HTMLElement | null>) {
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Already on screen (or above it): leave it visible, no animation.
+    if (el.getBoundingClientRect().top < window.innerHeight - REVEAL_MARGIN) return;
+
+    el.classList.add("reveal-pending");
+    let done: number | undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry) return;
+        // Reveal when it enters the viewport, or if a fast fling carried it past (already above
+        // the viewport): otherwise scrolling back up would find it still hidden.
+        if (!entry.isIntersecting && entry.boundingClientRect.top > 0) return;
+        el.classList.add("reveal-in");
+        io.disconnect();
+        // Once the entrance has played, drop the reveal classes so the element's own
+        // hover transitions and transforms (card lifts, colour fades) apply untouched.
+        done = window.setTimeout(() => el.classList.remove("reveal-pending", "reveal-in"), REVEAL_CLEANUP_MS);
+      },
+      // No negative margin: an element at the very bottom of the page must still be able to trigger
+      { rootMargin: "0px" },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      window.clearTimeout(done);
+    };
+  }, [ref]);
+}
+
+const delayStyle = (delay: number): CSSProperties | undefined =>
+  delay ? ({ "--reveal-delay": `${delay}s` } as CSSProperties) : undefined;
 
 type FadeInProps = {
   children: ReactNode;
@@ -20,19 +57,14 @@ type FadeInProps = {
   delay?: number;
 };
 
-/** Fades/slides content in once, the first time it enters the viewport. */
+/** Fades/slides content in once, the first time it scrolls into view. */
 export function FadeIn({ children, className, delay = 0 }: FadeInProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  useReveal(ref);
   return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
-      variants={fadeUp}
-      transition={{ delay }}
-    >
+    <div ref={ref} className={`reveal-fade ${className ?? ""}`} style={delayStyle(delay)}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -42,27 +74,15 @@ type StaggerProps = {
   as?: "div" | "ul" | "ol";
 };
 
-/** Wraps a list; pair with <StaggerItem> children for a staggered reveal. */
+/** Wraps a list; its <StaggerItem> children reveal one after another. */
 export function Stagger({ children, className, as = "div" }: StaggerProps) {
-  const viewport = { once: true, margin: "-80px" } as const;
-  if (as === "ul") {
-    return (
-      <motion.ul className={className} initial="hidden" whileInView="visible" viewport={viewport} variants={staggerContainer}>
-        {children}
-      </motion.ul>
-    );
-  }
-  if (as === "ol") {
-    return (
-      <motion.ol className={className} initial="hidden" whileInView="visible" viewport={viewport} variants={staggerContainer}>
-        {children}
-      </motion.ol>
-    );
-  }
+  const ref = useRef<HTMLElement>(null);
+  useReveal(ref);
+  const Tag = as;
   return (
-    <motion.div className={className} initial="hidden" whileInView="visible" viewport={viewport} variants={staggerContainer}>
+    <Tag ref={ref as RefObject<never>} className={`reveal-stagger ${className ?? ""}`}>
       {children}
-    </motion.div>
+    </Tag>
   );
 }
 
@@ -73,18 +93,8 @@ type StaggerItemProps = {
 };
 
 export function StaggerItem({ children, className, as = "li" }: StaggerItemProps) {
-  if (as === "div") {
-    return (
-      <motion.div className={className} variants={fadeUp}>
-        {children}
-      </motion.div>
-    );
-  }
-  return (
-    <motion.li className={className} variants={fadeUp}>
-      {children}
-    </motion.li>
-  );
+  const Tag = as;
+  return <Tag className={`reveal-item ${className ?? ""}`}>{children}</Tag>;
 }
 
 /** Subtle press/lift for primary actions; disabled automatically under prefers-reduced-motion via MotionConfig. */
@@ -95,32 +105,22 @@ type ScaleInProps = {
   className?: string;
 };
 
-/** Scales/fades an inline element in once, the first time it enters the viewport. */
+/** Scales/fades an inline element in once, the first time it scrolls into view. */
 export function ScaleIn({ children, className }: ScaleInProps) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useReveal(ref);
   return (
-    <motion.span
-      className={className}
-      initial={{ opacity: 0, scale: 0.7 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <span ref={ref} className={`reveal-scale ${className ?? ""}`}>
       {children}
-    </motion.span>
+    </span>
   );
 }
 
-/** Draws a short accent line in from the left, the first time it enters the viewport. */
+/** Draws a short accent line in from the left, the first time it scrolls into view. */
 export function DrawLine({ className }: { className?: string }) {
-  return (
-    <motion.span
-      className={className}
-      initial={{ scaleX: 0 }}
-      whileInView={{ scaleX: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-    />
-  );
+  const ref = useRef<HTMLSpanElement>(null);
+  useReveal(ref);
+  return <span ref={ref} className={`reveal-line ${className ?? ""}`} />;
 }
 
 type RevealTextProps = {
@@ -130,29 +130,20 @@ type RevealTextProps = {
   delay?: number;
 };
 
-const revealWord: Variants = {
-  hidden: { y: "110%" },
-  visible: { y: "0%", transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
-};
-
 /** Title reveal: each word slides up out of its own clipping mask, staggered. */
 export function RevealText({ text, as = "h2", className, delay = 0 }: RevealTextProps) {
-  const Tag = motion[as] as typeof motion.h2;
+  const ref = useRef<HTMLHeadingElement>(null);
+  useReveal(ref);
+  const Tag = as;
   const words = text.split(" ");
   return (
-    <Tag
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
-      variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: delay } } }}
-    >
+    <Tag ref={ref} className={`reveal-words ${className ?? ""}`} style={delayStyle(delay)}>
       {words.map((w, i) => (
         <span key={i}>
           <span className="-mb-[0.15em] inline-block overflow-hidden pb-[0.15em] align-bottom">
-            <motion.span className="inline-block" variants={revealWord}>
+            <span className="reveal-word inline-block" style={{ "--i": i } as CSSProperties}>
               {w}
-            </motion.span>
+            </span>
           </span>
           {i < words.length - 1 ? " " : null}
         </span>

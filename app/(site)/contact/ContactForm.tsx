@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import { submitEnquiry } from "@/lib/actions";
 import { motion, tapScale } from "@/components/motion";
 import { enquiryTopics } from "@/lib/content";
+import { submitWithoutReset } from "@/lib/submitWithoutReset";
 import type { ContactState } from "@/lib/types";
 
 export default function ContactForm({ defaultTopic }: { defaultTopic?: string }) {
@@ -26,7 +27,7 @@ export default function ContactForm({ defaultTopic }: { defaultTopic?: string })
   }
 
   return (
-    <form action={action} className="space-y-5" noValidate>
+    <form action={action} onSubmit={(e) => submitWithoutReset(e, action)} className="space-y-5">
       {/* Honeypot: hidden from people, filled by bots */}
       <div className="hidden" aria-hidden="true">
         <label>
@@ -37,7 +38,7 @@ export default function ContactForm({ defaultTopic }: { defaultTopic?: string })
 
       <div>
         <label htmlFor="name" className="label">Your name</label>
-        <input id="name" name="name" type="text" required autoComplete="name" className="field" />
+        <input id="name" name="name" type="text" required minLength={2} maxLength={100} autoComplete="name" className="field" />
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
@@ -72,7 +73,7 @@ export default function ContactForm({ defaultTopic }: { defaultTopic?: string })
 
       <div>
         <label htmlFor="message" className="label">Message</label>
-        <textarea id="message" name="message" required rows={6} className="field" />
+        <textarea id="message" name="message" required minLength={10} maxLength={3000} rows={6} className="field" />
       </div>
 
       {state?.error && (

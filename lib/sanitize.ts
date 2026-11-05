@@ -9,7 +9,7 @@ export function cleanHtml(html: string): string {
     // Only the editor's font and size choices are kept; any other inline style is dropped
     allowedStyles: { span: { "font-family": [postFontPattern], "font-size": [postSizePattern] } },
     allowedSchemes: ["http", "https", "mailto", "tel"],
-    allowedSchemesByTag: { img: ["http", "https"] },
+    allowedSchemesByTag: { img: ["https"] }, // http images would be blocked or upgraded on an https site
     transformTags: {
       a: sanitizeHtml.simpleTransform("a", { rel: "noopener noreferrer", target: "_blank" }),
     },

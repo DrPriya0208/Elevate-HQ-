@@ -42,17 +42,33 @@ export default async function ContactPage({ searchParams }: Props) {
         intro="Book a free introductory call or send an enquiry. We will understand your needs and suggest the next step."
       />
 
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1.25fr_0.75fr]">
-        <FadeIn className="card p-8 md:p-10">
-          <p className="kicker text-brass">Send a message</p>
-          <h2 className="mt-3 font-serif text-2xl">Tell us a little about what you need</h2>
-          <div className="mt-8">
-            <ContactForm defaultTopic={topic} />
-          </div>
-        </FadeIn>
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 lg:grid-cols-[1.25fr_0.75fr] lg:py-20">
+        <div className="space-y-6">
+          {site.bookingUrl && (
+            <FadeIn className="speckle relative overflow-hidden rounded-xl bg-navy p-6 text-white md:p-10">
+              <p className="kicker text-gold">Free introductory call</p>
+              <h2 className="mt-3 font-serif text-2xl text-white">Pick a time that suits you</h2>
+              <p className="mt-3 leading-relaxed text-white/80">
+                Choose a slot in our calendar for a short first conversation. You will get a confirmation by email.
+              </p>
+              <a href={site.bookingUrl} target="_blank" rel="noopener noreferrer" className="btn btn-gold mt-6">
+                Choose a time
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </FadeIn>
+          )}
+          <FadeIn className="card p-6 md:p-10">
+            <p className="kicker text-brass">Send a message</p>
+            <h2 className="mt-3 font-serif text-2xl">Tell us a little about what you need</h2>
+            <div className="mt-8">
+              <ContactForm defaultTopic={topic} />
+            </div>
+          </FadeIn>
+        </div>
 
-        <aside className="space-y-4">
-          <Stagger as="ul" className="space-y-4">
+        {/* Phones: call and WhatsApp come before the form */}
+        <aside className="order-first space-y-4 lg:order-none">
+          <Stagger as="ul" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             {methods.map((m) => (
               <StaggerItem key={m.href}>
                 <a

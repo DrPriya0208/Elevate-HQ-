@@ -11,6 +11,8 @@ export const site = {
   location: "Sholinganallur, Chennai",
   linkedin: "https://www.linkedin.com/in/priyadharshini-balaji-b549031a5/",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://elevatehqservices.com",
+  /** Calendly or Cal.com link for the free introductory call. Empty hides the booking card on the contact page. */
+  bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL ?? "",
 };
 
 // Leave url empty until the profile exists; the icon shows but is not clickable.
@@ -30,7 +32,7 @@ export const home = {
   intro:
     "From a first-year student to a seasoned CEO, from a homemaker to a seafarer far from shore, we offer psychology, counselling, assessments and training that help individuals thrive and organisations perform.",
   welcome:
-    "Elevate HQ Psychology and Development Services is a purpose-led practice for people at every stage of life and work.",
+    "Elevate HQ Psychology & Human Development Services is a purpose-led practice for people at every stage of life and work.",
   purpose: "Healthier minds, wholesome lives and workplaces where every person feels safe, valued and inspired to excel.",
   practiceTitle: "A practice for every person and every workplace",
   practice: [
@@ -54,13 +56,20 @@ export const whoWeServe: { icon: string; title: string; body: string }[] = [
   { icon: "hands", title: "NGOs, healthcare and service-sector organisations", body: "Wellbeing, conduct and capability programmes for people-facing teams." },
 ];
 
+// The four strongest reasons; years of experience and credentials sit in the strip under the hero.
 export const whyChoose: { icon: string; text: string }[] = [
-  { icon: "award", text: "14 years of combined experience in psychology, counselling, assessments and training." },
   { icon: "ship", text: "Specialist in workplace and maritime psychology. Few practitioners offer both." },
   { icon: "posh", text: "Practising Presiding Officer (Chairperson) of Internal Committees under the PoSH Act." },
   { icon: "psychometric", text: "Evidence-based and ethical. Every method is grounded in behavioural science." },
   { icon: "lock", text: "Inclusive and confidential. Respect for every background, culture and role, and your trust is never taken lightly." },
-  { icon: "organizational", text: "Business-aligned. We connect people development to real organisational goals." },
+];
+
+/** Shown in the strip under the home hero until client reviews come in. */
+export const credentials: { title: string; detail: string }[] = [
+  { title: "14 years", detail: "Combined experience in psychology, counselling, assessments and training" },
+  { title: "Presiding Officer", detail: "Internal Committees under the PoSH Act" },
+  { title: "Doctoral researcher", detail: "Psychology, Management and Organisational Behaviour (final year)" },
+  { title: "Certified trainer", detail: "PoSH and maritime training" },
 ];
 
 export const howWeWork: { title: string; body: string; icon: string }[] = [
@@ -131,7 +140,7 @@ export const services: Service[] = [
     },
     notes: [{ label: "Your privacy matters", text: "Every session is strictly confidential." }],
     cta: "Book a session",
-    topic: "Counselling (individuals and families)",
+    topic: "Personal or family counselling",
   },
   {
     slug: "psychometric",
@@ -182,7 +191,7 @@ export const services: Service[] = [
       { label: "Formats", text: "Workshops, talks, half-day or full-day programmes, multi-session series, online or on-site." },
     ],
     cta: "Plan a training programme",
-    topic: "Leadership, behavioural or soft skills training",
+    topic: "Leadership or soft skills training",
   },
   {
     slug: "posh",
@@ -232,7 +241,7 @@ export const services: Service[] = [
       "Building psychologically safe and inclusive workplaces",
     ],
     cta: "Talk to our consultant",
-    topic: "Organisational psychology consulting",
+    topic: "Organisational consulting",
   },
   {
     slug: "maritime",
@@ -279,7 +288,7 @@ export const services: Service[] = [
       "Parent counselling, parenting support and teacher sensitisation",
     ],
     cta: "Plan a student programme",
-    topic: "Student, school or institution programme",
+    topic: "Student or school programme",
   },
 ];
 

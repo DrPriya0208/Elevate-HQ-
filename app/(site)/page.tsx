@@ -9,7 +9,7 @@ import StarField from "@/components/StarField";
 import { Icon } from "@/components/icons";
 import MindOfLightHero from "@/components/mind-of-light/MindOfLightHero";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
-import { faqs, home, services, whoWeServe, whyChoose } from "@/lib/content";
+import { credentials, faqs, home, services, whoWeServe, whyChoose } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import { formatMonthYear, postCardDate } from "@/lib/text";
 
@@ -41,12 +41,6 @@ async function getFeaturedReviews() {
   }
 }
 
-const stats = [
-  { value: "14", unit: "years", label: "Combined experience in psychology, counselling, assessments and training" },
-  { value: "10+", unit: "years", label: "Specialised in workplace behaviour and seafarer mental health" },
-  { value: "7", unit: "services", label: "From counselling and student programmes to PoSH and maritime psychology" },
-];
-
 export default async function HomePage() {
   const [posts, reviews] = await Promise.all([getLatestPosts(), getFeaturedReviews()]);
 
@@ -58,20 +52,17 @@ export default async function HomePage() {
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">{home.intro}</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/services" className="btn btn-gold">Explore our services</Link>
-          <Link href="/contact" className="btn btn-outline-light">Book a session</Link>
+          <Link href="/contact" className="btn btn-outline-light">Book a free call</Link>
         </div>
       </MindOfLightHero>
 
-      {/* Credentials strip */}
+      {/* Credentials strip: the founder's qualifications, up front until reviews come in */}
       <section className="border-b border-line bg-white">
-        <Stagger as="ul" className="mx-auto grid max-w-6xl divide-y divide-line px-6 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
-          {stats.map((s) => (
-            <StaggerItem key={s.label} className="flex items-center gap-4 py-8 lg:px-8 lg:first:pl-0 lg:last:pr-0">
-              <p className="font-serif text-5xl font-bold leading-none text-navy">
-                {s.value}
-                <span className="ml-1 text-base font-semibold text-brass">{s.unit}</span>
-              </p>
-              <p className="text-sm leading-snug text-slate">{s.label}</p>
+        <Stagger as="ul" className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-6 px-6 py-8 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-line">
+          {credentials.map((c) => (
+            <StaggerItem key={c.title} className="lg:px-8 lg:first:pl-0 lg:last:pr-0">
+              <p className="font-serif text-xl font-semibold leading-tight text-navy sm:text-2xl">{c.title}</p>
+              <p className="mt-1.5 text-sm leading-snug text-slate">{c.detail}</p>
             </StaggerItem>
           ))}
         </Stagger>
@@ -101,7 +92,7 @@ export default async function HomePage() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading kicker="What we do" title="Our core services at a glance" />
             <FadeIn>
-              <Link href="/services" className="btn btn-navy shrink-0">Explore our services</Link>
+              <Link href="/services" className="btn btn-navy shrink-0">All services</Link>
             </FadeIn>
           </div>
           {/* Seven services fill a 3-column grid exactly: the two flagship areas (counselling and maritime) span two columns */}
@@ -115,16 +106,19 @@ export default async function HomePage() {
                 <StaggerItem key={s.slug} className={`h-full sm:last:col-span-2 lg:last:col-span-1 ${wide ? "lg:col-span-2" : ""}`}>
                   <Link
                     href={`/services#${s.slug}`}
-                    className={`card card-hover group flex h-full flex-col p-7 ${wide ? "lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-10" : ""} ${
+                    className={`card card-hover group flex h-full flex-col p-6 sm:p-7 ${wide ? "lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-10" : ""} ${
                       tabletWide ? "sm:max-lg:grid sm:max-lg:grid-cols-2 sm:max-lg:items-center sm:max-lg:gap-x-10" : ""
                     }`}
                   >
-                    <div>
+                    {/* Phones: icon beside the title to keep the stack of seven cards short */}
+                    <div className="flex items-start gap-4 sm:block">
                       <span className="icon-badge transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
                         <Icon name={s.slug} />
                       </span>
-                      <p className="text-sm font-semibold mt-6 text-slate">{s.audience}</p>
-                      <h3 className="mt-2 font-serif text-xl leading-snug">{s.title}</h3>
+                      <div>
+                        <p className="text-sm font-semibold text-slate sm:mt-6">{s.audience}</p>
+                        <h3 className="mt-1 font-serif text-xl leading-snug sm:mt-2">{s.title}</h3>
+                      </div>
                     </div>
                     <div
                       className={`flex flex-1 flex-col ${wide ? "lg:border-l lg:border-line lg:py-2 lg:pl-10" : ""} ${
@@ -134,7 +128,7 @@ export default async function HomePage() {
                       <p className={`mt-3 leading-relaxed text-navy/80 ${wide ? "lg:mt-0 lg:text-lg" : ""} ${tabletWide ? "sm:max-lg:mt-0" : ""}`}>
                         {s.summary}
                       </p>
-                      <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-semibold text-brass">
+                      <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-brass sm:pt-6">
                         Learn more
                         <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                       </span>
@@ -157,22 +151,22 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-6xl px-6 py-16 lg:py-20">
           <SectionHeading
             kicker="Who we serve"
-            title="From a first-year student to a seasoned CEO"
-            intro="Whatever your age, role or industry, there is a place for you here."
+            title="A place for every age, role and industry"
             dark
           />
-          <Stagger as="ul" className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {/* Phones: a compact list of names. Tablet and up: frosted cards with a line each. */}
+          <Stagger as="ul" className="mt-8 divide-y divide-white/10 border-y border-white/10 sm:mt-10 sm:grid sm:grid-cols-2 sm:gap-4 sm:divide-y-0 sm:border-0 lg:grid-cols-5">
             {whoWeServe.map((w) => (
               <StaggerItem
                 key={w.title}
-                className="flex gap-4 rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.12] to-white/[0.03] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl transition-colors duration-300 hover:border-gold/60 hover:from-white/[0.18] hover:to-white/[0.06] sm:flex-col sm:gap-3"
+                className="flex items-center gap-4 py-3.5 sm:flex-col sm:items-start sm:gap-3 sm:rounded-2xl sm:border sm:border-white/15 sm:bg-gradient-to-br sm:from-white/[0.12] sm:to-white/[0.03] sm:p-5 sm:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_10px_30px_rgba(0,0,0,0.25)] sm:backdrop-blur-xl sm:transition-colors sm:duration-300 sm:hover:border-gold/60 sm:hover:from-white/[0.18] sm:hover:to-white/[0.06]"
               >
                 <span className="shrink-0 text-gold">
-                  <Icon name={w.icon} className="h-7 w-7" />
+                  <Icon name={w.icon} className="h-6 w-6 sm:h-7 sm:w-7" />
                 </span>
-                <span className="flex flex-col gap-1.5 sm:gap-3">
-                  <span className="font-serif text-base font-bold leading-snug text-white">{w.title}</span>
-                  <span className="text-sm leading-relaxed text-white/70">{w.body}</span>
+                <span className="flex flex-col gap-3">
+                  <span className="font-serif text-base font-semibold leading-snug text-white">{w.title}</span>
+                  <span className="hidden text-sm leading-relaxed text-white/70 sm:block">{w.body}</span>
                 </span>
               </StaggerItem>
             ))}
@@ -183,7 +177,7 @@ export default async function HomePage() {
       {/* Why choose */}
       <section className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <SectionHeading kicker="Why choose Elevate HQ" title="Experience, ethics and real-world results" />
-        <Stagger as="ul" className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <Stagger as="ul" className="mt-10 grid gap-5 md:grid-cols-2">
           {whyChoose.map((w) => (
             <StaggerItem key={w.text} className="h-full">
               {/* Same hover as the service cards; on an inner element so it doesn't fight the entrance animation */}

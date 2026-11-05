@@ -14,6 +14,8 @@ const LAST = howWeWork.length - 1;
 export default function HowWeWorkSteps() {
   const [active, setActive] = useState<number | null>(null);
   const [canHover, setCanHover] = useState(false);
+  // Touch screens: true after the fill sequence finishes, so no step stays swapped to its icon
+  const [settled, setSettled] = useState(false);
   const listRef = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
@@ -31,9 +33,12 @@ export default function HowWeWorkSteps() {
         io.disconnect();
         if (reduced) {
           setActive(LAST);
+          setSettled(true);
           return;
         }
         howWeWork.forEach((_, i) => timers.push(window.setTimeout(() => setActive(i), 300 + i * 450)));
+        // Once the trail reaches the end, step 5 shows its number again like the others
+        timers.push(window.setTimeout(() => setSettled(true), 300 + howWeWork.length * 450 + 300));
       },
       { threshold: 0.35 },
     );
@@ -59,7 +64,7 @@ export default function HowWeWorkSteps() {
         <ol ref={listRef} className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {howWeWork.map((step, i) => {
             const lit = active !== null && i <= active;
-            const current = i === active;
+            const current = i === active && !settled;
             return (
               <li
                 key={step.title}

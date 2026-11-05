@@ -66,7 +66,7 @@ export default function ContactForm({ defaultTopic }: { defaultTopic?: string })
       </div>
 
       <div>
-        <label htmlFor="organisation" className="label">Organization (optional)</label>
+        <label htmlFor="organisation" className="label">Organisation (optional)</label>
         <input id="organisation" name="organisation" type="text" maxLength={120} autoComplete="organization" className="field" />
       </div>
 

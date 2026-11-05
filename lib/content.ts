@@ -7,7 +7,7 @@ export const site = {
   phone: "+91 98407 38955",
   phoneHref: "tel:+919840738955",
   whatsapp: "https://wa.me/919840738955",
-  email: "info@elevatehqservices.com",
+  email: "drpriyadharshini@elevatehqservices.com",
   location: "Sholinganallur, Chennai",
   linkedin: "https://www.linkedin.com/in/priyadharshini-balaji-b549031a5/",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://elevatehqservices.com",

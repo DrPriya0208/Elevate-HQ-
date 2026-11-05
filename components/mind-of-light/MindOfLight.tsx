@@ -9,7 +9,8 @@ import { useEffect, useLayoutEffect, type RefObject } from "react";
  * slot, logo and Skip button; this just drives them via the refs it's given. What's new
  * for production: data is fetched from /public/mind-of-light instead of being inlined,
  * the timeline can warm-start at the formed state for a repeat visit, rendering pauses
- * off-screen/off-tab, dpr is capped for small screens, and resize is debounced.
+ * off-screen/off-tab, dpr runs at full device sharpness (up to 3x) and steps down to 1.5x if the
+ * first frames are slow, and resize is debounced.
  */
 
 const INTRO_SEEN_KEY = "ehq-mind-intro-seen";
@@ -317,6 +318,11 @@ export default function MindOfLight({ heroRef, canvasRef, slotRef, stageRef, ski
       let gc = [0, 0, -7];
       let bscale = 1;
       let dpr = 1;
+      // Pixel-density ceiling. Starts at 3 so 3x phones and 2x laptops get a crisp animation;
+      // dropped to 1.5 once if the first frames run slow (see frameGuard in frame()).
+      let dprCap = 3;
+      const LOW_DPR_CAP = 1.5;
+      const frameGuard = { last: 0, skipped: 0, total: 0, count: 0, done: false };
       let W = 1;
       let H = 1;
       let targets: Targets | null = null;
@@ -339,7 +345,7 @@ export default function MindOfLight({ heroRef, canvasRef, slotRef, stageRef, ski
         const sr = slot.getBoundingClientRect();
         W = hr.width;
         H = hr.height;
-        const dprCap = W < 700 ? 1.5 : 1.75;
+        // Full device sharpness (up to 3x) unless the frame-time guard in frame() has stepped it down
         dpr = Math.min(window.devicePixelRatio || 1, dprCap);
         canvas.width = Math.round(W * dpr);
         canvas.height = Math.round(H * dpr);
@@ -521,6 +527,26 @@ export default function MindOfLight({ heroRef, canvasRef, slotRef, stageRef, ski
 
       function frame(now: number) {
         raf = 0;
+        // One-time performance check: after 10 warm-up frames, average the next 40. Slower than
+        // ~40fps at full density means a weaker GPU, so render at 1.5x from then on.
+        if (!frameGuard.done) {
+          const delta = frameGuard.last ? now - frameGuard.last : 0;
+          frameGuard.last = now;
+          if (delta > 0 && delta < 250) {
+            if (frameGuard.skipped < 10) frameGuard.skipped++;
+            else {
+              frameGuard.total += delta;
+              frameGuard.count++;
+              if (frameGuard.count >= 40) {
+                frameGuard.done = true;
+                if (frameGuard.total / frameGuard.count > 25 && dprCap > LOW_DPR_CAP && dpr > LOW_DPR_CAP) {
+                  dprCap = LOW_DPR_CAP;
+                  layout();
+                }
+              }
+            }
+          }
+        }
         const t = (now - t0) / 1000 + offset;
         const P1 = ease((t - 1.6) / 2.0);
         const P2 = ease((t - 5.0) / 1.9);

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const links = [
@@ -18,6 +18,24 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  // Close the mobile menu on any navigation, including the browser's back and forward buttons
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // Escape closes the open menu and puts focus back on the menu button
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      toggleRef.current?.focus();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   return (
     <header className="sticky top-0 z-40 bg-navy text-white">
@@ -69,6 +87,7 @@ export default function Header() {
         </nav>
 
         <button
+          ref={toggleRef}
           type="button"
           className="flex h-11 w-11 items-center justify-center rounded-md lg:hidden"
           aria-expanded={open}

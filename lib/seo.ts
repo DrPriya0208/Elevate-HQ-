@@ -1,5 +1,48 @@
 import type { Metadata } from "next";
-import { site } from "@/lib/content";
+import { founder, services, site } from "@/lib/content";
+
+/** Serialise structured data for a <script type="application/ld+json">, escaping "<" so no string can close the tag. */
+export function jsonLd(data: object): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
+/** The practice as a ProfessionalService (schema.org), built only from facts already on the site. */
+export function practiceJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${site.url}/#practice`,
+    name: site.name,
+    description: site.tagline,
+    url: site.url,
+    logo: `${site.url}/elevatehq-logo-dark-playfair-1024.png`,
+    image: `${site.url}/opengraph-image.jpg`,
+    telephone: site.phoneHref.replace("tel:", ""),
+    email: site.email,
+    address: { "@type": "PostalAddress", addressLocality: "Sholinganallur, Chennai", addressRegion: "Tamil Nadu", addressCountry: "IN" },
+    areaServed: "IN",
+    founder: { "@type": "Person", name: founder.name, jobTitle: founder.role, sameAs: [site.linkedin] },
+    sameAs: [site.linkedin],
+    knowsAbout: services.map((s) => s.title),
+  };
+}
+
+/** A blog post as an Article (schema.org). */
+export function articleJsonLd(post: { title: string; excerpt: string; slug: string; coverImage: string | null; publishedAt: Date | null; updatedAt: Date }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    url: `${site.url}/blog/${post.slug}`,
+    mainEntityOfPage: `${site.url}/blog/${post.slug}`,
+    image: post.coverImage ?? `${site.url}/opengraph-image.jpg`,
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt.toISOString(),
+    author: { "@type": "Person", name: founder.name },
+    publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/elevatehq-logo-dark-playfair-1024.png` } },
+  };
+}
 
 type PageMeta = {
   /** Short page name; the layout's title template adds " | Elevate HQ" in the browser tab. */

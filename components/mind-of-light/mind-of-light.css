@@ -120,6 +120,11 @@
 .mind-hero .skip.gone {
   opacity: 0;
   pointer-events: none;
+  /* Out of the tab order and the accessibility tree once faded (visibility waits for the fade to end) */
+  visibility: hidden;
+  transition:
+    opacity 0.6s ease,
+    visibility 0s linear 0.6s;
 }
 
 /* Phones and portrait tablets: badge stacks above the copy instead of overlapping it. */

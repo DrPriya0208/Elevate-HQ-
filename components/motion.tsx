@@ -116,13 +116,6 @@ export function ScaleIn({ children, className }: ScaleInProps) {
   );
 }
 
-/** Draws a short accent line in from the left, the first time it scrolls into view. */
-export function DrawLine({ className }: { className?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  useReveal(ref);
-  return <span ref={ref} className={`reveal-line ${className ?? ""}`} />;
-}
-
 type RevealTextProps = {
   text: string;
   as?: "h1" | "h2" | "h3" | "p";

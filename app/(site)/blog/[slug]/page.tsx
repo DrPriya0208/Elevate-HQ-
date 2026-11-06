@@ -3,13 +3,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { postFontVariables } from "@/app/postFontLoaders";
-import { OG_IMAGE, TWITTER_LARGE } from "@/lib/seo";
+import { OG_IMAGE, TWITTER_LARGE, articleJsonLd, jsonLd } from "@/lib/seo";
+import CoverImage from "@/components/CoverImage";
 import CtaBand from "@/components/CtaBand";
 import ShareButtons from "@/components/ShareButtons";
 import StarField from "@/components/StarField";
 import { site } from "@/lib/content";
 import { FadeIn, RevealText } from "@/components/motion";
 import { prisma } from "@/lib/prisma";
+import { cleanHtml } from "@/lib/sanitize";
 import { formatDate } from "@/lib/text";
 
 export const revalidate = 60;
@@ -53,6 +55,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(articleJsonLd(post)) }} />
       <header className="speckle relative overflow-hidden bg-navy text-white">
         <StarField />
         <div className={`relative mx-auto max-w-3xl px-6 pt-16 ${post.coverImage ? "pb-36" : "pb-16"}`}>
@@ -69,16 +72,17 @@ export default async function PostPage({ params }: Props) {
       <article className={`mx-auto max-w-3xl px-6 pb-20 ${postFontVariables}`}>
         {post.coverImage && (
           <FadeIn className="-mt-24">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <CoverImage
               src={post.coverImage}
-              alt=""
+              sizes="(min-width: 768px) 720px, 100vw"
+              priority
               className="relative aspect-[16/9] w-full rounded-xl object-cover shadow-[0_20px_40px_rgba(10,21,48,0.25)]"
             />
           </FadeIn>
         )}
         <FadeIn>
-          <div className="post-body mt-12" dangerouslySetInnerHTML={{ __html: post.content }} />
+          {/* Sanitised on save, and again here so posts saved under older rules get today's rules too */}
+          <div className="post-body mt-12" dangerouslySetInnerHTML={{ __html: cleanHtml(post.content) }} />
         </FadeIn>
         <p className="mt-16 border-t border-line pt-8 text-sm text-slate">
           Last updated: <time dateTime={post.updatedAt.toISOString()}>{formatDate(post.updatedAt)}</time>

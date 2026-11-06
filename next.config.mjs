@@ -36,9 +36,21 @@ const securityHeaders = [
   ...(isDev ? [] : [{ key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" }]),
 ];
 
+// Blog photos live in Cloudflare R2 behind this public URL; next/image may resize images from it.
+const photoHost = (() => {
+  try {
+    return process.env.R2_PUBLIC_URL ? new URL(process.env.R2_PUBLIC_URL).hostname : null;
+  } catch {
+    return null;
+  }
+})();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  images: {
+    remotePatterns: photoHost ? [{ protocol: "https", hostname: photoHost }] : [],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

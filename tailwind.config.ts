@@ -17,13 +17,10 @@ const config: Config = {
         mist: "#FAF7F0",
         slate: "#56627D",
         line: "#E7E1D5",
-        "canvas-cream": "#F5E9D4",
-        ruby: "#EA2261",
       },
       fontFamily: {
         serif: ["var(--font-serif)", "Georgia", "serif"],
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        sohne: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
     },
   },

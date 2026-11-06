@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
+import CoverImage from "@/components/CoverImage";
 import PageHero from "@/components/PageHero";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { prisma } from "@/lib/prisma";
@@ -28,8 +29,11 @@ type PostCard = {
 function Cover({ src, large = false }: { src: string | null; large?: boolean }) {
   if (src) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src={src} alt="" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+      <CoverImage
+        src={src}
+        sizes={large ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
+        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
     );
   }
   return (

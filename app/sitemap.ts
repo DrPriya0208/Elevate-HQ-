@@ -5,9 +5,10 @@ import { prisma } from "@/lib/prisma";
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // No lastModified on static pages: stamping them "now" on every regeneration teaches search engines to
+  // ignore the dates. Blog posts below carry their real updatedAt.
   const pages = ["", "/about", "/services", "/blog", "/reviews", "/contact", "/privacy", "/terms"].map((path) => ({
     url: `${site.url}${path}`,
-    lastModified: new Date(),
   }));
 
   try {

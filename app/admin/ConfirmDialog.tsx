@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 
 type Props = {
   open: boolean;
@@ -15,6 +15,9 @@ type Props = {
 /** A modal "are you sure?" box built on the native <dialog>, so Esc, focus trapping and screen readers work. */
 export default function ConfirmDialog({ open, title, message, confirmLabel, danger = false, onConfirm, onCancel }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
+  // Unique per dialog: the dashboard renders one per row, and a shared id made every dialog read the first title
+  const titleId = useId();
+  const messageId = useId();
 
   useEffect(() => {
     const d = ref.current;
@@ -28,12 +31,13 @@ export default function ConfirmDialog({ open, title, message, confirmLabel, dang
       ref={ref}
       onClose={onCancel}
       onClick={(e) => e.target === ref.current && onCancel()} // click on the backdrop
-      aria-labelledby="confirm-title"
+      aria-labelledby={titleId}
+      aria-describedby={messageId}
       className="w-[min(28rem,calc(100%-2rem))] rounded-xl border border-line bg-white p-0 text-navy shadow-[0_20px_50px_rgba(10,21,48,0.3)] backdrop:bg-ink/60"
     >
       <div className="p-7">
-        <h2 id="confirm-title" className="font-serif text-2xl">{title}</h2>
-        <p className="mt-3 leading-relaxed text-slate">{message}</p>
+        <h2 id={titleId} className="font-serif text-2xl">{title}</h2>
+        <p id={messageId} className="mt-3 leading-relaxed text-slate">{message}</p>
         <div className="mt-7 flex flex-wrap justify-end gap-3">
           <button type="button" onClick={onCancel} autoFocus className="btn border border-line bg-white text-navy hover:border-navy">
             Cancel

@@ -11,6 +11,9 @@ import { postFontGroups, postFonts, postSizes } from "@/lib/postFonts";
 import { FontSize } from "./fontSize";
 import { uploadImage } from "./uploadImage";
 
+const ALT_PROMPT =
+  "Describe this photo in a few words for people who can't see it (for example: Priyadharshini leading a workshop for ship officers). Leave blank if it is only decoration.";
+
 // "Lora, Georgia, serif" or "'Playfair Display', …" -> "Lora" / "Playfair Display"
 const firstFont = (css?: string) => css?.split(",")[0].trim().replace(/^['"]|['"]$/g, "").toLowerCase() ?? "";
 
@@ -88,7 +91,9 @@ export default function Editor({ value, onChange }: Props) {
       setUploading(true);
       try {
         const url = await uploadImage(file);
-        editor.chain().focus().setImage({ src: url, alt: "" }).run();
+        // Screen reader users hear this description instead of seeing the photo
+        const alt = window.prompt(ALT_PROMPT, "");
+        editor.chain().focus().setImage({ src: url, alt: alt?.trim() ?? "" }).run();
       } catch (err) {
         setUploadError(err instanceof Error ? err.message : "Could not upload the image.");
       } finally {
@@ -159,6 +164,18 @@ export default function Editor({ value, onChange }: Props) {
         <ToolButton label="Quote" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()} />
         <ToolButton label="Link" active={editor.isActive("link")} onClick={setLink} />
         <ToolButton label={uploading ? "Uploading…" : "Photo"} disabled={uploading} onClick={pickImage} />
+        {editor.isActive("image") && (
+          <ToolButton
+            label="Photo description"
+            active={Boolean(editor.getAttributes("image").alt)}
+            onClick={() => {
+              const current = (editor.getAttributes("image").alt as string | undefined) ?? "";
+              const alt = window.prompt(ALT_PROMPT, current);
+              if (alt === null) return;
+              editor.chain().focus().updateAttributes("image", { alt: alt.trim() }).run();
+            }}
+          />
+        )}
         <ToolButton label="Undo" disabled={!editor.can().undo()} onClick={() => editor.chain().focus().undo().run()} />
         <ToolButton label="Redo" disabled={!editor.can().redo()} onClick={() => editor.chain().focus().redo().run()} />
         <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />

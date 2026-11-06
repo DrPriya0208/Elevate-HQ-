@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { MotionConfig } from "framer-motion";
-import ScrollProgress from "@/components/ScrollProgress";
-import SmoothScroll from "@/components/SmoothScroll";
 import { site } from "@/lib/content";
 import "./globals.css";
 
@@ -45,8 +43,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${bricolage.variable} ${inter.variable}`}>
       <body>
-        <ScrollProgress />
-        <SmoothScroll />
         <MotionConfig reducedMotion="user">{children}</MotionConfig>
       </body>
     </html>

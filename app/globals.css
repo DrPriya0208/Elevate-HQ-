@@ -64,18 +64,6 @@
 }
 
 @layer utilities {
-  @keyframes drift {
-    0%,
-    100% {
-      transform: translate(0, 0) scale(1);
-    }
-    50% {
-      transform: translate(24px, -20px) scale(1.08);
-    }
-  }
-  .animate-drift {
-    animation: drift 16s ease-in-out infinite;
-  }
   /* Star field (components/StarField.tsx) behind the navy heroes */
   .star-field {
     position: absolute;
@@ -264,17 +252,12 @@
   opacity: 0;
   transform: scale(0.7);
 }
-.reveal-pending.reveal-line {
-  transform: scaleX(0);
-  transform-origin: left;
-}
 .reveal-pending.reveal-words .reveal-word {
   transform: translateY(110%);
 }
 .reveal-in.reveal-fade,
 .reveal-in.reveal-stagger > .reveal-item,
 .reveal-in.reveal-scale,
-.reveal-in.reveal-line,
 .reveal-in.reveal-words .reveal-word {
   opacity: 1;
   transform: none;
@@ -297,7 +280,6 @@
   .reveal-pending.reveal-fade,
   .reveal-pending.reveal-stagger > .reveal-item,
   .reveal-pending.reveal-scale,
-  .reveal-pending.reveal-line,
   .reveal-pending.reveal-words .reveal-word {
     opacity: 1;
     transform: none;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import CoverImage from "@/components/CoverImage";
 import CtaBand from "@/components/CtaBand";
 import FaqItem from "@/components/FaqItem";
 import HowWeWorkSteps from "@/components/HowWeWorkSteps";
@@ -13,7 +14,7 @@ import MindOfLightHero from "@/components/mind-of-light/MindOfLightHero";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { credentials, faqs, home, services, site, whoWeServe, whyChoose } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
-import { OG_IMAGE, TWITTER_LARGE } from "@/lib/seo";
+import { OG_IMAGE, TWITTER_LARGE, jsonLd, practiceJsonLd } from "@/lib/seo";
 import { formatMonthYear, postCardDate } from "@/lib/text";
 
 export const revalidate = 60;
@@ -65,6 +66,7 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero: "Mind of Light" - a WebGL badge animation (galaxy -> vein brain -> logo) */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(practiceJsonLd()) }} />
       <MindOfLightHero badge={<LogoBadge />}>
         <h1 className="font-serif text-4xl leading-[1.1] text-white lg:text-[3.5rem]">{home.title}</h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">{home.intro}</p>
@@ -241,10 +243,9 @@ export default async function HomePage() {
                 <Link href={`/blog/${p.slug}`} className="card card-hover group flex h-full flex-col overflow-hidden">
                   <div className="relative aspect-[16/10] overflow-hidden bg-navy">
                     {p.coverImage ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <CoverImage
                         src={p.coverImage}
-                        alt=""
+                        sizes="(min-width: 768px) 33vw, 100vw"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (

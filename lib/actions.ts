@@ -25,6 +25,33 @@ function revalidateBlog(slug?: string) {
   if (slug) revalidatePath(`/blog/${slug}`);
 }
 
+/** The src of every <img> in a post body (already sanitised HTML). */
+function imageUrls(html: string): string[] {
+  return [...html.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/gi)].map((m) => m[1]);
+}
+
+/** Prisma's error for a unique constraint (two posts saved with the same slug at the same moment). */
+function isUniqueConflict(err: unknown): boolean {
+  return typeof err === "object" && err !== null && "code" in err && (err as { code?: string }).code === "P2002";
+}
+
+/**
+ * Deletes photos from our bucket, but only ones no other post still uses (the same link can be pasted
+ * into two posts, and deleting is permanent). deletePhoto itself ignores links outside our bucket.
+ */
+async function deleteUnusedPhotos(urls: Array<string | null | undefined>, excludePostId: string) {
+  const unique = [...new Set(urls.filter((u): u is string => Boolean(u)))];
+  for (const url of unique) {
+    const usedElsewhere = await prisma.post.findFirst({
+      where: { id: { not: excludePostId }, OR: [{ coverImage: url }, { content: { contains: url } }] },
+      select: { id: true },
+    });
+    if (!usedElsewhere) await deletePhoto(url);
+  }
+}
+
+const SLUG_TAKEN ="Another post already uses that web address. Change the slug and save again.";
+
 async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
   const root = slugify(base);
   let candidate = root;
@@ -90,17 +117,22 @@ export async function createPost(_prev: FormState, formData: FormData): Promise<
   const published = formData.get("published") === "on";
   const slug = await uniqueSlug(data.slug || data.title);
 
-  await prisma.post.create({
-    data: {
-      title: data.title,
-      slug,
-      excerpt: data.excerpt || makeExcerpt(data.content),
-      content: data.content,
-      coverImage: data.coverImage || null,
-      published,
-      publishedAt: published ? new Date() : null,
-    },
-  });
+  try {
+    await prisma.post.create({
+      data: {
+        title: data.title,
+        slug,
+        excerpt: data.excerpt || makeExcerpt(data.content),
+        content: data.content,
+        coverImage: data.coverImage || null,
+        published,
+        publishedAt: published ? new Date() : null,
+      },
+    });
+  } catch (err) {
+    if (isUniqueConflict(err)) return { error: SLUG_TAKEN };
+    throw err;
+  }
 
   revalidateBlog(slug);
   redirect("/admin");
@@ -118,22 +150,29 @@ export async function updatePost(id: string, _prev: FormState, formData: FormDat
   const published = formData.get("published") === "on";
   const slug = await uniqueSlug(data.slug || data.title, id);
 
-  if (existing.coverImage && existing.coverImage !== (data.coverImage || null)) {
-    await deletePhoto(existing.coverImage);
+  try {
+    await prisma.post.update({
+      where: { id },
+      data: {
+        title: data.title,
+        slug,
+        excerpt: data.excerpt || makeExcerpt(data.content),
+        content: data.content,
+        coverImage: data.coverImage || null,
+        published,
+        publishedAt: published ? existing.publishedAt ?? new Date() : null,
+      },
+    });
+  } catch (err) {
+    if (isUniqueConflict(err)) return { error: SLUG_TAKEN };
+    throw err;
   }
 
-  await prisma.post.update({
-    where: { id },
-    data: {
-      title: data.title,
-      slug,
-      excerpt: data.excerpt || makeExcerpt(data.content),
-      content: data.content,
-      coverImage: data.coverImage || null,
-      published,
-      publishedAt: published ? existing.publishedAt ?? new Date() : null,
-    },
-  });
+  // Only after the save succeeded: remove photos this edit stopped using (a replaced cover, images
+  // taken out of the body). deletePhoto ignores anything outside our own bucket.
+  const stillUsed = new Set([data.coverImage, ...imageUrls(data.content)].filter(Boolean));
+  const dropped = [existing.coverImage, ...imageUrls(existing.content)].filter((u) => u && !stillUsed.has(u));
+  await deleteUnusedPhotos(dropped, id);
 
   revalidateBlog(existing.slug);
   revalidateBlog(slug);
@@ -142,10 +181,11 @@ export async function updatePost(id: string, _prev: FormState, formData: FormDat
 
 export async function deletePost(id: string): Promise<void> {
   await requireAdmin();
-  const existing = await prisma.post.findUnique({ where: { id }, select: { slug: true, coverImage: true } });
+  const existing = await prisma.post.findUnique({ where: { id }, select: { slug: true, coverImage: true, content: true } });
   if (!existing) return;
   await prisma.post.delete({ where: { id } });
-  await deletePhoto(existing.coverImage);
+  // The cover and every image inside the post, unless another post uses the same photo
+  await deleteUnusedPhotos([existing.coverImage, ...imageUrls(existing.content)], id);
   revalidateBlog(existing.slug);
   revalidatePath("/admin");
 }

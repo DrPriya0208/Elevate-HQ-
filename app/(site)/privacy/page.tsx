@@ -102,7 +102,10 @@ export default function PrivacyPage() {
       </p>
       <ul>
         <li>
-          <strong>Vercel:</strong> website hosting and storage of images we publish.
+          <strong>Vercel:</strong> website hosting.
+        </li>
+        <li>
+          <strong>Cloudflare:</strong> storage of the photos we publish on our blog.
         </li>
         <li>
           <strong>Neon:</strong> the database that stores form submissions, hosted in the Singapore region.

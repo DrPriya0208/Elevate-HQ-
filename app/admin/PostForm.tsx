@@ -33,6 +33,7 @@ export default function PostForm({ action, post, submitLabel }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const confirmed = useRef(false);
   const [asking, setAsking] = useState<null | { published: boolean }>(null);
+  const [slugChanged, setSlugChanged] = useState(false);
 
   // Ask before saving; the confirm button re-submits the form with `confirmed` set
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -112,9 +113,17 @@ export default function PostForm({ action, post, submitLabel }: Props) {
             name="slug"
             type="text"
             defaultValue={post?.slug}
+            onChange={(e) => setSlugChanged(Boolean(post?.published) && e.target.value.trim() !== post?.slug)}
+            aria-describedby={slugChanged ? "slug-warning" : undefined}
             className="field"
             placeholder="created from the title if empty"
           />
+          {slugChanged && (
+            <p id="slug-warning" className="mt-1.5 text-sm text-red-800">
+              This post is live. Changing its web address breaks any links already shared (LinkedIn, WhatsApp,
+              Google), which will then show “Page not found”.
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="coverImage" className="label">Cover image (optional)</label>

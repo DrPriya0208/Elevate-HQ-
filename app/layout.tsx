@@ -1,35 +1,29 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Open_Sans, Playfair_Display, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { MotionConfig } from "framer-motion";
 import ScrollProgress from "@/components/ScrollProgress";
 import SmoothScroll from "@/components/SmoothScroll";
 import { site } from "@/lib/content";
-import { postFontVariables } from "./postFontLoaders";
 import "./globals.css";
 
-const serif = Bricolage_Grotesque({
-  subsets: ["latin"],
+// The site's two faces, self-hosted from app/fonts (variable-weight Latin files from Fontsource, SIL OFL).
+// Self-hosting means builds never depend on reaching Google Fonts (it was blocked on the office network,
+// leaving the site in fallback fonts) and visitors' browsers never request anything from Google.
+// The blog editor's extra fonts live in app/postFontLoaders.ts and load only on blog posts and in the admin.
+const bricolage = localFont({
+  src: "./fonts/bricolage-grotesque-latin-wght-normal.woff2",
   variable: "--font-serif",
   display: "swap",
-  weight: "variable",
+  weight: "200 800",
+  fallback: ["Georgia", "serif"],
 });
-const sans = Open_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-  weight: ["400", "500", "600"],
-});
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  display: "swap",
-  weight: ["500", "600"],
-});
-const inter = Inter({
-  subsets: ["latin"],
+// Variable Inter covers every weight, so semibold and bold text is real, not browser-faked.
+const inter = localFont({
+  src: "./fonts/inter-latin-wght-normal.woff2",
   variable: "--font-inter",
   display: "swap",
-  weight: ["300", "400", "500"],
+  weight: "100 900",
+  fallback: ["system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -49,7 +43,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} ${playfair.variable} ${inter.variable} ${postFontVariables}`}>
+    <html lang="en" className={`${bricolage.variable} ${inter.variable}`}>
       <body>
         <ScrollProgress />
         <SmoothScroll />

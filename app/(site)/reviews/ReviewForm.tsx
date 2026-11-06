@@ -25,7 +25,7 @@ function RatingInput() {
             key={n}
             onMouseEnter={() => setHover(n)}
             className={`relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-md text-3xl leading-none transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-navy ${
-              n <= shown ? "text-deep-gold" : "text-line"
+              n <= shown ? "text-star-gold" : "text-line"
             }`}
           >
             <input

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import LegalPage from "@/components/LegalPage";
 import { site } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
   description: "How Elevate HQ collects, uses and protects your personal information.",
-};
+  path: "/privacy",
+});
 
 const sections = [
   { id: "who-we-are", title: "Who we are" },

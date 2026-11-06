@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { useRef, type ReactNode } from "react";
 import StarField from "@/components/StarField";
-import LogoBadge from "./LogoBadge";
 import "./mind-of-light.css";
 
 // The engine (shaders, buffers, timeline) is WebGL-only behavior with no DOM of its own:
@@ -15,10 +14,13 @@ const MindOfLightEngine = dynamic(() => import("./MindOfLight"), { ssr: false })
 
 type MindOfLightHeroProps = {
   children: ReactNode;
+  /** The finished logo (<LogoBadge />), rendered by the server page and passed in so its ~96 KB of
+   *  SVG stays out of this client component's JavaScript bundle. */
+  badge: ReactNode;
 };
 
 /** The "Mind of Light" hero: the site's real header/copy/buttons, with a WebGL badge animation. */
-export default function MindOfLightHero({ children }: MindOfLightHeroProps) {
+export default function MindOfLightHero({ children, badge }: MindOfLightHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const slotRef = useRef<HTMLDivElement>(null);
@@ -36,7 +38,7 @@ export default function MindOfLightHero({ children }: MindOfLightHeroProps) {
         <div className="logo-slot" ref={slotRef}>
           <button type="button" className="badge-btn" aria-label="Replay logo animation" ref={badgeBtnRef}>
             <div className="stage v-w wait" ref={stageRef}>
-              <LogoBadge />
+              {badge}
             </div>
             <span className="replay-icon" aria-hidden="true">
               ↻

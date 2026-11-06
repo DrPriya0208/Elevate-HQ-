@@ -11,7 +11,7 @@ export default async function LoginPage() {
     <div className="speckle flex min-h-screen items-center justify-center bg-navy px-6 py-12">
       <div className="w-full max-w-sm rounded-lg bg-mist p-8 shadow-xl">
         <div className="flex flex-col items-center text-center">
-          <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={72} height={72} />
+          <Image src="/elevatehq-logo-dark-playfair-1024.png" alt="" width={72} height={72} />
           <h1 className="mt-4 font-serif text-2xl">Admin sign in</h1>
         </div>
         <div className="mt-8">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
@@ -8,10 +9,11 @@ import { postCardDate } from "@/lib/text";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Blog",
   description: "Articles on mental health, relationships, and personal growth from Elevate HQ.",
-};
+  path: "/blog",
+});
 
 type PostCard = {
   id: string;
@@ -33,11 +35,10 @@ function Cover({ src, large = false }: { src: string | null; large?: boolean }) 
   return (
     <div className="speckle flex h-full items-center justify-center bg-navy">
       <Image
-        src="/elevatehq-logo-dark-playfair.svg"
+        src="/elevatehq-logo-dark-playfair-1024.png"
         alt=""
         width={large ? 140 : 88}
         height={large ? 140 : 88}
-        priority
         className="opacity-80 transition-transform duration-500 group-hover:scale-105"
       />
     </div>
@@ -54,7 +55,10 @@ export default async function BlogPage() {
       orderBy: { publishedAt: "desc" },
       select: { id: true, slug: true, title: true, excerpt: true, coverImage: true, publishedAt: true, updatedAt: true },
     });
-  } catch {
+  } catch (err) {
+    // While building, show the "could not be loaded" state rather than failing the whole deploy.
+    // At runtime, rethrow: Next then keeps serving the last good cached list instead of caching the failure.
+    if (process.env.NEXT_PHASE !== "phase-production-build") throw err;
     failed = true;
   }
 

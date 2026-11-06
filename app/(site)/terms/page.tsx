@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import LegalPage from "@/components/LegalPage";
 import { site } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Terms & Conditions",
   description: "The terms that apply when you use the Elevate HQ website.",
-};
+  path: "/terms",
+});
 
 const sections = [
   { id: "about", title: "About these terms" },

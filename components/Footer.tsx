@@ -20,7 +20,7 @@ export default function Footer() {
       <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-[1.5fr_1fr_1.2fr]">
         <div>
           <div className="flex items-center gap-3">
-            <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={52} height={52} priority />
+            <Image src="/elevatehq-logo-dark-playfair-1024.png" alt="" width={52} height={52} />
             <p className="font-serif text-2xl font-semibold text-white">{site.name}</p>
           </div>
           <p className="mt-4 max-w-xs text-sm leading-relaxed">{site.tagline}</p>

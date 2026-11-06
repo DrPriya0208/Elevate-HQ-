@@ -4,12 +4,27 @@ import { deleteEnquiry, deletePost } from "@/lib/actions";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/text";
 
-export default async function AdminDashboard() {
+const ENQUIRIES_PER_PAGE = 20;
+
+type Props = { searchParams: Promise<{ page?: string }> };
+
+export default async function AdminDashboard({ searchParams }: Props) {
+  const { page: pageParam } = await searchParams;
+  const enquiryTotal = await prisma.enquiry.count();
+  const pageCount = Math.max(1, Math.ceil(enquiryTotal / ENQUIRIES_PER_PAGE));
+  const page = Math.min(pageCount, Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1));
+
   const [posts, enquiries, pendingReviews] = await Promise.all([
     prisma.post.findMany({ orderBy: { createdAt: "desc" } }),
-    prisma.enquiry.findMany({ orderBy: { createdAt: "desc" }, take: 25 }),
+    prisma.enquiry.findMany({
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * ENQUIRIES_PER_PAGE,
+      take: ENQUIRIES_PER_PAGE,
+    }),
     prisma.review.count({ where: { status: "PENDING" } }),
   ]);
+  const firstShown = (page - 1) * ENQUIRIES_PER_PAGE + 1;
+  const lastShown = firstShown + enquiries.length - 1;
 
   return (
     <div className="space-y-14">
@@ -60,8 +75,15 @@ export default async function AdminDashboard() {
         )}
       </section>
 
-      <section>
-        <h2 className="font-serif text-3xl">Enquiries</h2>
+      <section id="enquiries" className="scroll-mt-24">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="font-serif text-3xl">Enquiries</h2>
+          {enquiryTotal > 0 && (
+            <p className="text-sm text-slate">
+              {enquiryTotal > ENQUIRIES_PER_PAGE ? `Showing ${firstShown}–${lastShown} of ${enquiryTotal}` : `${enquiryTotal} in total`}
+            </p>
+          )}
+        </div>
         {enquiries.length === 0 ? (
           <p className="mt-6 rounded-md border border-line bg-white p-6 text-slate">
             No enquiries yet. Messages sent from the contact page appear here.
@@ -74,7 +96,7 @@ export default async function AdminDashboard() {
                   <p className="font-semibold">{e.name}</p>
                   <div className="flex items-baseline gap-5">
                     <p className="text-sm text-slate">
-                      {new Date(e.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
+                      {new Date(e.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}
                     </p>
                     <DeleteButton
                       action={deleteEnquiry.bind(null, e.id)}
@@ -92,6 +114,28 @@ export default async function AdminDashboard() {
               </li>
             ))}
           </ul>
+        )}
+
+        {pageCount > 1 && (
+          <nav aria-label="Enquiry pages" className="mt-6 flex flex-wrap items-center justify-between gap-4">
+            {page > 1 ? (
+              <Link href={`/admin?page=${page - 1}#enquiries`} className="btn border border-line bg-white text-navy hover:border-brass">
+                Newer
+              </Link>
+            ) : (
+              <span />
+            )}
+            <p className="text-sm text-slate">
+              Page {page} of {pageCount}
+            </p>
+            {page < pageCount ? (
+              <Link href={`/admin?page=${page + 1}#enquiries`} className="btn border border-line bg-white text-navy hover:border-brass">
+                Older
+              </Link>
+            ) : (
+              <span />
+            )}
+          </nav>
         )}
       </section>
     </div>

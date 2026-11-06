@@ -89,11 +89,17 @@ export default function MindOfLight({ heroRef, canvasRef, slotRef, stageRef, ski
     function init() {
       if (cancelled || !hero || !canvas || !slot || !stage || !skipBtn || !badgeBtn) return;
 
-      const gl = canvas.getContext("webgl", {
-        premultipliedAlpha: true,
-        antialias: false,
-        alpha: true,
-      });
+      // Data Saver on (common on Indian mobile plans): skip the WebGL story and its ~300 KB of data
+      // files, and use the lightweight CSS-drawn logo animation instead.
+      const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+
+      const gl = saveData
+        ? null
+        : canvas.getContext("webgl", {
+            premultipliedAlpha: true,
+            antialias: false,
+            alpha: true,
+          });
 
       if (!gl) {
         stage.className = "stage v-a";

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import SectionHeading from "@/components/SectionHeading";
@@ -9,10 +10,11 @@ import { prisma } from "@/lib/prisma";
 import { formatMonthYear } from "@/lib/text";
 import ReviewForm from "./ReviewForm";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Reviews",
   description: "Feedback from people who have worked with Elevate HQ.",
-};
+  path: "/reviews",
+});
 
 const PAGE_SIZE = 10;
 

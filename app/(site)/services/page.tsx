@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import CtaBand from "@/components/CtaBand";
 import PageHero from "@/components/PageHero";
@@ -7,11 +8,12 @@ import { Icon } from "@/components/icons";
 import { FadeIn, RevealText, ScaleIn, Stagger, StaggerItem } from "@/components/motion";
 import { services, whoChoosesUs } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Services",
   description:
     "Counselling, psychometric assessments, leadership and soft skills training, PoSH compliance, organisational and maritime psychology, and student programmes.",
-};
+  path: "/services",
+});
 
 export default function ServicesPage() {
   return (

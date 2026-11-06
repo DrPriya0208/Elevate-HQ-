@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import CtaBand from "@/components/CtaBand";
@@ -7,13 +8,30 @@ import ReviewCarousel from "@/components/ReviewCarousel";
 import SectionHeading from "@/components/SectionHeading";
 import StarField from "@/components/StarField";
 import { Icon } from "@/components/icons";
+import LogoBadge from "@/components/mind-of-light/LogoBadge";
 import MindOfLightHero from "@/components/mind-of-light/MindOfLightHero";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
-import { credentials, faqs, home, services, whoWeServe, whyChoose } from "@/lib/content";
+import { credentials, faqs, home, services, site, whoWeServe, whyChoose } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
+import { OG_IMAGE, TWITTER_LARGE } from "@/lib/seo";
 import { formatMonthYear, postCardDate } from "@/lib/text";
 
 export const revalidate = 60;
+
+// The tab title is the layout's default; this adds the home page's own canonical URL and og:url.
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    locale: "en_IN",
+    title: `${site.name} | ${site.tagline}`,
+    description: home.intro,
+    url: "/",
+    images: [OG_IMAGE],
+  },
+  twitter: TWITTER_LARGE,
+};
 
 async function getLatestPosts() {
   try {
@@ -47,7 +65,7 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero: "Mind of Light" - a WebGL badge animation (galaxy -> vein brain -> logo) */}
-      <MindOfLightHero>
+      <MindOfLightHero badge={<LogoBadge />}>
         <h1 className="font-serif text-4xl leading-[1.1] text-white lg:text-[3.5rem]">{home.title}</h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">{home.intro}</p>
         <div className="mt-8 flex flex-wrap gap-3">
@@ -231,7 +249,7 @@ export default async function HomePage() {
                       />
                     ) : (
                       <div className="speckle flex h-full items-center justify-center">
-                        <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={88} height={88} priority className="opacity-80" />
+                        <Image src="/elevatehq-logo-dark-playfair-1024.png" alt="" width={88} height={88} className="opacity-80" />
                       </div>
                     )}
                   </div>

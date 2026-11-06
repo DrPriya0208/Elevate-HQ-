@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import PageHero from "@/components/PageHero";
 import { Icon } from "@/components/icons";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { site } from "@/lib/content";
 import ContactForm from "./ContactForm";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
   description: "Book a session or ask a question. Elevate HQ, Sholinganallur, Chennai.",
-};
+  path: "/contact",
+});
 
 const [emailUser, emailDomain] = site.email.split("@");
 

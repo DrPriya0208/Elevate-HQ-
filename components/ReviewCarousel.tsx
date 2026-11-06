@@ -18,7 +18,9 @@ export default function ReviewCarousel({ reviews }: { reviews: CarouselReview[] 
   const trackRef = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
   const [multi, setMulti] = useState(false);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(false); // temporary: hover, focus or touch
+  const [stopped, setStopped] = useState(false); // the visitor pressed Pause (WCAG 2.2.2); stays until Play
+  const [canDrift, setCanDrift] = useState(false); // false under reduced motion, so no Pause button is needed
   const pausedRef = useRef(false);
   const pos = useRef(0);
   const drag = useRef<{ x: number; left: number } | null>(null);
@@ -75,11 +77,16 @@ export default function ReviewCarousel({ reviews }: { reviews: CarouselReview[] 
     return () => window.removeEventListener("resize", measure);
   }, [measure]);
 
+  useEffect(() => {
+    setCanDrift(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+
   // Pick up from wherever the visitor left it when the drift resumes
   useEffect(() => {
-    pausedRef.current = paused;
-    if (!paused && trackRef.current) pos.current = trackRef.current.scrollLeft;
-  }, [paused]);
+    const halted = paused || stopped;
+    pausedRef.current = halted;
+    if (!halted && trackRef.current) pos.current = trackRef.current.scrollLeft;
+  }, [paused, stopped]);
 
   // Continuous drift, wrapping seamlessly between the two copies
   useEffect(() => {
@@ -174,7 +181,24 @@ export default function ReviewCarousel({ reviews }: { reviews: CarouselReview[] 
       </ul>
 
       {multi && (
-        <div className="mt-6 flex flex-wrap gap-2">
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+            {canDrift && (
+              <button
+                type="button"
+                onClick={() => setStopped((s) => !s)}
+                aria-label={stopped ? "Play the moving reviews" : "Pause the moving reviews"}
+                className="mr-3 inline-flex h-9 items-center gap-2 rounded-full border border-line px-4 text-sm font-semibold text-navy transition-colors hover:border-brass"
+              >
+                <span aria-hidden="true" className="flex h-3 w-3 items-center justify-center">
+                  {stopped ? (
+                    <svg viewBox="0 0 12 12" className="h-3 w-3 fill-current"><path d="M2 1l9 5-9 5z" /></svg>
+                  ) : (
+                    <svg viewBox="0 0 12 12" className="h-3 w-3 fill-current"><path d="M2 1h3v10H2zM7 1h3v10H7z" /></svg>
+                  )}
+                </span>
+                {stopped ? "Play" : "Pause"}
+              </button>
+            )}
             {reviews.map((r, i) => (
               <button
                 key={r.id}

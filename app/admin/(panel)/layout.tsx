@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { postFontVariables } from "@/app/postFontLoaders";
 import { auth, signOut } from "@/auth";
 
 export default async function PanelLayout({ children }: { children: React.ReactNode }) {
@@ -13,11 +14,12 @@ export default async function PanelLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-mist">
+    // postFontVariables: the editor's font menu previews each font, so the admin loads them all
+    <div className={`min-h-screen bg-mist ${postFontVariables}`}>
       <header className="bg-navy text-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
           <Link href="/admin" className="flex items-center gap-3">
-            <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={36} height={36} />
+            <Image src="/elevatehq-logo-dark-playfair-1024.png" alt="" width={36} height={36} />
             <span className="font-serif text-lg">Elevate HQ admin</span>
           </Link>
           <div className="flex items-center gap-5 text-sm">

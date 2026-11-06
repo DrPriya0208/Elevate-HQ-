@@ -9,12 +9,18 @@ import {
   Merriweather,
   Montserrat,
   Nunito,
+  Open_Sans,
+  Playfair_Display,
   Poppins,
   Raleway,
 } from "next/font/google";
 
-// Extra fonts for the blog editor's font menu (lib/postFonts.ts). Inter, Open Sans and Playfair Display
-// are already loaded by the site layout. Not preloaded: a page only downloads a font its text uses.
+// Extra fonts for the blog editor's font menu (lib/postFonts.ts). Inter is already loaded by the site
+// layout. Import this module only where post content is shown or edited (the blog post page and the
+// admin panel), so other pages don't carry these @font-face rules. Not preloaded: a page only
+// downloads a font its text actually uses.
+const openSans = Open_Sans({ subsets: ["latin"], variable: "--font-open-sans", display: "swap", preload: false, style: ["normal", "italic"] });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", display: "swap", preload: false, style: ["normal", "italic"] });
 const lora = Lora({ subsets: ["latin"], variable: "--font-lora", display: "swap", preload: false, style: ["normal", "italic"] });
 const merriweather = Merriweather({
   subsets: ["latin"],
@@ -55,8 +61,10 @@ const cormorant = Cormorant_Garamond({
 const dancingScript = Dancing_Script({ subsets: ["latin"], variable: "--font-dancing-script", display: "swap", preload: false });
 const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat", display: "swap", preload: false });
 
-/** Class names to put on <html> so every editor font's @font-face rules are available. */
+/** Class names for the element wrapping post content, so every editor font's @font-face rules are available. */
 export const postFontVariables = [
+  openSans,
+  playfair,
   lora,
   merriweather,
   nunito,

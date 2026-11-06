@@ -23,7 +23,7 @@ export default function Header() {
     <header className="sticky top-0 z-40 bg-navy text-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
-          <Image src="/elevatehq-logo-dark-playfair.svg" alt="" width={56} height={56} className="h-14 w-14" priority />
+          <Image src="/elevatehq-logo-dark-playfair-1024.png" alt="" width={56} height={56} className="h-14 w-14" priority />
           <span className="whitespace-nowrap font-serif text-2xl font-bold tracking-wide">
             Elevate H
             <span className="relative inline-block">

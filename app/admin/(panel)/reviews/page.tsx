@@ -74,7 +74,7 @@ export default async function AdminReviewsPage({ searchParams }: Props) {
                   </div>
                   <p className="mt-2 whitespace-pre-line leading-relaxed">{r.message}</p>
                   <p className="mt-2 text-sm text-slate">
-                    {new Date(r.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
+                    {new Date(r.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-wrap items-center gap-4">

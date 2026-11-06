@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
+import { postFontVariables } from "@/app/postFontLoaders";
+import { OG_IMAGE, TWITTER_LARGE } from "@/lib/seo";
 import CtaBand from "@/components/CtaBand";
 import ShareButtons from "@/components/ShareButtons";
 import StarField from "@/components/StarField";
@@ -13,14 +16,13 @@ export const revalidate = 60;
 
 type Props = { params: Promise<{ slug: string }> };
 
-async function getPost(slug: string) {
-  try {
-    const post = await prisma.post.findUnique({ where: { slug } });
-    return post && post.published ? post : null;
-  } catch {
-    return null;
-  }
-}
+// null means "no such published post" (a real 404). A database error is NOT caught here: it
+// propagates so Next keeps serving the last good cached copy (or the (site) error page), instead of
+// caching a live article as a 404. cache() shares one query between generateMetadata and the page.
+const getPost = cache(async (slug: string) => {
+  const post = await prisma.post.findUnique({ where: { slug } });
+  return post && post.published ? post : null;
+});
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -37,8 +39,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: post.excerpt,
       type: "article",
       publishedTime: post.publishedAt?.toISOString(),
-      images: post.coverImage ? [post.coverImage] : ["/elevatehq-logo-dark-playfair-1024.png"],
+      // The post's own cover photo, or the site's 1200x630 preview image
+      images: post.coverImage ? [post.coverImage] : [OG_IMAGE],
     },
+    twitter: TWITTER_LARGE,
   };
 }
 
@@ -62,7 +66,7 @@ export default async function PostPage({ params }: Props) {
         </div>
       </header>
 
-      <article className="mx-auto max-w-3xl px-6 pb-20">
+      <article className={`mx-auto max-w-3xl px-6 pb-20 ${postFontVariables}`}>
         {post.coverImage && (
           <FadeIn className="-mt-24">
             {/* eslint-disable-next-line @next/next/no-img-element */}

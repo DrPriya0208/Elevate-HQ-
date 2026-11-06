@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import CtaBand from "@/components/CtaBand";
 import PageHero from "@/components/PageHero";
@@ -7,10 +8,11 @@ import { Icon } from "@/components/icons";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { about, coFounder, founder, site, values } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About",
   description: `About Elevate HQ, its founder ${founder.name} and co-founder ${coFounder.name}.`,
-};
+  path: "/about",
+});
 
 function Monogram({ name }: { name: string }) {
   return (

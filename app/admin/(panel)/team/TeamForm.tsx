@@ -5,6 +5,9 @@ import { useActionState, useRef, useState } from "react";
 import { submitWithoutReset } from "@/lib/submitWithoutReset";
 import type { FormState } from "@/lib/types";
 import { uploadImage } from "@/app/admin/uploadImage";
+import { teamRoles } from "@/lib/teamRoles";
+
+const OTHER = "__other";
 
 export type TeamValues = {
   name: string;
@@ -30,6 +33,9 @@ export default function TeamForm({ action, member, submitLabel }: Props) {
   const [uploading, setUploading] = useState(false);
   const [photoError, setPhotoError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  // A saved role that is not in the list (typed via "Other") opens with "Other" selected and the text filled
+  const knownRole = !member?.role || (teamRoles as readonly string[]).includes(member.role);
+  const [roleChoice, setRoleChoice] = useState(member?.role ? (knownRole ? member.role : OTHER) : "");
 
   async function handlePhotoFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -89,18 +95,42 @@ export default function TeamForm({ action, member, submitLabel }: Props) {
           <input id="name" name="name" type="text" required minLength={2} maxLength={80} defaultValue={member?.name} className="field" />
         </div>
         <div>
-          <label htmlFor="role" className="label">Role</label>
-          <input
-            id="role"
-            name="role"
-            type="text"
+          <label htmlFor="roleChoice" className="label">Role</label>
+          <select
+            id="roleChoice"
+            name={roleChoice === OTHER ? undefined : "role"}
             required
-            minLength={2}
-            maxLength={80}
-            defaultValue={member?.role}
-            placeholder="e.g. Counselling Psychologist"
+            value={roleChoice}
+            onChange={(e) => setRoleChoice(e.target.value)}
             className="field"
-          />
+          >
+            <option value="" disabled>
+              Choose a role
+            </option>
+            {teamRoles.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+            <option value={OTHER}>Other (type your own)</option>
+          </select>
+          {roleChoice === OTHER && (
+            <>
+              <label htmlFor="role" className="sr-only">Role, typed</label>
+              <input
+                id="role"
+                name="role"
+                type="text"
+                required
+                minLength={2}
+                maxLength={80}
+                defaultValue={knownRole ? "" : member?.role}
+                placeholder="Type the role"
+                autoFocus={!member}
+                className="field mt-2"
+              />
+            </>
+          )}
         </div>
       </div>
 

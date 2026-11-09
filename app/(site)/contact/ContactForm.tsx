@@ -9,7 +9,13 @@ import { enquiryTopics } from "@/lib/content";
 import { submitWithoutReset } from "@/lib/submitWithoutReset";
 import type { ContactState } from "@/lib/types";
 
-export default function ContactForm({ defaultTopic }: { defaultTopic?: string }) {
+type Props = {
+  defaultTopic?: string;
+  /** Active team members; the "who would you like to speak with" choice shows only when there are some */
+  team?: { name: string; role: string }[];
+};
+
+export default function ContactForm({ defaultTopic, team = [] }: Props) {
   const [state, action, pending] = useActionState<ContactState, FormData>(submitEnquiry, undefined);
 
   if (state?.ok) {
@@ -66,6 +72,20 @@ export default function ContactForm({ defaultTopic }: { defaultTopic?: string })
           ))}
         </select>
       </div>
+
+      {team.length > 0 && (
+        <div>
+          <label htmlFor="preferredMember" className="label">Who would you like to speak with? (optional)</label>
+          <select id="preferredMember" name="preferredMember" defaultValue="" className="field">
+            <option value="">No preference</option>
+            {team.map((m) => (
+              <option key={m.name} value={m.name}>
+                {m.name}, {m.role}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div>
         <label htmlFor="organisation" className="label">Organisation (optional)</label>

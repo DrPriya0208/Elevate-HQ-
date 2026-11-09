@@ -4,6 +4,7 @@ import PageHero from "@/components/PageHero";
 import { Icon } from "@/components/icons";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { site } from "@/lib/content";
+import { getActiveTeam } from "@/lib/team";
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = pageMetadata({
@@ -35,6 +36,7 @@ type Props = { searchParams: Promise<{ topic?: string }> };
 
 export default async function ContactPage({ searchParams }: Props) {
   const { topic } = await searchParams;
+  const team = (await getActiveTeam()).map((m) => ({ name: m.name, role: m.role }));
 
   return (
     <>
@@ -63,7 +65,7 @@ export default async function ContactPage({ searchParams }: Props) {
             <p className="kicker text-brass">Send a message</p>
             <h2 className="mt-3 font-serif text-2xl">Tell us a little about what you need</h2>
             <div className="mt-8">
-              <ContactForm defaultTopic={topic} />
+              <ContactForm defaultTopic={topic} team={team} />
             </div>
           </FadeIn>
         </div>

@@ -9,6 +9,7 @@ import { auth, signIn } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { clientIp, passedHumanCheck, underLimit } from "@/lib/protection";
 import { cleanHtml } from "@/lib/sanitize";
+import { getActiveTeam } from "@/lib/team";
 import { deletePhoto } from "@/lib/storage";
 import { makeExcerpt, slugify, stripTags } from "@/lib/text";
 import {
@@ -305,7 +306,7 @@ const enquirySchema = z.object({
   message: z.string().trim().min(10, "Please write a few words about how we can help.").max(3000, "Please keep the message under 3000 characters."),
 });
 
-async function sendEnquiryEmail(e: z.infer<typeof enquirySchema>) {
+async function sendEnquiryEmail(e: z.infer<typeof enquirySchema>, preferredMember: string | null) {
   const key = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_TO_EMAIL;
   if (!key || !to) return;
@@ -319,7 +320,7 @@ async function sendEnquiryEmail(e: z.infer<typeof enquirySchema>) {
         to: [to],
         reply_to: e.email,
         subject: `New enquiry from ${e.name}`,
-        text: `Name: ${e.name}\nEmail: ${e.email}\nPhone: ${e.phone || "-"}\nOrganization: ${e.organisation || "-"}\nInterested in: ${e.interest}\n\n${e.message}`,
+        text: `Name: ${e.name}\nEmail: ${e.email}\nPhone: ${e.phone || "-"}\nOrganization: ${e.organisation || "-"}\nInterested in: ${e.interest}\nWould like to speak with: ${preferredMember ?? "No preference"}\n\n${e.message}`,
       }),
     });
     if (!res.ok) console.error("Resend responded with", res.status, await res.text());
@@ -349,6 +350,9 @@ export async function submitEnquiry(_prev: ContactState, formData: FormData): Pr
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Check the form and try again." };
 
   const e = parsed.data;
+  // Only accept a name that is on the current team (the field is a dropdown, but posts can be forged)
+  const asked = String(formData.get("preferredMember") ?? "").trim();
+  const preferredMember = asked && (await getActiveTeam()).some((m) => m.name === asked) ? asked : null;
   try {
     await prisma.enquiry.create({
       data: {
@@ -358,6 +362,7 @@ export async function submitEnquiry(_prev: ContactState, formData: FormData): Pr
         interest: e.interest,
         organisation: e.organisation || null,
         message: e.message,
+        preferredMember,
       },
     });
   } catch (err) {
@@ -365,7 +370,7 @@ export async function submitEnquiry(_prev: ContactState, formData: FormData): Pr
     return { error: "We could not send your message. Please call or WhatsApp us instead." };
   }
 
-  await sendEnquiryEmail(e);
+  await sendEnquiryEmail(e, preferredMember);
   revalidatePath("/admin");
   return { ok: true };
 }
@@ -516,4 +521,101 @@ export async function updateReview(id: string, _prev: FormState, formData: FormD
 
   revalidateReviews();
   redirect("/admin/reviews");
+}
+
+/* ---------- team members ---------- */
+
+function revalidateTeam() {
+  revalidatePath("/about");
+  revalidatePath("/contact");
+  revalidatePath("/admin/team");
+}
+
+const teamSchema = z.object({
+  name: z.string().trim().min(2, "Add the person's name.").max(80, "Keep the name under 80 characters."),
+  role: z.string().trim().min(2, "Add their role, for example Counselling Psychologist.").max(80, "Keep the role under 80 characters."),
+  bio: z.string().trim().min(20, "Write a short bio of at least 20 characters.").max(1500, "Keep the bio under 1500 characters."),
+  qualifications: z.string().max(2000, "Keep the qualifications under 2000 characters."),
+  languages: z.string().trim().max(120, "Keep the languages under 120 characters."),
+  linkedin: z.union([z.literal(""), z.string().trim().url("LinkedIn must be a full link starting with https://")]),
+  photo: z.union([z.literal(""), z.string().trim().url("Photo must be a full link starting with https://")]),
+  sortOrder: z.coerce.number().int("Display order must be a whole number.").min(0).max(999),
+});
+
+function readTeamMember(formData: FormData) {
+  const parsed = teamSchema.safeParse({
+    name: String(formData.get("name") ?? ""),
+    role: String(formData.get("role") ?? ""),
+    bio: String(formData.get("bio") ?? ""),
+    qualifications: String(formData.get("qualifications") ?? ""),
+    languages: String(formData.get("languages") ?? ""),
+    linkedin: String(formData.get("linkedin") ?? "").trim(),
+    photo: String(formData.get("photo") ?? "").trim(),
+    sortOrder: String(formData.get("sortOrder") ?? "0") || "0",
+  });
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Check the form and try again." };
+  const d = parsed.data;
+  return {
+    data: {
+      name: d.name,
+      role: d.role,
+      bio: d.bio,
+      // One per line, tidied
+      qualifications: d.qualifications.split("\n").map((q) => q.trim()).filter(Boolean).join("\n"),
+      languages: d.languages || null,
+      linkedin: d.linkedin || null,
+      photo: d.photo || null,
+      sortOrder: d.sortOrder,
+      active: formData.get("active") === "on",
+    },
+  };
+}
+
+/** Deletes a member's photo from our bucket unless another member or a post still uses it. */
+async function deleteUnusedTeamPhoto(url: string | null | undefined, excludeMemberId: string) {
+  if (!url) return;
+  const [member, post] = await Promise.all([
+    prisma.teamMember.findFirst({ where: { id: { not: excludeMemberId }, photo: url }, select: { id: true } }),
+    prisma.post.findFirst({ where: { OR: [{ coverImage: url }, { content: { contains: url } }] }, select: { id: true } }),
+  ]);
+  if (!member && !post) await deletePhoto(url);
+}
+
+export async function createTeamMember(_prev: FormState, formData: FormData): Promise<FormState> {
+  await requireAdmin();
+  const result = readTeamMember(formData);
+  if ("error" in result) return { error: result.error };
+  await prisma.teamMember.create({ data: result.data });
+  revalidateTeam();
+  redirect("/admin/team");
+}
+
+export async function updateTeamMember(id: string, _prev: FormState, formData: FormData): Promise<FormState> {
+  await requireAdmin();
+  const result = readTeamMember(formData);
+  if ("error" in result) return { error: result.error };
+
+  const existing = await prisma.teamMember.findUnique({ where: { id }, select: { photo: true } });
+  if (!existing) return { error: "This team member no longer exists. It may have been deleted." };
+  await prisma.teamMember.update({ where: { id }, data: result.data });
+  // Only after a successful save: remove the old photo if it was replaced or removed
+  if (existing.photo && existing.photo !== result.data.photo) await deleteUnusedTeamPhoto(existing.photo, id);
+
+  revalidateTeam();
+  redirect("/admin/team");
+}
+
+export async function setTeamMemberActive(id: string, active: boolean): Promise<void> {
+  await requireAdmin();
+  await prisma.teamMember.updateMany({ where: { id }, data: { active } });
+  revalidateTeam();
+}
+
+export async function deleteTeamMember(id: string): Promise<void> {
+  await requireAdmin();
+  const member = await prisma.teamMember.findUnique({ where: { id }, select: { photo: true } });
+  if (!member) return;
+  await prisma.teamMember.delete({ where: { id } });
+  await deleteUnusedTeamPhoto(member.photo, id);
+  revalidateTeam();
 }

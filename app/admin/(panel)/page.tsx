@@ -110,6 +110,9 @@ export default async function AdminDashboard({ searchParams }: Props) {
                   {e.phone ? ` · ${e.phone}` : ""} · {e.interest}
                   {e.organisation ? ` · ${e.organisation}` : ""}
                 </p>
+                {e.preferredMember && (
+                  <p className="mt-1 text-sm font-semibold text-brass">Would like to speak with {e.preferredMember}</p>
+                )}
                 <p className="mt-3 whitespace-pre-wrap leading-relaxed">{e.message}</p>
               </li>
             ))}

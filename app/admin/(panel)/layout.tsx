@@ -22,7 +22,9 @@ export default async function PanelLayout({ children }: { children: React.ReactN
             <Image src="/elevatehq-logo-dark-playfair-1024.png" alt="" width={36} height={36} />
             <span className="font-serif text-lg">Elevate HQ admin</span>
           </Link>
-          <div className="flex items-center gap-5 text-sm">
+          <div className="flex flex-wrap items-center justify-end gap-x-5 gap-y-1 text-sm">
+            <Link href="/admin/reviews" className="text-white/80 hover:text-gold">Reviews</Link>
+            <Link href="/admin/team" className="text-white/80 hover:text-gold">Team</Link>
             <Link href="/" className="text-white/80 hover:text-gold" target="_blank">View site</Link>
             <form action={logout}>
               <button type="submit" className="text-white/80 hover:text-gold">Sign out</button>

@@ -31,7 +31,30 @@ model Enquiry {
   interest     String
   organisation String?
   message      String   @db.Text
+  /// Name of the team member the visitor asked for, as it was when they wrote (null = no preference)
+  preferredMember String?
   createdAt    DateTime @default(now())
+}
+
+/// Team members shown on /about (below the founders) and offered on the contact form.
+/// Managed from /admin/team. Nothing shows on the site while no member is active.
+model TeamMember {
+  id             String   @id @default(cuid())
+  name           String
+  role           String
+  bio            String   @db.Text
+  /// One qualification or certification per line
+  qualifications String   @default("") @db.Text
+  languages      String?
+  linkedin       String?
+  photo          String?
+  /// Lower numbers show first
+  sortOrder      Int      @default(0)
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([active, sortOrder])
 }
 
 enum ReviewStatus {

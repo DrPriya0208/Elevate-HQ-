@@ -110,7 +110,7 @@ export default async function AboutPage() {
       <section className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <SectionHeading kicker="Our team" title="Science and compassion, strategy and reach" center />
         <div className="mt-10 grid gap-6 lg:grid-cols-2 lg:items-start">
-          <FadeIn className="card flex flex-col p-8 md:p-10">
+          <FadeIn className="card card-hover flex flex-col p-8 md:p-10">
             <div className="flex items-center gap-5">
               <Monogram name={founder.name} />
               <div>
@@ -153,7 +153,7 @@ export default async function AboutPage() {
             </div>
           </FadeIn>
 
-          <FadeIn delay={0.1} className="card flex flex-col p-8 md:p-10">
+          <FadeIn delay={0.1} className="card card-hover flex flex-col p-8 md:p-10">
             <div className="flex items-center gap-5">
               <Monogram name={coFounder.name} />
               <div>
@@ -202,7 +202,7 @@ export default async function AboutPage() {
                 return (
                   <StaggerItem
                     key={m.id}
-                    className={`card flex w-full flex-col p-6 sm:w-[calc((100%-1.5rem)/2)] md:p-8 ${
+                    className={`card card-hover flex w-full flex-col p-6 sm:w-[calc((100%-1.5rem)/2)] md:p-8 ${
                       teamColumns === 3 ? "lg:w-[calc((100%-3rem)/3)]" : ""
                     }`}
                   >

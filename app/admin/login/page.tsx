@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { emailCodeAvailable } from "@/lib/twoFactor";
 import LoginForm from "./LoginForm";
 
 export default async function LoginPage() {
@@ -15,7 +16,7 @@ export default async function LoginPage() {
           <h1 className="mt-4 font-serif text-2xl">Admin sign in</h1>
         </div>
         <div className="mt-8">
-          <LoginForm />
+          <LoginForm emailCodes={emailCodeAvailable()} />
         </div>
       </div>
     </div>

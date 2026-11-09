@@ -37,6 +37,8 @@ const limits = {
   // Per IP, and per typed email so spreading guesses across many IPs does not help either.
   loginIp: limiter("login-ip", 10, "15 m"),
   loginEmail: limiter("login-email", 20, "1 h"),
+  // Emailed sign-in codes: enough for a slow inbox, not enough to flood it.
+  loginEmailCode: limiter("login-email-code", 3, "15 m"),
 };
 
 export type LimitName = keyof typeof limits;

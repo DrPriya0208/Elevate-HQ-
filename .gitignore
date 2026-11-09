@@ -11,3 +11,6 @@ __pycache__/
 # Local design tooling and reference material, not part of the site
 .impeccable/
 reference/awesome-design-md/
+
+# Admin authenticator QR from npm run totp-setup (secret!)
+totp-setup-qr.png

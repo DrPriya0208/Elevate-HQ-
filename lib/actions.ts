@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { z } from "zod";
@@ -10,7 +11,17 @@ import { clientIp, passedHumanCheck, underLimit } from "@/lib/protection";
 import { cleanHtml } from "@/lib/sanitize";
 import { deletePhoto } from "@/lib/storage";
 import { makeExcerpt, slugify, stripTags } from "@/lib/text";
-import type { ContactState, FormState, ReviewState } from "@/lib/types";
+import {
+  TICKET_COOKIE,
+  TICKET_MINUTES,
+  checkAdminPassword,
+  createTicket,
+  emailCodeAvailable,
+  newEmailCode,
+  ticketIsValid,
+  twoFactorEnabled,
+} from "@/lib/twoFactor";
+import type { ContactState, FormState, LoginState, ReviewState } from "@/lib/types";
 
 /* ---------- helpers ---------- */
 
@@ -72,22 +83,105 @@ async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
 
 /* ---------- login ---------- */
 
-export async function loginAction(_prev: string | undefined, formData: FormData): Promise<string | undefined> {
-  const email = String(formData.get("email") ?? "").toLowerCase().trim();
-  const ip = await clientIp();
-  if (!(await underLimit("loginIp", ip)) || !(await underLimit("loginEmail", email || "blank"))) {
-    return "Too many sign-in attempts. Please wait 15 minutes and try again.";
+const TOO_MANY_SIGN_INS = "Too many sign-in attempts. Please wait 15 minutes and try again.";
+const SIGN_IN_TIMED_OUT = "Your sign-in timed out. Please enter your password again.";
+
+async function setTicketCookie(ticket: string) {
+  (await cookies()).set(TICKET_COOKIE, ticket, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/admin",
+    maxAge: TICKET_MINUTES * 60,
+  });
+}
+
+async function sendSignInCodeEmail(code: string): Promise<boolean> {
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: process.env.CONTACT_FROM_EMAIL || "Elevate HQ <onboarding@resend.dev>",
+        to: [process.env.ADMIN_EMAIL],
+        subject: `Your Elevate HQ admin sign-in code: ${code}`,
+        text:
+          `Your sign-in code is ${code}\n\nIt works for ${TICKET_MINUTES} minutes, once.\n\n` +
+          "If you did not just try to sign in to the Elevate HQ admin, someone knows your password: change it now.",
+      }),
+    });
+    if (!res.ok) console.error("Resend responded with", res.status, await res.text());
+    return res.ok;
+  } catch (err) {
+    console.error("Could not send sign-in code email", err);
+    return false;
   }
-  if (!(await passedHumanCheck(formData, ip))) return HUMAN_CHECK_FAILED;
+}
+
+/**
+ * Admin sign-in, in up to two steps. The form's "intent" says which:
+ * - "password" (default): email + password. With two-factor off this signs in; with it on, a correct
+ *   password earns a 10-minute ticket cookie and the code screen.
+ * - "code": the 6-digit code from the authenticator app or the email, checked with the ticket.
+ * - "email-code": email a code to the admin address instead of using the app.
+ * - "restart": back to the password screen.
+ */
+export async function loginAction(_prev: LoginState, formData: FormData): Promise<LoginState> {
+  const intent = String(formData.get("intent") ?? "password");
+  const jar = await cookies();
+  const ticket = jar.get(TICKET_COOKIE)?.value;
+  const ip = await clientIp();
+
+  if (intent === "restart") {
+    jar.delete({ name: TICKET_COOKIE, path: "/admin" });
+    return { step: "password" };
+  }
+
+  if (intent === "email-code") {
+    if (!ticketIsValid(ticket)) return { step: "password", error: SIGN_IN_TIMED_OUT };
+    if (!emailCodeAvailable()) return { step: "code", error: "Email codes are not set up yet. Use the code from your authenticator app." };
+    if (!(await underLimit("loginEmailCode", ip))) {
+      return { step: "code", error: "Several codes have been emailed already. Check your inbox and spam folder, or wait 15 minutes." };
+    }
+    const code = newEmailCode();
+    if (!(await sendSignInCodeEmail(code))) {
+      return { step: "code", error: "We could not send the email. Use the code from your authenticator app, or try again shortly." };
+    }
+    await setTicketCookie(createTicket(code)); // the new code replaces any earlier emailed one
+    return { step: "code", notice: `We emailed a code to the admin address. It works for ${TICKET_MINUTES} minutes.` };
+  }
+
+  if (intent === "code") {
+    if (!ticketIsValid(ticket)) return { step: "password", error: SIGN_IN_TIMED_OUT };
+    if (!(await underLimit("loginIp", ip))) return { step: "code", error: TOO_MANY_SIGN_INS };
+    try {
+      await signIn("credentials", { ticket, code: String(formData.get("code") ?? ""), redirect: false });
+    } catch (error) {
+      if (error instanceof AuthError) return { step: "code", error: "That code is not right, or it has expired. Try the latest one." };
+      throw error;
+    }
+    jar.delete({ name: TICKET_COOKIE, path: "/admin" });
+    redirect("/admin");
+  }
+
+  // Step 1: email and password
+  const email = String(formData.get("email") ?? "").toLowerCase().trim();
+  const password = String(formData.get("password") ?? "");
+  if (!(await underLimit("loginIp", ip)) || !(await underLimit("loginEmail", email || "blank"))) {
+    return { step: "password", error: TOO_MANY_SIGN_INS };
+  }
+  if (!(await passedHumanCheck(formData, ip))) return { step: "password", error: HUMAN_CHECK_FAILED };
+
+  if (twoFactorEnabled()) {
+    if (!(await checkAdminPassword(email, password))) return { step: "password", error: "Email or password is incorrect." };
+    await setTicketCookie(createTicket());
+    return { step: "code" };
+  }
 
   try {
-    await signIn("credentials", {
-      email,
-      password: String(formData.get("password") ?? ""),
-      redirectTo: "/admin",
-    });
+    await signIn("credentials", { email, password, redirectTo: "/admin" });
   } catch (error) {
-    if (error instanceof AuthError) return "Email or password is incorrect.";
+    if (error instanceof AuthError) return { step: "password", error: "Email or password is incorrect." };
     throw error; // lets the success redirect through
   }
 }

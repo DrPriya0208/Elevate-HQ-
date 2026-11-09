@@ -7,19 +7,22 @@ const isDev = process.env.NODE_ENV !== "production";
  *   'unsafe-eval' for React Refresh and a websocket for hot reload.
  * - Styles: inline style attributes are used by blog post spans (fonts/sizes) and by components.
  * - Images: cover and in-post images come from Cloudflare R2 or any https link an admin pastes.
+ * - Cloudflare Turnstile (the human check on the forms and admin login) loads a script and an iframe
+ *   from challenges.cloudflare.com.
  * - Everything else (fonts, the WebGL data files, uploads, server actions) is same-origin.
  */
+const turnstile = "https://challenges.cloudflare.com";
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' ${turnstile}${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  `connect-src 'self'${isDev ? " ws: wss:" : ""}`,
+  `connect-src 'self' ${turnstile}${isDev ? " ws: wss:" : ""}`,
   "media-src 'self'",
   "worker-src 'self' blob:",
   "object-src 'none'",
-  "frame-src 'none'",
+  `frame-src ${turnstile}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

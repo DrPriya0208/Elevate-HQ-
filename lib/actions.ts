@@ -6,6 +6,7 @@ import { AuthError } from "next-auth";
 import { z } from "zod";
 import { auth, signIn } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { clientIp, passedHumanCheck, underLimit } from "@/lib/protection";
 import { cleanHtml } from "@/lib/sanitize";
 import { deletePhoto } from "@/lib/storage";
 import { makeExcerpt, slugify, stripTags } from "@/lib/text";
@@ -50,7 +51,9 @@ async function deleteUnusedPhotos(urls: Array<string | null | undefined>, exclud
   }
 }
 
-const SLUG_TAKEN ="Another post already uses that web address. Change the slug and save again.";
+const HUMAN_CHECK_FAILED = "We could not confirm you are not a bot. Please wait for the security check to finish and try again.";
+
+const SLUG_TAKEN = "Another post already uses that web address. Change the slug and save again.";
 
 async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
   const root = slugify(base);
@@ -70,9 +73,16 @@ async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
 /* ---------- login ---------- */
 
 export async function loginAction(_prev: string | undefined, formData: FormData): Promise<string | undefined> {
+  const email = String(formData.get("email") ?? "").toLowerCase().trim();
+  const ip = await clientIp();
+  if (!(await underLimit("loginIp", ip)) || !(await underLimit("loginEmail", email || "blank"))) {
+    return "Too many sign-in attempts. Please wait 15 minutes and try again.";
+  }
+  if (!(await passedHumanCheck(formData, ip))) return HUMAN_CHECK_FAILED;
+
   try {
     await signIn("credentials", {
-      email: String(formData.get("email") ?? ""),
+      email,
       password: String(formData.get("password") ?? ""),
       redirectTo: "/admin",
     });
@@ -228,6 +238,12 @@ export async function submitEnquiry(_prev: ContactState, formData: FormData): Pr
   // Honeypot: real visitors never fill this hidden field.
   if (String(formData.get("website") ?? "") !== "") return { ok: true };
 
+  const ip = await clientIp();
+  if (!(await underLimit("enquiry", ip))) {
+    return { error: "You have sent several messages in a short time. Please try again in an hour, or call or WhatsApp us." };
+  }
+  if (!(await passedHumanCheck(formData, ip))) return { error: HUMAN_CHECK_FAILED };
+
   const parsed = enquirySchema.safeParse({
     name: String(formData.get("name") ?? ""),
     email: String(formData.get("email") ?? ""),
@@ -313,6 +329,12 @@ export async function submitReview(_prev: ReviewState, formData: FormData): Prom
   // Reject submissions made less than 3 seconds after the form rendered.
   const renderedAt = Number(formData.get("renderedAt") ?? 0);
   if (!renderedAt || Date.now() - renderedAt < 3000) return { ok: true };
+
+  const ip = await clientIp();
+  if (!(await underLimit("review", ip))) {
+    return { error: "You have sent several reviews in a short time. Please try again in an hour." };
+  }
+  if (!(await passedHumanCheck(formData, ip))) return { error: HUMAN_CHECK_FAILED };
 
   const rating = Number(formData.get("rating"));
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) {

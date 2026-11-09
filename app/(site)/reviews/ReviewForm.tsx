@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useActionState, useState } from "react";
 import { submitReview } from "@/lib/actions";
 import { motion, tapScale } from "@/components/motion";
+import Turnstile from "@/components/Turnstile";
 import { reviewsCopy } from "@/lib/content";
 import { submitWithoutReset } from "@/lib/submitWithoutReset";
 import type { ReviewState } from "@/lib/types";
@@ -99,6 +100,8 @@ export default function ReviewForm() {
           .
         </span>
       </label>
+
+      <Turnstile pending={pending} />
 
       {state?.error && (
         <p role="alert" className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">

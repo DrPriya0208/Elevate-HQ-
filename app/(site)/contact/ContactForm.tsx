@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { submitEnquiry } from "@/lib/actions";
 import { motion, tapScale } from "@/components/motion";
+import Turnstile from "@/components/Turnstile";
 import { enquiryTopics } from "@/lib/content";
 import { submitWithoutReset } from "@/lib/submitWithoutReset";
 import type { ContactState } from "@/lib/types";
@@ -75,6 +76,8 @@ export default function ContactForm({ defaultTopic }: { defaultTopic?: string })
         <label htmlFor="message" className="label">Message</label>
         <textarea id="message" name="message" required minLength={10} maxLength={3000} rows={6} className="field" />
       </div>
+
+      <Turnstile pending={pending} />
 
       {state?.error && (
         <p role="alert" className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">

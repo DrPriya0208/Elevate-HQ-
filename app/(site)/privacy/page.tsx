@@ -105,7 +105,13 @@ export default function PrivacyPage() {
           <strong>Vercel:</strong> website hosting.
         </li>
         <li>
-          <strong>Cloudflare:</strong> storage of the photos we publish on our blog.
+          <strong>Cloudflare:</strong> storage of the photos we publish on our blog, and Turnstile, a check that
+          blocks automated spam on our forms. Turnstile looks at technical details from your browser and does not set
+          tracking cookies.
+        </li>
+        <li>
+          <strong>Upstash:</strong> counts form submissions and sign-in attempts per IP address for about an hour, so
+          one visitor cannot flood the forms. Only the count is kept, never what you wrote.
         </li>
         <li>
           <strong>Neon:</strong> the database that stores form submissions, hosted in the Singapore region.

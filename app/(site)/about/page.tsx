@@ -29,6 +29,7 @@ export const revalidate = 3600;
 
 export default async function AboutPage() {
   const team = await getActiveTeam();
+  const teamColumns = team.length === 3 || team.length >= 5 ? 3 : 2;
   return (
     <>
       <PageHero kicker="About Elevate HQ" title={about.title} intro={about.storyBelief} />
@@ -192,14 +193,18 @@ export default async function AboutPage() {
         {team.length > 0 && (
           <div className="mt-16">
             <h3 className="text-center font-serif text-2xl md:text-3xl">The people you will work with</h3>
-            {/* Centred rows, so one or two members do not leave an empty gap on the right */}
+            {/* Columns follow the team size so rows look complete: 1, 2 or 4 members use two columns (a
+                centred card, a pair, 2 x 2), lining up with the founder cards above; 3, 5 or more use three,
+                with a short last row centred. Tablets always two columns, phones one. */}
             <Stagger as="ul" className="mt-10 flex flex-wrap justify-center gap-6">
               {team.map((m) => {
                 const qualifications = qualificationList(m);
                 return (
                   <StaggerItem
                     key={m.id}
-                    className="card flex w-full flex-col p-6 sm:w-[calc((100%-1.5rem)/2)] md:p-8 lg:w-[calc((100%-3rem)/3)]"
+                    className={`card flex w-full flex-col p-6 sm:w-[calc((100%-1.5rem)/2)] md:p-8 ${
+                      teamColumns === 3 ? "lg:w-[calc((100%-3rem)/3)]" : ""
+                    }`}
                   >
                     <div className="flex items-center gap-4">
                       {m.photo ? (

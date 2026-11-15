@@ -32,10 +32,10 @@ const methods = [
   },
 ];
 
-type Props = { searchParams: Promise<{ topic?: string }> };
+type Props = { searchParams: Promise<{ topic?: string; member?: string }> };
 
 export default async function ContactPage({ searchParams }: Props) {
-  const { topic } = await searchParams;
+  const { topic, member } = await searchParams;
   const team = (await getActiveTeam()).map((m) => ({ name: m.name, role: m.role }));
 
   return (
@@ -65,7 +65,7 @@ export default async function ContactPage({ searchParams }: Props) {
             <p className="kicker text-brass">Send a message</p>
             <h2 className="mt-3 font-serif text-2xl">Tell us a little about what you need</h2>
             <div className="mt-8">
-              <ContactForm defaultTopic={topic} team={team} />
+              <ContactForm defaultTopic={topic} defaultMember={member} team={team} />
             </div>
           </FadeIn>
         </div>

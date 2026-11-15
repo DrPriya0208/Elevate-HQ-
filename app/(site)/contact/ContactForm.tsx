@@ -11,11 +11,13 @@ import type { ContactState } from "@/lib/types";
 
 type Props = {
   defaultTopic?: string;
+  /** Pre-selects a team member ("Book with …" links pass ?member=Name) */
+  defaultMember?: string;
   /** Active team members; the "who would you like to speak with" choice shows only when there are some */
   team?: { name: string; role: string }[];
 };
 
-export default function ContactForm({ defaultTopic, team = [] }: Props) {
+export default function ContactForm({ defaultTopic, defaultMember, team = [] }: Props) {
   const [state, action, pending] = useActionState<ContactState, FormData>(submitEnquiry, undefined);
 
   if (state?.ok) {
@@ -76,7 +78,12 @@ export default function ContactForm({ defaultTopic, team = [] }: Props) {
       {team.length > 0 && (
         <div>
           <label htmlFor="preferredMember" className="label">Who would you like to speak with? (optional)</label>
-          <select id="preferredMember" name="preferredMember" defaultValue="" className="field">
+          <select
+            id="preferredMember"
+            name="preferredMember"
+            defaultValue={defaultMember && team.some((m) => m.name === defaultMember) ? defaultMember : ""}
+            className="field"
+          >
             <option value="">No preference</option>
             {team.map((m) => (
               <option key={m.name} value={m.name}>

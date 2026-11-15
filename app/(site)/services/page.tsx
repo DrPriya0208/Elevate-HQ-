@@ -27,15 +27,12 @@ export default function ServicesPage() {
       <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         {/* Four per row on desktop (4 + 3), two on tablets; a short last row is centred instead of leaving gaps */}
         <Stagger as="ul" className="flex flex-wrap justify-center gap-4">
-          {services.map((s, i) => (
+          {services.map((s) => (
             <StaggerItem key={s.slug} className="w-full sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-3rem)/4)]">
               <a href={`#${s.slug}`} className="card card-hover group flex h-full flex-col gap-3 p-6">
-                <div className="flex items-center justify-between">
-                  <span className="icon-badge transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
-                    <Icon name={s.slug} />
-                  </span>
-                  <span className="font-serif text-sm text-slate">{String(i + 1).padStart(2, "0")}</span>
-                </div>
+                <span className="icon-badge transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
+                  <Icon name={s.slug} />
+                </span>
                 <span className="mt-2 font-serif text-lg font-semibold leading-snug text-navy">{s.title}</span>
                 <span className="text-sm leading-relaxed text-navy/75">{s.summary}</span>
                 <span className="mt-auto inline-flex items-center gap-1 pt-2 text-sm font-semibold text-brass">
@@ -52,7 +49,7 @@ export default function ServicesPage() {
         <div className="mt-16 space-y-8 lg:mt-20">
           {services.map((s, i) => (
             <section key={s.slug} id={s.slug} className="card scroll-mt-28 overflow-clip">
-              <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="grid lg:grid-cols-[0.8fr_1.2fr]">
                 <div className="speckle relative bg-navy p-8 text-white md:p-10">
                   {/* Sticky on desktop, so the intro stays beside a long list instead of leaving an empty navy column */}
                   <div className="relative lg:sticky lg:top-28">
@@ -74,9 +71,10 @@ export default function ServicesPage() {
 
                 <div className="flex flex-col p-8 md:p-10">
                   <p className="kicker text-brass">{s.listTitle}</p>
-                  <Stagger as="ul" className="mt-5 space-y-3">
+                  {/* Long lists run in two columns on desktop, so the card is not much taller than its navy intro */}
+                  <Stagger as="ul" className={`mt-5 ${s.details.length > 6 ? "xl:columns-2 xl:gap-x-8" : ""}`}>
                     {s.details.map((d) => (
-                      <StaggerItem key={d} className="flex gap-3 leading-relaxed text-navy/90">
+                      <StaggerItem key={d} className="mb-3 flex break-inside-avoid gap-3 leading-relaxed text-navy/90">
                         <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/20 text-brass">
                           <Icon name="check" className="h-3.5 w-3.5" />
                         </span>
@@ -124,7 +122,7 @@ export default function ServicesPage() {
         </div>
 
         <section className="mt-16 lg:mt-20">
-          <SectionHeading kicker="Who chooses us" title="Trusted by people and organisations of every kind" center />
+          <SectionHeading kicker="Who we work with" title="People and organisations of every kind" center />
           <Stagger as="ul" className="mx-auto mt-10 flex max-w-4xl flex-wrap justify-center gap-3">
             {whoChoosesUs.map((w) => (
               <StaggerItem key={w} className="rounded-full border border-line bg-white px-5 py-2.5 text-[0.95rem] font-medium text-navy">

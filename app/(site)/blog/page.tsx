@@ -32,7 +32,7 @@ function Cover({ src, large = false }: { src: string | null; large?: boolean }) 
       <CoverImage
         src={src}
         sizes={large ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
-        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="h-full w-full object-cover"
       />
     );
   }
@@ -43,7 +43,7 @@ function Cover({ src, large = false }: { src: string | null; large?: boolean }) 
         alt=""
         width={large ? 140 : 88}
         height={large ? 140 : 88}
-        className="opacity-80 transition-transform duration-500 group-hover:scale-105"
+        className="opacity-80"
       />
     </div>
   );

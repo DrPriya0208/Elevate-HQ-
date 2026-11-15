@@ -72,11 +72,11 @@ export default function HowWeWorkSteps() {
                 onMouseEnter={() => canHover && setActive(i)}
               >
                 <span
-                  className={`relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-gold font-serif text-2xl font-bold text-navy transition-[background-color,transform,box-shadow] duration-300 motion-reduce:transition-none ${
+                  className={`relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-gold font-serif text-2xl font-semibold text-navy transition-[background-color,transform,box-shadow] duration-300 motion-reduce:transition-none ${
                     lit ? "bg-gold" : "bg-white"
                   } ${
                     current
-                      ? "-translate-y-1 shadow-[0_0_0_8px_white,0_12px_24px_rgba(212,165,58,0.35)]"
+                      ? "-translate-y-1 shadow-[0_0_0_8px_white,0_8px_16px_rgba(10,21,48,0.12)]"
                       : "shadow-[0_0_0_8px_white]"
                   }`}
                 >

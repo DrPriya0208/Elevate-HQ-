@@ -69,18 +69,23 @@ function fromRow(key: FounderKey, r: Row): Founder {
 }
 
 /**
- * Both founder cards, saved edits over the original text. A database error falls back to the
- * original text (logged), so /about still renders.
+ * Both founder cards, saved edits over the original text. Throws on a database error: the admin
+ * edit page uses this, because a form filled with the defaults would overwrite the real profile on save.
  */
+export async function loadFounders(): Promise<Record<FounderKey, Founder>> {
+  const rows = await prisma.founderProfile.findMany();
+  const saved = new Map(rows.map((r) => [r.key, r]));
+  const pick = (k: FounderKey) => {
+    const r = saved.get(k);
+    return r ? fromRow(k, r) : founderDefaults[k];
+  };
+  return { founder: pick("founder"), "co-founder": pick("co-founder") };
+}
+
+/** For public pages: on a database error, the original text (logged), so the page still renders. */
 export const getFounders = cache(async (): Promise<Record<FounderKey, Founder>> => {
   try {
-    const rows = await prisma.founderProfile.findMany();
-    const saved = new Map(rows.map((r) => [r.key, r]));
-    const pick = (k: FounderKey) => {
-      const r = saved.get(k);
-      return r ? fromRow(k, r) : founderDefaults[k];
-    };
-    return { founder: pick("founder"), "co-founder": pick("co-founder") };
+    return await loadFounders();
   } catch (err) {
     console.error("Could not load founder profiles", err);
     return founderDefaults;

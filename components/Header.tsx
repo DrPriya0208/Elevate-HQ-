@@ -42,7 +42,7 @@ export default function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <Image src="/elevatehq-logo-dark-playfair-1024.png" alt="" width={56} height={56} className="h-14 w-14" priority />
-          <span className="whitespace-nowrap font-serif text-2xl font-bold tracking-wide">
+          <span className="whitespace-nowrap font-serif text-2xl font-semibold tracking-wide">
             Elevate H
             <span className="relative inline-block">
               <span className="inline-block [clip-path:polygon(0_0,100%_0,100%_68%,68%_100%,0_100%)]">Q</span>

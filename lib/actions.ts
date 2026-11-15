@@ -50,19 +50,33 @@ function isUniqueConflict(err: unknown): boolean {
 }
 
 /**
- * Deletes photos from our bucket, but only ones no other post still uses (the same link can be pasted
- * into two posts, and deleting is permanent). deletePhoto itself ignores links outside our bucket.
+ * Deletes photos from our bucket, but only ones nothing else still uses: another post, a team member or a
+ * founder (the same link can be reused, and deleting is permanent). deletePhoto ignores links outside our bucket.
  */
 async function deleteUnusedPhotos(urls: Array<string | null | undefined>, excludePostId: string) {
   const unique = [...new Set(urls.filter((u): u is string => Boolean(u)))];
   for (const url of unique) {
-    const usedElsewhere = await prisma.post.findFirst({
-      where: { id: { not: excludePostId }, OR: [{ coverImage: url }, { content: { contains: url } }] },
-      select: { id: true },
-    });
-    if (!usedElsewhere) await deletePhoto(url);
+    const [post, member, founder] = await Promise.all([
+      prisma.post.findFirst({
+        where: { id: { not: excludePostId }, OR: [{ coverImage: url }, { content: { contains: url } }] },
+        select: { id: true },
+      }),
+      prisma.teamMember.findFirst({ where: { photo: url }, select: { id: true } }),
+      prisma.founderProfile.findFirst({ where: { photo: url }, select: { key: true } }),
+    ]);
+    if (!post && !member && !founder) await deletePhoto(url);
   }
 }
+
+/**
+ * Optional web link field: empty, or a full http(s) link. z.url() alone also accepts schemes like
+ * `javascript:`, which would run script when a visitor clicks a link built from it.
+ */
+const webLink = (message: string) =>
+  z.union([
+    z.literal(""),
+    z.string().trim().url(message).refine((u) => /^https?:\/\//i.test(u), message),
+  ]);
 
 const HUMAN_CHECK_FAILED = "We could not confirm you are not a bot. Please wait for the security check to finish and try again.";
 
@@ -194,7 +208,7 @@ const postSchema = z.object({
   title: z.string().trim().min(3, "Add a title of at least 3 characters.").max(140, "Keep the title under 140 characters."),
   slug: z.string().trim().max(160),
   excerpt: z.string().trim().max(300, "Keep the summary under 300 characters."),
-  coverImage: z.union([z.literal(""), z.string().trim().url("Cover image must be a full link starting with https://")]),
+  coverImage: webLink("Cover image must be a full link starting with https://"),
   content: z.string(),
 });
 
@@ -538,8 +552,8 @@ const teamSchema = z.object({
   bio: z.string().trim().min(20, "Write a short bio of at least 20 characters.").max(1500, "Keep the bio under 1500 characters."),
   qualifications: z.string().max(2000, "Keep the qualifications under 2000 characters."),
   languages: z.string().trim().max(120, "Keep the languages under 120 characters."),
-  linkedin: z.union([z.literal(""), z.string().trim().url("LinkedIn must be a full link starting with https://")]),
-  photo: z.union([z.literal(""), z.string().trim().url("Photo must be a full link starting with https://")]),
+  linkedin: webLink("LinkedIn must be a full link starting with https://"),
+  photo: webLink("Photo must be a full link starting with https://"),
   sortOrder: z.coerce.number().int("Display order must be a whole number.").min(0).max(999),
 });
 
@@ -626,13 +640,13 @@ export async function deleteTeamMember(id: string): Promise<void> {
 
 const founderSchema = z.object({
   role: z.string().trim().min(2, "Add the role, for example Founder.").max(80, "Keep the role under 80 characters."),
-  photo: z.union([z.literal(""), z.string().trim().url("Photo must be a full link starting with https://")]),
+  photo: webLink("Photo must be a full link starting with https://"),
   headline: z.string().trim().max(160, "Keep the headline under 160 characters."),
   bio: z.string().max(3000, "Keep the about text under 3000 characters."),
   tags: z.string().max(1500, "Keep this list under 1500 characters."),
   qualifications: z.string().max(2000, "Keep the qualifications under 2000 characters."),
   alsoOffered: z.string().trim().max(600, "Keep the also-offered note under 600 characters."),
-  linkedin: z.union([z.literal(""), z.string().trim().url("LinkedIn must be a full link starting with https://")]),
+  linkedin: webLink("LinkedIn must be a full link starting with https://"),
 });
 
 /** Saves the founder's or co-founder's card on /about. Names are fixed (see lib/founders.ts). */
@@ -670,6 +684,7 @@ export async function updateFounderProfile(key: string, _prev: FormState, formDa
   if (existing?.photo && existing.photo !== data.photo) await deleteUnusedPersonPhoto(existing.photo, { founderKey: key });
 
   revalidatePath("/about");
+  revalidatePath("/"); // the home page's search data names the founder's role and LinkedIn
   revalidatePath("/admin/team");
   redirect("/admin/team");
 }

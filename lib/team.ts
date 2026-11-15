@@ -7,6 +7,19 @@ import type { TeamCard } from "@/components/team/shared";
 export const qualificationList = (m: Pick<TeamMember, "qualifications">) =>
   m.qualifications.split("\n").map((q) => q.trim()).filter(Boolean);
 
+/** Titles and degrees whose full stop does not end a sentence: "Dr. Meena", "M.Phil. in Psychology". */
+const NOT_A_SENTENCE_END = /(?:^|\s)(?:dr|mr|mrs|ms|prof|st|no|vs|etc|e\.g|i\.e|[a-z])\.$|\.[a-z]+\.$/i;
+
+/** The bio's first sentence, used as the personal line on the pinned note. The whole bio if it has only one. */
+export function firstSentence(text: string): string {
+  const ends = /[.!?](?=\s+["'“(]?[A-Z0-9]|\s*$)/g;
+  for (let m = ends.exec(text); m; m = ends.exec(text)) {
+    const upto = text.slice(0, m.index + 1);
+    if (!NOT_A_SENTENCE_END.test(upto)) return upto.trim();
+  }
+  return text.trim();
+}
+
 /** Plain data for the public team sections (components/team). */
 export function toTeamCard(m: TeamMember): TeamCard {
   const bio = m.bio.trim();
@@ -16,7 +29,7 @@ export function toTeamCard(m: TeamMember): TeamCard {
     firstName: m.name.trim().split(/\s+/)[0],
     role: m.role,
     bio,
-    line: bio.match(/^[\s\S]*?[.!?](?=\s|$)/)?.[0] ?? bio,
+    line: firstSentence(bio),
     qualifications: qualificationList(m),
     languages: (m.languages ?? "").split(",").map((l) => l.trim()).filter(Boolean),
     linkedin: m.linkedin,

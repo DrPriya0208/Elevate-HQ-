@@ -146,18 +146,11 @@ export default async function AboutPage() {
                 <h3 className="mt-1 font-serif text-2xl">{founder.name}</h3>
               </div>
             </div>
-            {founder.headline && <p className="mt-6 font-semibold text-navy">{founder.headline}</p>}
-            {founder.bio.length > 0 && (
-              <div className="mt-4 space-y-4 leading-relaxed text-navy/85">
-                {founder.bio.map((p) => (
-                  <p key={p}>{p}</p>
-                ))}
-              </div>
-            )}
+            {/* Lines typed in the admin can repeat, so list keys include the position */}
             {founder.tags.length > 0 && (
               <ul className="mt-6 flex flex-wrap gap-2">
-                {founder.tags.map((t) => (
-                  <li key={t} className="rounded-full bg-mist px-3 py-1.5 text-sm font-medium text-navy">
+                {founder.tags.map((t, i) => (
+                  <li key={`${i}-${t}`} className="rounded-full bg-mist px-3 py-1.5 text-sm font-medium text-navy">
                     {t}
                   </li>
                 ))}
@@ -167,8 +160,8 @@ export default async function AboutPage() {
               <>
                 <p className="kicker mt-8 text-brass">Qualifications and certifications</p>
                 <ul className="mt-4 space-y-2.5">
-                  {founder.qualifications.map((q) => (
-                    <li key={q} className="flex gap-3 leading-relaxed text-navy/85">
+                  {founder.qualifications.map((q, i) => (
+                    <li key={`${i}-${q}`} className="flex gap-3 leading-relaxed text-navy/85">
                       <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/20 text-brass">
                         <Icon name="award" className="h-3.5 w-3.5" />
                       </span>
@@ -198,8 +191,8 @@ export default async function AboutPage() {
             {coFounder.headline && <p className="mt-6 font-semibold text-navy">{coFounder.headline}</p>}
             {coFounder.bio.length > 0 && (
               <div className="mt-4 space-y-4 leading-relaxed text-navy/85">
-                {coFounder.bio.map((p) => (
-                  <p key={p}>{p}</p>
+                {coFounder.bio.map((p, i) => (
+                  <p key={`${i}-${p}`}>{p}</p>
                 ))}
               </div>
             )}
@@ -207,8 +200,8 @@ export default async function AboutPage() {
               <>
                 <p className="kicker mt-8 text-brass">Areas of strength</p>
                 <ul className="mt-4 flex flex-wrap gap-2">
-                  {coFounder.tags.map((s) => (
-                    <li key={s} className="rounded-full bg-mist px-3 py-1.5 text-sm font-medium text-navy">
+                  {coFounder.tags.map((s, i) => (
+                    <li key={`${i}-${s}`} className="rounded-full bg-mist px-3 py-1.5 text-sm font-medium text-navy">
                       {s}
                     </li>
                   ))}

@@ -3,8 +3,9 @@
 import { useState } from "react";
 
 /**
- * Wraps a long team list. Items past the limit carry `hidden group-data-[expanded=true]/board:flex`, so they stay in the HTML
- * (for search engines and screen readers that read the whole page) but only show once the button is pressed.
+ * Wraps a long team list. Items past the limit carry `hidden group-data-[expanded=true]/board:flex`: they stay in the
+ * HTML for search engines, but are hidden from everyone, screen readers included, until the button is pressed.
+ * The button says how many people there are and carries aria-expanded / aria-controls.
  */
 export default function ShowMore({
   total,

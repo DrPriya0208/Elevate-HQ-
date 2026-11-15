@@ -17,7 +17,7 @@ export default function FaqItem({ q, a }: FaqItemProps) {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="group flex w-full cursor-pointer items-center justify-between gap-4 py-5 text-left font-serif text-lg font-bold transition-colors hover:text-brass"
+        className="group flex w-full cursor-pointer items-center justify-between gap-4 py-5 text-left font-serif text-lg font-semibold transition-colors hover:text-brass"
       >
         {q}
         <motion.span

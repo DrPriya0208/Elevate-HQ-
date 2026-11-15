@@ -36,7 +36,7 @@ export default function Footer() {
                   href={p.href}
                   className="group inline-flex min-h-10 items-center gap-2 transition-colors hover:text-gold md:min-h-0"
                 >
-                  <span aria-hidden className="h-px w-3 bg-white/30 transition-all duration-300 group-hover:w-5 group-hover:bg-gold" />
+                  <span aria-hidden className="h-px w-3 origin-left bg-white/30 transition-[transform,background-color] duration-300 group-hover:scale-x-[1.67] group-hover:bg-gold" />
                   {p.label}
                 </Link>
               </li>

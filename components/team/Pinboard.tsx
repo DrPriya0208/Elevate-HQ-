@@ -51,7 +51,7 @@ export default function Pinboard({ team }: { team: TeamCard[] }) {
         {team.map((m, i) => (
           <li key={m.id} className={`w-full max-w-[17rem] flex-col items-center ${itemDisplay(i, limit, phoneLimit)}`}>
             <figure
-              className={`group relative w-full bg-white p-3 pb-5 shadow-[0_12px_28px_rgba(10,21,48,0.16)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:z-10 hover:-translate-y-1 hover:rotate-0 hover:scale-[1.03] motion-reduce:transition-none ${tilts[i % tilts.length]}`}
+              className={`group relative w-full bg-white p-3 pb-5 shadow-[0_12px_28px_rgba(10,21,48,0.16)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:z-10 hover:-translate-y-1 hover:rotate-0 motion-reduce:transition-none ${tilts[i % tilts.length]}`}
             >
               <span aria-hidden="true" className="absolute -top-3 left-1/2 h-6 w-24 -translate-x-1/2 -rotate-3 bg-gold/45 shadow-sm" />
               <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-navy">
@@ -74,6 +74,16 @@ export default function Pinboard({ team }: { team: TeamCard[] }) {
             <div className={`relative -mt-2 w-[94%] rounded-sm border border-gold/40 bg-[#FFF8E6] p-4 pt-5 shadow-[0_6px_14px_rgba(10,21,48,0.08)] ${noteTilts[i % noteTilts.length]}`}>
               <span aria-hidden="true" className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-brass shadow-[0_1px_2px_rgba(0,0,0,0.3)]" />
               <p className="text-[0.95rem] leading-relaxed text-navy/85">{m.line}</p>
+              {/* The rest of the bio, so a longer bio is still published in full */}
+              {m.bio.length > m.line.length && (
+                <details className="group/more mt-2">
+                  <summary className="cursor-pointer list-none text-sm font-semibold text-brass underline decoration-brass/40 underline-offset-4 hover:text-navy [&::-webkit-details-marker]:hidden">
+                    <span className="group-open/more:hidden">More about {m.firstName}</span>
+                    <span className="hidden group-open/more:inline">Show less</span>
+                  </summary>
+                  <p className="mt-2 whitespace-pre-line text-[0.95rem] leading-relaxed text-navy/85">{m.bio.slice(m.line.length).trim()}</p>
+                </details>
+              )}
               {m.qualifications.length > 0 && (
                 <p className="mt-3 flex gap-2 text-sm text-navy/70">
                   <Icon name="award" className="mt-0.5 h-4 w-4 shrink-0 text-brass" />

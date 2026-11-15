@@ -6,8 +6,13 @@ export function jsonLd(data: object): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
-/** The practice as a ProfessionalService (schema.org), built only from facts already on the site. */
-export function practiceJsonLd() {
+/**
+ * The practice as a ProfessionalService (schema.org), built only from facts already on the site.
+ * `founderCard` is the founder as edited in the admin, so search data matches the About page.
+ */
+export function practiceJsonLd(founderCard?: { role: string; linkedin: string | null }) {
+  const role = founderCard?.role ?? founder.role;
+  const founderLinks = founderCard ? (founderCard.linkedin ? [founderCard.linkedin] : []) : [site.linkedin];
   return {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
@@ -21,7 +26,7 @@ export function practiceJsonLd() {
     email: site.email,
     address: { "@type": "PostalAddress", addressLocality: "Sholinganallur, Chennai", addressRegion: "Tamil Nadu", addressCountry: "IN" },
     areaServed: "IN",
-    founder: { "@type": "Person", name: founder.name, jobTitle: founder.role, sameAs: [site.linkedin] },
+    founder: { "@type": "Person", name: founder.name, jobTitle: role, ...(founderLinks.length ? { sameAs: founderLinks } : {}) },
     sameAs: [site.linkedin],
     knowsAbout: services.map((s) => s.title),
   };

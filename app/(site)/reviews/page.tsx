@@ -56,7 +56,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
         {summary && (
           <FadeIn delay={0.25}>
             <div className="mt-8 inline-flex items-center gap-4 rounded-full border border-white/15 bg-white/5 px-5 py-3">
-              <span className="font-serif text-3xl font-bold text-gold">{summary.average.toFixed(1)}</span>
+              <span className="font-serif text-3xl font-semibold text-gold">{summary.average.toFixed(1)}</span>
               <span className="flex flex-col gap-1">
                 <Stars rating={Math.round(summary.average)} />
                 <span className="text-sm text-white/75">

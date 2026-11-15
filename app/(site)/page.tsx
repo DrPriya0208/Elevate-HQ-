@@ -14,6 +14,7 @@ import MindOfLightHero from "@/components/mind-of-light/MindOfLightHero";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { credentials, faqs, home, services, site, whoWeServe, whyChoose } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
+import { getFounders } from "@/lib/founders";
 import { OG_IMAGE, TWITTER_LARGE, jsonLd, practiceJsonLd } from "@/lib/seo";
 import { formatMonthYear, postCardDate } from "@/lib/text";
 
@@ -61,12 +62,12 @@ async function getFeaturedReviews() {
 }
 
 export default async function HomePage() {
-  const [posts, reviews] = await Promise.all([getLatestPosts(), getFeaturedReviews()]);
+  const [posts, reviews, founders] = await Promise.all([getLatestPosts(), getFeaturedReviews(), getFounders()]);
 
   return (
     <>
       {/* Hero: "Mind of Light" - a WebGL badge animation (galaxy -> vein brain -> logo) */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(practiceJsonLd()) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(practiceJsonLd(founders.founder)) }} />
       <MindOfLightHero badge={<LogoBadge />}>
         <h1 className="font-serif text-4xl leading-[1.1] text-white lg:text-[3.5rem]">{home.title}</h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">{home.intro}</p>
@@ -100,7 +101,7 @@ export default async function HomePage() {
           <FadeIn delay={0.2}>
             <figure className="card mt-8 p-7">
               <p className="kicker text-brass">Our purpose</p>
-              <blockquote className="mt-3 font-serif text-xl font-bold leading-snug text-navy">{home.purpose}</blockquote>
+              <blockquote className="mt-3 font-serif text-xl font-semibold leading-snug text-navy">{home.purpose}</blockquote>
             </figure>
           </FadeIn>
         </div>
@@ -115,21 +116,14 @@ export default async function HomePage() {
               <Link href="/services" className="btn btn-navy shrink-0">All services</Link>
             </FadeIn>
           </div>
-          {/* Seven services fill a 3-column grid exactly: the two flagship areas (counselling and maritime) span two columns */}
+          {/* Seven services fill a 3-column grid exactly: the two flagship areas (counselling and maritime) span two
+              columns on desktop, and the last card spans the 2-column tablet grid. Every card keeps the same layout. */}
           <Stagger as="ul" className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((s, i) => {
-              // Wide cards lay out side by side: name on the left, description and link on the right.
-              // Counselling and maritime are wide on desktop; the last card is wide on tablets (2-column grid).
+            {services.map((s) => {
               const wide = s.slug === "counselling" || s.slug === "maritime";
-              const tabletWide = i === services.length - 1;
               return (
                 <StaggerItem key={s.slug} className={`h-full sm:last:col-span-2 lg:last:col-span-1 ${wide ? "lg:col-span-2" : ""}`}>
-                  <Link
-                    href={`/services#${s.slug}`}
-                    className={`card card-hover group flex h-full flex-col p-6 sm:p-7 ${wide ? "lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-10" : ""} ${
-                      tabletWide ? "sm:max-lg:grid sm:max-lg:grid-cols-2 sm:max-lg:items-center sm:max-lg:gap-x-10" : ""
-                    }`}
-                  >
+                  <Link href={`/services#${s.slug}`} className="card card-hover group flex h-full flex-col p-6 sm:p-7">
                     {/* Phones: icon beside the title to keep the stack of seven cards short */}
                     <div className="flex items-start gap-4 sm:block">
                       <span className="icon-badge transition-colors duration-200 group-hover:border-brass group-hover:bg-gold/15">
@@ -140,14 +134,8 @@ export default async function HomePage() {
                         <h3 className="mt-1 font-serif text-xl leading-snug sm:mt-2">{s.title}</h3>
                       </div>
                     </div>
-                    <div
-                      className={`flex flex-1 flex-col ${wide ? "lg:border-l lg:border-line lg:py-2 lg:pl-10" : ""} ${
-                        tabletWide ? "sm:max-lg:border-l sm:max-lg:border-line sm:max-lg:py-2 sm:max-lg:pl-10" : ""
-                      }`}
-                    >
-                      <p className={`mt-3 leading-relaxed text-navy/80 ${wide ? "lg:mt-0 lg:text-lg" : ""} ${tabletWide ? "sm:max-lg:mt-0" : ""}`}>
-                        {s.summary}
-                      </p>
+                    <div className="flex flex-1 flex-col">
+                      <p className="mt-3 max-w-md leading-relaxed text-navy/80">{s.summary}</p>
                       <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-brass sm:pt-6">
                         Learn more
                         <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
@@ -164,22 +152,18 @@ export default async function HomePage() {
       {/* Who we serve */}
       <section className="speckle relative overflow-hidden bg-navy text-white">
         <StarField />
-        {/* Soft colour behind the cards so the frosted glass has something to blur */}
-        <div aria-hidden className="pointer-events-none absolute left-[8%] top-[45%] h-80 w-80 rounded-full bg-gold/25 blur-[90px]" />
-        <div aria-hidden className="pointer-events-none absolute right-[6%] top-[60%] h-96 w-96 rounded-full bg-[#3b5998]/40 blur-[100px]" />
-        <div aria-hidden className="pointer-events-none absolute left-[45%] top-[30%] h-64 w-64 rounded-full bg-deep-gold/15 blur-[90px]" />
         <div className="relative mx-auto max-w-6xl px-6 py-16 lg:py-20">
           <SectionHeading
             kicker="Who we serve"
             title="A place for every age, role and industry"
             dark
           />
-          {/* Phones: a compact list of names. Tablet and up: frosted cards with a line each. */}
+          {/* Phones: a compact list of names. Tablet and up: quiet raised cards (one surface step and a hairline) with a line each. */}
           <Stagger as="ul" className="mt-8 divide-y divide-white/10 border-y border-white/10 sm:mt-10 sm:grid sm:grid-cols-2 sm:gap-4 sm:divide-y-0 sm:border-0 lg:grid-cols-5">
             {whoWeServe.map((w) => (
               <StaggerItem
                 key={w.title}
-                className="flex items-center gap-4 py-3.5 sm:flex-col sm:items-start sm:gap-3 sm:rounded-2xl sm:border sm:border-white/15 sm:bg-gradient-to-br sm:from-white/[0.12] sm:to-white/[0.03] sm:p-5 sm:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_10px_30px_rgba(0,0,0,0.25)] sm:backdrop-blur-xl sm:transition-colors sm:duration-300 sm:hover:border-gold/60 sm:hover:from-white/[0.18] sm:hover:to-white/[0.06]"
+                className="flex items-center gap-4 py-3.5 sm:flex-col sm:items-start sm:gap-3 sm:rounded-xl sm:border sm:border-white/10 sm:bg-white/[0.05] sm:p-5 sm:transition-colors sm:duration-200 sm:hover:border-gold/40 sm:hover:bg-white/[0.08]"
               >
                 <span className="shrink-0 text-gold">
                   <Icon name={w.icon} className="h-6 w-6 sm:h-7 sm:w-7" />
@@ -224,7 +208,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-4xl px-6 py-16 lg:py-20 text-center">
         <FadeIn>
           <p className="kicker text-brass">Our promise</p>
-          <p className="mt-5 font-serif text-3xl font-bold leading-snug text-navy sm:text-4xl">“{home.promise}”</p>
+          <p className="mt-5 font-serif text-3xl font-semibold leading-snug text-navy sm:text-4xl">“{home.promise}”</p>
         </FadeIn>
       </section>
 
@@ -246,7 +230,7 @@ export default async function HomePage() {
                       <CoverImage
                         src={p.coverImage}
                         sizes="(min-width: 768px) 33vw, 100vw"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-cover"
                       />
                     ) : (
                       <div className="speckle flex h-full items-center justify-center">

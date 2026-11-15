@@ -1,4 +1,5 @@
-/** Twinkling gold and white stars with an occasional shooting star, for navy hero backgrounds.
+/** Gold and white stars for navy backgrounds. Still by default; `live` (the home hero only, the one place
+ * where motion is the point) adds twinkling, the glow on the larger stars and the occasional shooting star.
  * Place inside a `relative overflow-hidden` parent. */
 
 // Deterministic star field so server and client render the same positions.
@@ -19,28 +20,34 @@ const stars = (() => {
 })();
 
 /** `count` lets shorter banners use fewer stars so the density matches the home hero. */
-export default function StarField({ count = stars.length }: { count?: number }) {
+export default function StarField({ count = stars.length, live = false }: { count?: number; live?: boolean }) {
   return (
     <div aria-hidden className="star-field">
       {stars.slice(0, count).map((s, i) => (
         <span
           key={i}
-          className="star"
+          className={live ? "star star-live" : "star"}
           style={{
             left: `${s.x}%`,
             top: `${s.y}%`,
             width: s.size,
             height: s.size,
             background: s.gold ? "#F2CC73" : "#ffffff",
-            boxShadow: s.size > 2 ? "0 0 8px 2px rgba(242,204,115,.7)" : undefined,
-            animationDuration: `${3 + (i % 4)}s`,
-            animationDelay: `${-s.delay}s`,
+            ...(live
+              ? {
+                  boxShadow: s.size > 2 ? "0 0 8px 2px rgba(242,204,115,.7)" : undefined,
+                  animationDuration: `${3 + (i % 4)}s`,
+                  animationDelay: `${-s.delay}s`,
+                }
+              : // Still stars keep the variety of a night sky through brightness instead of motion
+                { opacity: 0.25 + ((i * 37) % 60) / 100 }),
           }}
         />
       ))}
-      {[0, 1].map((i) => (
-        <span key={i} className="shooting-star" style={{ right: `${8 + i * 22}%`, top: `${6 + i * 10}%`, animationDelay: `${i * 4.5}s` }} />
-      ))}
+      {live &&
+        [0, 1].map((i) => (
+          <span key={i} className="shooting-star" style={{ right: `${8 + i * 22}%`, top: `${6 + i * 10}%`, animationDelay: `${i * 4.5}s` }} />
+        ))}
     </div>
   );
 }

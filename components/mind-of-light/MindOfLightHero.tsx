@@ -30,7 +30,7 @@ export default function MindOfLightHero({ children, badge }: MindOfLightHeroProp
 
   return (
     <section className="mind-hero" ref={heroRef} aria-label="Elevate HQ hero">
-      <StarField />
+      <StarField live />
       <canvas ref={canvasRef} aria-hidden="true" />
       {/* Same container as the header (mx-auto max-w-6xl px-6), so the headline lines up with the logo.
           The badge is positioned independently (absolute) so it never narrows the text column. */}

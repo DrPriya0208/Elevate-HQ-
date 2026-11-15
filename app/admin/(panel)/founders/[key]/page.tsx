@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { updateFounderProfile } from "@/lib/actions";
-import { getFounders, isFounderKey, toFormValues } from "@/lib/founders";
+import { isFounderKey, loadFounders, toFormValues } from "@/lib/founders";
 import FounderForm from "./FounderForm";
 
 type Props = { params: Promise<{ key: string }> };
@@ -9,7 +9,8 @@ type Props = { params: Promise<{ key: string }> };
 export default async function EditFounderPage({ params }: Props) {
   const { key } = await params;
   if (!isFounderKey(key)) notFound();
-  const profile = (await getFounders())[key];
+  // Strict load: a database error shows the error page rather than a form of defaults that would overwrite the profile
+  const profile = (await loadFounders())[key];
 
   return (
     <div>

@@ -208,7 +208,7 @@ export default function ReviewCarousel({ reviews }: { reviews: CarouselReview[] 
                 aria-current={i === active}
                 className="flex h-6 items-center"
               >
-                <span className={`block h-2 rounded-full transition-all duration-300 ${i === active ? "w-7 bg-deep-gold" : "w-2 bg-line hover:bg-brass"}`} />
+                <span className={`block h-2 rounded-full transition-colors duration-300 ${i === active ? "w-7 bg-deep-gold" : "w-2 bg-line hover:bg-brass"}`} />
               </button>
             ))}
         </div>

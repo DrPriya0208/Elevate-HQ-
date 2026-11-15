@@ -30,11 +30,17 @@ export default function TopoLines() {
       viewBox="0 0 1440 600"
       // Anchor right so narrow screens show the ring centre, not the stretched middle of the pattern
       preserveAspectRatio="xMaxYMid slice"
-      className="pointer-events-none absolute inset-0 h-full w-full"
+      className="animate-breathe pointer-events-none absolute inset-0 h-full w-full"
     >
-      {/* Still, crisp lines (no glow, no breathing loop): the contours are the site's signature, not decoration.
-          Softer on phones, where the rings run behind the intro text. */}
+      {/* Soft glow: a wide, faint gold halo under each line. Two plain strokes instead of an SVG blur
+          filter, because the whole drawing slowly scales (animate-breathe) and a filter would be
+          recomputed on every frame, which is heavy on phones. */}
+      {/* Softer on phones, where the rings run behind the intro text. Set on the group, not the <svg>:
+          animate-breathe animates the svg's own opacity, which would override a class there. */}
       <g fill="none" stroke="#F2CC73" strokeLinejoin="round" className="opacity-[0.55] md:opacity-100">
+        {contours.map((c, i) => (
+          <path key={`halo-${i}`} d={c.d} strokeOpacity={c.opacity * 0.22} strokeWidth="7" />
+        ))}
         {contours.map((c, i) => (
           <path key={`line-${i}`} d={c.d} strokeOpacity={c.opacity} strokeWidth="1.3" />
         ))}

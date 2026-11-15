@@ -78,6 +78,22 @@
   .star-field .star-live {
     animation: twinkle 4s ease-in-out infinite;
   }
+  /* The page-header contour lines (components/TopoLines.tsx) slowly breathe */
+  @keyframes breathe {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+    50% {
+      transform: scale(1.04);
+      opacity: 1;
+    }
+  }
+  .animate-breathe {
+    animation: breathe 10s ease-in-out infinite;
+    transform-origin: 80% 60%;
+  }
   .star-field .shooting-star {
     position: absolute;
     width: 10rem;

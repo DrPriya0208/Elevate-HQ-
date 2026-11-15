@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useState } from "react";
 import { submitWithoutReset } from "@/lib/submitWithoutReset";
 import type { FormState } from "@/lib/types";
-import { uploadImage } from "@/app/admin/uploadImage";
+import PhotoField from "@/app/admin/PhotoField";
 import { teamRoles } from "@/lib/teamRoles";
 
 const OTHER = "__other";
@@ -29,65 +29,18 @@ type Props = {
 
 export default function TeamForm({ action, member, submitLabel }: Props) {
   const [state, formAction, pending] = useActionState<FormState, FormData>(action, undefined);
-  const [photo, setPhoto] = useState(member?.photo ?? "");
   const [uploading, setUploading] = useState(false);
-  const [photoError, setPhotoError] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
   // A saved role that is not in the list (typed via "Other") opens with "Other" selected and the text filled
   const knownRole = !member?.role || (teamRoles as readonly string[]).includes(member.role);
   const [roleChoice, setRoleChoice] = useState(member?.role ? (knownRole ? member.role : OTHER) : "");
 
-  async function handlePhotoFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    e.target.value = "";
-    if (!file) return;
-    setPhotoError(null);
-    setUploading(true);
-    try {
-      setPhoto(await uploadImage(file));
-    } catch (err) {
-      setPhotoError(err instanceof Error ? err.message : "Could not upload the photo.");
-    } finally {
-      setUploading(false);
-    }
-  }
-
   return (
     <form action={formAction} onSubmit={(e) => submitWithoutReset(e, formAction)} className="space-y-6">
-      <div>
-        <p className="label">Photo (optional)</p>
-        <div className="flex flex-wrap items-center gap-4">
-          {photo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={photo} alt="" className="h-20 w-20 rounded-full object-cover ring-4 ring-gold/25" />
-          ) : (
-            <span className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-center text-xs leading-tight text-gold/80 ring-4 ring-gold/25">
-              No photo
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            disabled={uploading}
-            className="btn btn-navy !px-4 !py-2 text-sm disabled:opacity-60"
-          >
-            {uploading ? "Uploading…" : photo ? "Replace photo" : "Upload photo"}
-          </button>
-          {photo && (
-            <button
-              type="button"
-              onClick={() => setPhoto("")}
-              className="text-sm font-semibold text-slate underline underline-offset-4 hover:text-navy"
-            >
-              Remove
-            </button>
-          )}
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoFile} />
-        </div>
-        <input type="hidden" name="photo" value={photo} />
-        <p className="mt-1.5 text-sm text-slate">A square, head-and-shoulders photo works best. Without one, the first letter of the name is shown.</p>
-        {photoError && <p className="mt-1 text-sm text-red-800">{photoError}</p>}
-      </div>
+      <PhotoField
+        initial={member?.photo ?? ""}
+        help="A square, head-and-shoulders photo works best. Without one, the first letter of the name is shown."
+        onUploadingChange={setUploading}
+      />
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div>

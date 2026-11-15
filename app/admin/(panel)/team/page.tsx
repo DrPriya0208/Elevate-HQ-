@@ -2,20 +2,61 @@ import Link from "next/link";
 import ActionButton from "@/app/admin/ActionButton";
 import DeleteButton from "@/app/admin/DeleteButton";
 import { deleteTeamMember, setTeamMemberActive } from "@/lib/actions";
+import { founderKeys, getFounders } from "@/lib/founders";
 import { prisma } from "@/lib/prisma";
 
+function Face({ name, photo }: { name: string; photo: string | null }) {
+  return photo ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={photo} alt="" className="h-12 w-12 shrink-0 rounded-full object-cover" />
+  ) : (
+    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-navy font-serif text-lg text-gold">
+      {name.charAt(0)}
+    </span>
+  );
+}
+
 export default async function AdminTeamPage() {
-  const members = await prisma.teamMember.findMany({ orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }] });
+  const [members, founders] = await Promise.all([
+    prisma.teamMember.findMany({ orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }] }),
+    getFounders(),
+  ]);
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="font-serif text-3xl">Team</h1>
+      <h1 className="font-serif text-3xl">Team</h1>
+
+      <h2 className="mt-8 font-serif text-xl">Founders</h2>
+      <p className="mt-1 text-slate">The two cards at the top of the team section on the About page.</p>
+      <ul className="mt-4 divide-y divide-line rounded-md border border-line bg-white">
+        {founderKeys.map((key) => {
+          const f = founders[key];
+          return (
+            <li key={key} className="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
+              <div className="flex min-w-0 items-center gap-4">
+                <Face name={f.name} photo={f.photo} />
+                <div className="min-w-0">
+                  <p className="truncate font-semibold">{f.name}</p>
+                  <p className="text-sm text-slate">
+                    {f.role}
+                    {!f.photo && " · no photo yet"}
+                  </p>
+                </div>
+              </div>
+              <Link href={`/admin/founders/${key}`} className="text-sm font-semibold underline underline-offset-4">
+                Edit profile
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="mt-12 flex items-center justify-between gap-4">
+        <h2 className="font-serif text-xl">Team members</h2>
         <Link href="/admin/team/new" className="btn btn-navy">Add member</Link>
       </div>
       <p className="mt-2 text-slate">
-        Members shown here appear on the About page, below the founders, and as a choice in the contact form. The
-        founders&apos; own cards are part of the About page and are not listed here.
+        Members shown here appear on the About page, below the founders, and as a choice in the contact form.
       </p>
 
       {members.length === 0 ? (
@@ -28,14 +69,7 @@ export default async function AdminTeamPage() {
           {members.map((m) => (
             <li key={m.id} className="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
               <div className="flex min-w-0 items-center gap-4">
-                {m.photo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={m.photo} alt="" className="h-12 w-12 shrink-0 rounded-full object-cover" />
-                ) : (
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-navy font-serif text-lg text-gold">
-                    {m.name.charAt(0)}
-                  </span>
-                )}
+                <Face name={m.name} photo={m.photo} />
                 <div className="min-w-0">
                   <p className="flex items-center gap-2 font-semibold">
                     <span className="truncate">{m.name}</span>

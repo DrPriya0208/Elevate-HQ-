@@ -57,6 +57,28 @@ model TeamMember {
   @@index([active, sortOrder])
 }
 
+/// The founder's and co-founder's cards on /about, edited from /admin/team. Until a profile is first
+/// saved there is no row, and the site shows the original text from lib/content.ts. Names are not stored
+/// here: they also appear in the privacy policy and search data, so they stay in lib/content.ts.
+model FounderProfile {
+  /// "founder" or "co-founder"
+  key            String   @id
+  photo          String?
+  role           String
+  /// Co-founder: the bold line under the name
+  headline       String?
+  /// Co-founder: paragraphs, separated by a blank line
+  bio            String   @default("") @db.Text
+  /// One per line. Founder: titles shown as tags. Co-founder: areas of strength.
+  tags           String   @default("") @db.Text
+  /// Founder: one qualification or certification per line
+  qualifications String   @default("") @db.Text
+  /// Founder: the "Also offered" note
+  alsoOffered    String?  @db.Text
+  linkedin       String?
+  updatedAt      DateTime @updatedAt
+}
+
 enum ReviewStatus {
   PENDING
   APPROVED

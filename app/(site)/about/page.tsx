@@ -8,27 +8,56 @@ import PageHero from "@/components/PageHero";
 import SectionHeading from "@/components/SectionHeading";
 import { Icon } from "@/components/icons";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
-import { about, coFounder, founder, site, values } from "@/lib/content";
+import CoverImage from "@/components/CoverImage";
+import { about, coFounder as coFounderText, founder as founderText, values } from "@/lib/content";
+import { getFounders, type Founder } from "@/lib/founders";
 
 export const metadata: Metadata = pageMetadata({
   title: "About",
-  description: `About Elevate HQ, its founder ${founder.name} and co-founder ${coFounder.name}.`,
+  description: `About Elevate HQ, its founder ${founderText.name} and co-founder ${coFounderText.name}.`,
   path: "/about",
 });
 
-function Monogram({ name }: { name: string }) {
-  return (
-    <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-navy font-serif text-2xl font-semibold text-gold ring-4 ring-gold/25">
-      {name.charAt(0)}
+/** The founder's photo, or the first letter of the name until a photo is uploaded in the admin. */
+function FounderFace({ f }: { f: Founder }) {
+  return f.photo ? (
+    <CoverImage
+      src={f.photo}
+      alt={`Photo of ${f.name}`}
+      sizes="96px"
+      className="h-20 w-20 shrink-0 rounded-full object-cover ring-4 ring-gold/25 md:h-24 md:w-24"
+    />
+  ) : (
+    <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-navy font-serif text-3xl font-semibold text-gold ring-4 ring-gold/25 md:h-24 md:w-24">
+      {f.name.charAt(0)}
     </span>
   );
 }
 
-// Rebuilt at most hourly; adding, editing or hiding a team member in the admin refreshes it at once
+function LinkedInButton({ f }: { f: Founder }) {
+  if (!f.linkedin) return null;
+  return (
+    <div className="mt-auto pt-8">
+      <a
+        href={f.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${f.name}'s LinkedIn profile, opens in a new tab`}
+        className="btn btn-navy"
+      >
+        LinkedIn profile
+      </a>
+    </div>
+  );
+}
+
+// Rebuilt at most hourly; editing a founder or team member in the admin refreshes it at once
 export const revalidate = 3600;
 
 export default async function AboutPage() {
-  const team = await getActiveTeam();
+  const [team, founders] = await Promise.all([getActiveTeam(), getFounders()]);
+  const founder = founders.founder;
+  const coFounder = founders["co-founder"];
   return (
     <>
       <PageHero kicker="About Elevate HQ" title={about.title} intro={about.storyBelief} />
@@ -111,80 +140,82 @@ export default async function AboutPage() {
         <div className="mt-10 grid gap-6 lg:grid-cols-2 lg:items-start">
           <FadeIn className="card card-hover flex flex-col p-8 md:p-10">
             <div className="flex items-center gap-5">
-              <Monogram name={founder.name} />
+              <FounderFace f={founder} />
               <div>
                 <p className="text-sm font-semibold text-brass">{founder.role}</p>
                 <h3 className="mt-1 font-serif text-2xl">{founder.name}</h3>
               </div>
             </div>
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {founder.titles.map((t) => (
-                <li key={t} className="rounded-full bg-mist px-3 py-1.5 text-sm font-medium text-navy">
-                  {t}
-                </li>
-              ))}
-            </ul>
-            <p className="kicker mt-8 text-brass">Qualifications and certifications</p>
-            <ul className="mt-4 space-y-2.5">
-              {founder.qualifications.map((q) => (
-                <li key={q} className="flex gap-3 leading-relaxed text-navy/85">
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/20 text-brass">
-                    <Icon name="award" className="h-3.5 w-3.5" />
-                  </span>
-                  {q}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 rounded-xl bg-mist p-4 text-[0.95rem] leading-relaxed text-navy/85">
-              <span className="font-semibold text-navy">Also offered: </span>
-              {founder.alsoOffered}
-            </p>
-            <div className="mt-auto pt-8">
-              <a
-                href={site.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${founder.name}'s LinkedIn profile, opens in a new tab`}
-                className="btn btn-navy"
-              >
-                LinkedIn profile
-              </a>
-            </div>
+            {founder.headline && <p className="mt-6 font-semibold text-navy">{founder.headline}</p>}
+            {founder.bio.length > 0 && (
+              <div className="mt-4 space-y-4 leading-relaxed text-navy/85">
+                {founder.bio.map((p) => (
+                  <p key={p}>{p}</p>
+                ))}
+              </div>
+            )}
+            {founder.tags.length > 0 && (
+              <ul className="mt-6 flex flex-wrap gap-2">
+                {founder.tags.map((t) => (
+                  <li key={t} className="rounded-full bg-mist px-3 py-1.5 text-sm font-medium text-navy">
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {founder.qualifications.length > 0 && (
+              <>
+                <p className="kicker mt-8 text-brass">Qualifications and certifications</p>
+                <ul className="mt-4 space-y-2.5">
+                  {founder.qualifications.map((q) => (
+                    <li key={q} className="flex gap-3 leading-relaxed text-navy/85">
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/20 text-brass">
+                        <Icon name="award" className="h-3.5 w-3.5" />
+                      </span>
+                      {q}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {founder.alsoOffered && (
+              <p className="mt-6 rounded-xl bg-mist p-4 text-[0.95rem] leading-relaxed text-navy/85">
+                <span className="font-semibold text-navy">Also offered: </span>
+                {founder.alsoOffered}
+              </p>
+            )}
+            <LinkedInButton f={founder} />
           </FadeIn>
 
           <FadeIn delay={0.1} className="card card-hover flex flex-col p-8 md:p-10">
             <div className="flex items-center gap-5">
-              <Monogram name={coFounder.name} />
+              <FounderFace f={coFounder} />
               <div>
                 <p className="text-sm font-semibold text-brass">{coFounder.role}</p>
                 <h3 className="mt-1 font-serif text-2xl">{coFounder.name}</h3>
               </div>
             </div>
-            <p className="mt-6 font-semibold text-navy">{coFounder.headline}</p>
-            <div className="mt-4 space-y-4 leading-relaxed text-navy/85">
-              {coFounder.bio.map((p) => (
-                <p key={p}>{p}</p>
-              ))}
-            </div>
-            <p className="kicker mt-8 text-brass">Areas of strength</p>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {coFounder.strengths.map((s) => (
-                <li key={s} className="rounded-full bg-mist px-3 py-1.5 text-sm font-medium text-navy">
-                  {s}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-auto pt-8">
-              <a
-                href={coFounder.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${coFounder.name}'s LinkedIn profile, opens in a new tab`}
-                className="btn btn-navy"
-              >
-                LinkedIn profile
-              </a>
-            </div>
+            {coFounder.headline && <p className="mt-6 font-semibold text-navy">{coFounder.headline}</p>}
+            {coFounder.bio.length > 0 && (
+              <div className="mt-4 space-y-4 leading-relaxed text-navy/85">
+                {coFounder.bio.map((p) => (
+                  <p key={p}>{p}</p>
+                ))}
+              </div>
+            )}
+            {coFounder.tags.length > 0 && (
+              <>
+                <p className="kicker mt-8 text-brass">Areas of strength</p>
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {coFounder.tags.map((s) => (
+                    <li key={s} className="rounded-full bg-mist px-3 py-1.5 text-sm font-medium text-navy">
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <LinkedInButton f={coFounder} />
           </FadeIn>
         </div>
 

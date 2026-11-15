@@ -9,6 +9,7 @@ import { auth, signIn } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { clientIp, passedHumanCheck, underLimit } from "@/lib/protection";
 import { cleanHtml } from "@/lib/sanitize";
+import { isFounderKey } from "@/lib/founders";
 import { getActiveTeam } from "@/lib/team";
 import { deletePhoto } from "@/lib/storage";
 import { makeExcerpt, slugify, stripTags } from "@/lib/text";
@@ -571,14 +572,15 @@ function readTeamMember(formData: FormData) {
   };
 }
 
-/** Deletes a member's photo from our bucket unless another member or a post still uses it. */
-async function deleteUnusedTeamPhoto(url: string | null | undefined, excludeMemberId: string) {
+/** Deletes a person's photo from our bucket unless another member, a founder or a post still uses it. */
+async function deleteUnusedPersonPhoto(url: string | null | undefined, exclude: { memberId?: string; founderKey?: string }) {
   if (!url) return;
-  const [member, post] = await Promise.all([
-    prisma.teamMember.findFirst({ where: { id: { not: excludeMemberId }, photo: url }, select: { id: true } }),
+  const [member, founder, post] = await Promise.all([
+    prisma.teamMember.findFirst({ where: { id: { not: exclude.memberId ?? "" }, photo: url }, select: { id: true } }),
+    prisma.founderProfile.findFirst({ where: { key: { not: exclude.founderKey ?? "" }, photo: url }, select: { key: true } }),
     prisma.post.findFirst({ where: { OR: [{ coverImage: url }, { content: { contains: url } }] }, select: { id: true } }),
   ]);
-  if (!member && !post) await deletePhoto(url);
+  if (!member && !founder && !post) await deletePhoto(url);
 }
 
 export async function createTeamMember(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -599,7 +601,7 @@ export async function updateTeamMember(id: string, _prev: FormState, formData: F
   if (!existing) return { error: "This team member no longer exists. It may have been deleted." };
   await prisma.teamMember.update({ where: { id }, data: result.data });
   // Only after a successful save: remove the old photo if it was replaced or removed
-  if (existing.photo && existing.photo !== result.data.photo) await deleteUnusedTeamPhoto(existing.photo, id);
+  if (existing.photo && existing.photo !== result.data.photo) await deleteUnusedPersonPhoto(existing.photo, { memberId: id });
 
   revalidateTeam();
   redirect("/admin/team");
@@ -616,6 +618,58 @@ export async function deleteTeamMember(id: string): Promise<void> {
   const member = await prisma.teamMember.findUnique({ where: { id }, select: { photo: true } });
   if (!member) return;
   await prisma.teamMember.delete({ where: { id } });
-  await deleteUnusedTeamPhoto(member.photo, id);
+  await deleteUnusedPersonPhoto(member.photo, { memberId: id });
   revalidateTeam();
+}
+
+/* ---------- founder profiles ---------- */
+
+const founderSchema = z.object({
+  role: z.string().trim().min(2, "Add the role, for example Founder.").max(80, "Keep the role under 80 characters."),
+  photo: z.union([z.literal(""), z.string().trim().url("Photo must be a full link starting with https://")]),
+  headline: z.string().trim().max(160, "Keep the headline under 160 characters."),
+  bio: z.string().max(3000, "Keep the about text under 3000 characters."),
+  tags: z.string().max(1500, "Keep this list under 1500 characters."),
+  qualifications: z.string().max(2000, "Keep the qualifications under 2000 characters."),
+  alsoOffered: z.string().trim().max(600, "Keep the also-offered note under 600 characters."),
+  linkedin: z.union([z.literal(""), z.string().trim().url("LinkedIn must be a full link starting with https://")]),
+});
+
+/** Saves the founder's or co-founder's card on /about. Names are fixed (see lib/founders.ts). */
+export async function updateFounderProfile(key: string, _prev: FormState, formData: FormData): Promise<FormState> {
+  await requireAdmin();
+  if (!isFounderKey(key)) return { error: "Unknown profile." };
+  const field = (n: string) => String(formData.get(n) ?? "");
+  const parsed = founderSchema.safeParse({
+    role: field("role"),
+    photo: field("photo").trim(),
+    headline: field("headline"),
+    bio: field("bio").replace(/\r\n/g, "\n"),
+    tags: field("tags").replace(/\r\n/g, "\n"),
+    qualifications: field("qualifications").replace(/\r\n/g, "\n"),
+    alsoOffered: field("alsoOffered"),
+    linkedin: field("linkedin").trim(),
+  });
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Check the form and try again." };
+  const d = parsed.data;
+  const tidyLines = (s: string) => s.split("\n").map((l) => l.trim()).filter(Boolean).join("\n");
+  const data = {
+    role: d.role,
+    photo: d.photo || null,
+    headline: d.headline || null,
+    bio: d.bio.trim(),
+    tags: tidyLines(d.tags),
+    qualifications: tidyLines(d.qualifications),
+    alsoOffered: d.alsoOffered || null,
+    linkedin: d.linkedin || null,
+  };
+
+  const existing = await prisma.founderProfile.findUnique({ where: { key }, select: { photo: true } });
+  await prisma.founderProfile.upsert({ where: { key }, create: { key, ...data }, update: data });
+  // Only after a successful save: remove the old photo if it was replaced or removed
+  if (existing?.photo && existing.photo !== data.photo) await deleteUnusedPersonPhoto(existing.photo, { founderKey: key });
+
+  revalidatePath("/about");
+  revalidatePath("/admin/team");
+  redirect("/admin/team");
 }

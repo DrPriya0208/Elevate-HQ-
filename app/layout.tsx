@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { MotionConfig } from "framer-motion";
 import { site } from "@/lib/content";
+import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
 import "./globals.css";
 
 // The site's two faces, self-hosted from app/fonts (variable-weight Latin files from Fontsource, SIL OFL).
@@ -27,13 +28,12 @@ const inter = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | ${site.tagline}`,
+    default: HOME_TITLE,
     template: `%s | ${site.name}`,
   },
-  description:
-    "Psychology, counselling, psychometric assessments, training and PoSH compliance for people at every stage of life and work, and for organisations of every size. Based in Sholinganallur, Chennai.",
+  description: HOME_DESCRIPTION,
   openGraph: {
-    title: `${site.name} | ${site.tagline}`,
+    title: HOME_TITLE,
     siteName: site.name,
     type: "website",
   },

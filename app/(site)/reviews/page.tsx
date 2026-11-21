@@ -11,8 +11,9 @@ import { formatMonthYear } from "@/lib/text";
 import ReviewForm from "./ReviewForm";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Reviews",
-  description: "Feedback from people who have worked with Elevate HQ.",
+  title: "Client Reviews",
+  description:
+    "Feedback from individuals and organisations who have worked with Elevate HQ for counselling, assessments and training in Chennai. Share your own experience.",
   path: "/reviews",
 });
 

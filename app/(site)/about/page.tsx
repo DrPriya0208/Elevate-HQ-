@@ -13,8 +13,8 @@ import { about, coFounder as coFounderText, founder as founderText, values } fro
 import { getFounders, type Founder } from "@/lib/founders";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About",
-  description: `About Elevate HQ, its founder ${founderText.name} and co-founder ${coFounderText.name}.`,
+  title: `About ${founderText.name}, Psychologist in Chennai`,
+  description: `Meet founder ${founderText.name}, organisational and maritime psychologist and certified PoSH trainer, and co-founder ${coFounderText.name}. Elevate HQ, Chennai.`,
   path: "/about",
 });
 

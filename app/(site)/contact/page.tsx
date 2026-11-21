@@ -8,8 +8,9 @@ import { getActiveTeam } from "@/lib/team";
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Contact",
-  description: "Book a session or ask a question. Elevate HQ, Sholinganallur, Chennai.",
+  title: "Book Counselling in Sholinganallur, Chennai",
+  description:
+    "Book a counselling session, assessment or training programme with Elevate HQ in Sholinganallur, Chennai, online or in person. Call, WhatsApp or send a message.",
   path: "/contact",
 });
 

@@ -9,9 +9,9 @@ import { FadeIn, RevealText, ScaleIn, Stagger, StaggerItem } from "@/components/
 import { services, whoChoosesUs } from "@/lib/content";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Services",
+  title: "Counselling, PoSH & Assessments in Chennai",
   description:
-    "Counselling, psychometric assessments, leadership and soft skills training, PoSH compliance, organisational and maritime psychology, and student programmes.",
+    "Counselling, psychometric assessments, PoSH compliance, leadership training, organisational and maritime psychology and student programmes. Chennai and online.",
   path: "/services",
 });
 

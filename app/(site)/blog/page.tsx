@@ -11,8 +11,9 @@ import { postCardDate } from "@/lib/text";
 export const revalidate = 60;
 
 export const metadata: Metadata = pageMetadata({
-  title: "Blog",
-  description: "Articles on mental health, relationships, and personal growth from Elevate HQ.",
+  title: "Mental Health & Workplace Psychology Blog",
+  description:
+    "Practical articles on mental health, relationships, workplace wellbeing, PoSH and personal growth from Elevate HQ, a psychology practice in Chennai.",
   path: "/blog",
 });
 

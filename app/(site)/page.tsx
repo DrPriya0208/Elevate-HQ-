@@ -15,20 +15,21 @@ import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { credentials, faqs, home, services, site, whoWeServe, whyChoose } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import { getFounders } from "@/lib/founders";
-import { OG_IMAGE, TWITTER_LARGE, jsonLd, practiceJsonLd } from "@/lib/seo";
+import { HOME_DESCRIPTION, HOME_TITLE, OG_IMAGE, TWITTER_LARGE, jsonLd, practiceJsonLd } from "@/lib/seo";
 import { formatMonthYear, postCardDate } from "@/lib/text";
 
 export const revalidate = 60;
 
-// The tab title is the layout's default; this adds the home page's own canonical URL and og:url.
+// The tab title and description are the layout's defaults (HOME_TITLE, HOME_DESCRIPTION); this adds the
+// home page's own canonical URL, og:url and link preview.
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: site.name,
     locale: "en_IN",
-    title: `${site.name} | ${site.tagline}`,
-    description: home.intro,
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     url: "/",
     images: [OG_IMAGE],
   },

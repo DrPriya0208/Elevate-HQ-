@@ -49,6 +49,11 @@ export function articleJsonLd(post: { title: string; excerpt: string; slug: stri
   };
 }
 
+/** Home page title and description, also the defaults for any page that sets none. Searchers' words first. */
+export const HOME_TITLE = `Psychology, Counselling & Training in Chennai | ${site.name}`;
+export const HOME_DESCRIPTION =
+  "Psychology, counselling, psychometric assessments, PoSH compliance and training for individuals and organisations. Sholinganallur, Chennai, online or in person.";
+
 type PageMeta = {
   /** Short page name; the layout's title template adds " | Elevate HQ" in the browser tab. */
   title: string;
